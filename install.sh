@@ -8,10 +8,6 @@ dotfiles_repo="https://github.com/jakubreron/voidrice.git"
 pkglists_repo="https://github.com/jakubreron/pkglists.git"
 # aurhelper="paru"
 
-setup_basics() {
-  timedatectl set-ntp on # network time sync
-}
-
 install_dirs() {
   mkdir $HOME/{Documents,Downloads,Music,Pictures,Videos,Cloud,Storage}
   mkdir -p $HOME/.local/{bin,share,src}
@@ -83,6 +79,10 @@ capslock = overload(meta, esc)
 insert = S-insert" | sudo tee "$global_config_path"
 }
 
+setup_basics() {
+  timedatectl set-ntp on # network time sync
+}
+
   # TODO: do it automatically
 # `sudoedit /etc/bluetooth/main.conf`
 # ```sh
@@ -111,14 +111,13 @@ setup_gsettings() {
   gsettings set org.gnome.nautilus.preferences show-hidden-files true
 }
 
-setup_basics
-
-install_dirs
-install_repos
-install_cache_management
+# install_dirs
+# install_repos
+# install_cache_management
 
 [ -x "$(command -v "keyd")" ] || install_keyd
 
+# setup_basics
 # setup_bluetooth
 # setup_programs
 # setup_cloud
