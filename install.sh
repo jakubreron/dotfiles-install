@@ -1,9 +1,13 @@
 #!/bin/sh
 # TODO: run "setup" functions after cloning, installing and stowing all packages and dotfiles
+# TODO: provide options for "primary, secondary, work" pkgtypes
 
 dotfiles_dir="$HOME/.config/personal/testing"
 dotfiles_repo="https://github.com/jakubreron/voidrice.git"
+
 pkglists_repo="https://github.com/jakubreron/pkglists.git"
+pkgtype="secondary"
+
 export TERM=ansi
 
 error() {
@@ -47,22 +51,26 @@ Include = /etc/pacman.d/mirrorlist-arch" >>/etc/pacman.conf
 	esac
 }
 
-install_dirs() {
+create_dirs() {
   mkdir "$HOME"/{Documents,Downloads,Music,Pictures,Videos,Cloud,Storage}
   mkdir -p "$HOME"/.local/{bin,share,src}
   mkdir -p "$dotfiles_dir"
 }
 
-install_repos() {
+clone_dotfiles_repos() {
   git clone "$dotfiles_repo" "$dotfiles_dir" || return 1
   git clone "$pkglists_repo" "$dotfiles_dir" || return 1
 }
 
-install_dotfiles() {
+install_pkglists() {
+  paru -S --needed - < "$dotfiles_dir/pkglists/$pkgtype/pacman.txt";
+}
+
+replace_stow() {
   stow --adopt --target="$HOME" --dir="$dotfiles_dir" voidrice
 }
 
-install_cache_management() {
+enable_cache_management() {
   sudo journalctl --vacuum-time=4weeks 
 
   echo '[Unit]
@@ -91,6 +99,7 @@ install_cache_management() {
 # TODO: only on laptops
 # TODO: install https://github.com/AdnanHodzic/auto-cpufreq#auto-cpufreq-installer
 # TODO: and setup https://github.com/AdnanHodzic/auto-cpufreq#auto-cpufreq-modes-and-options
+# TODO: also this: https://aur.archlinux.org/packages/dptfxtract-bin
 # install_auto_cpufreq() {
 #   git clone https://github.com/AdnanHodzic/auto-cpufreq.git
 #   cd auto-cpufreq && sudo ./auto-cpufreq-installer
@@ -108,7 +117,6 @@ install_keyd() {
   make && sudo make install
   sudo systemctl enable keyd && sudo systemctl start keyd
   rm -rf "$path"
-  
   global_config_path="/etc/keyd/defaulf.conf"
   echo "[ids]
 
@@ -116,15 +124,10 @@ install_keyd() {
 
 [main]
 
-shift = oneshot(shift)
-meta = oneshot(meta)
-control = oneshot(control)
-
-leftalt = oneshot(alt)
-rightalt = oneshot(altgr)
-
 capslock = overload(meta, esc)
-insert = S-insert" | sudo tee "$global_config_path"
+
+# Remaps the escape key to capslock
+esc = capslock" | sudo tee "$global_config_path"
 }
 
 setup_basics() {
@@ -132,29 +135,19 @@ setup_basics() {
 }
 
 setup_bluetooth() {
-  # TODO: implement enabling these lines
-  # `sudoedit /etc/bluetooth/main.conf`
-  # ```sh
-  #   [Policy]
-  #   AutoEnable=true
-
-  #   [General]
-  #   # DiscoverableTimeout = 0
-  # ```
+  sudo sed -i 's/^#AutoEnable=true/AutoEnable=true/g' /etc/bluetooth/main.conf
   sudo systemctl enable bluetooth.service --now
 }
 
-setup_programs() {
+setup_program_settings() {
   touch $HOME/.config/mpd/{database,mpdstate} || return 1
+
+  gsettings set org.gnome.nautilus.preferences show-hidden-files true
 }
 
 setup_cloud() {
   systemctl --user enable grive@$(systemd-escape Cloud).service
   systemctl --user start grive@$(systemd-escape Cloud).service
-}
-
-setup_gsettings() {
-  gsettings set org.gnome.nautilus.preferences show-hidden-files true
 }
 
 ### THE ACTUAL SCRIPT ###
@@ -196,15 +189,16 @@ echo "Defaults editor=/usr/bin/nvim" >/etc/sudoers.d/02-larbs-visudo-editor
 mkdir -p /etc/sysctl.d
 echo "kernel.dmesg_restrict = 0" > /etc/sysctl.d/dmesg.conf
 
-install_dirs
-install_repos
-install_cache_management
+create_dirs
+clone_dotfiles_repos
+install_pkglists
+replace_stow
+enable_cache_management
 
 [ -x "$(command -v "zap")" ] || install_zap
 [ -x "$(command -v "keyd")" ] || install_keyd
 
-# setup_basics
-# setup_bluetooth
-# setup_programs
-# setup_cloud
-# setup_gsettings
+setup_basics
+setup_bluetooth
+setup_program_settings
+setup_cloud
