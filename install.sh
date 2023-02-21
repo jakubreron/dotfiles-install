@@ -1,6 +1,7 @@
 #!/bin/sh
 # TODO: check if ~/.config/pacman/pacman.conf works, if not, link it to /etc something
 # TODO: same for paru
+# TODO: install zap https://www.zapzsh.org/
 
 dotfiles_dir="$HOME/.config/personal/testing"
 dotfiles_repo="https://github.com/jakubreron/voidrice.git"
