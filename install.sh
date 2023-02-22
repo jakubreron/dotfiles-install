@@ -98,8 +98,8 @@ enable_cache_management() {
 
 # TODO: only on laptops
 # TODO: install https://github.com/AdnanHodzic/auto-cpufreq#auto-cpufreq-installer
-# TODO: and setup https://github.com/AdnanHodzic/auto-cpufreq#auto-cpufreq-modes-and-options
-# TODO: also this: https://aur.archlinux.org/packages/dptfxtract-bin
+# TODO: and setup into /etc/auto-cpufreq.conf https://github.com/AdnanHodzic/auto-cpufreq#auto-cpufreq-modes-and-options (min freq on battery and so on)
+# TODO: also this: https://github.com/intel/dptf
 # install_auto_cpufreq() {
 #   git clone https://github.com/AdnanHodzic/auto-cpufreq.git
 #   cd auto-cpufreq && sudo ./auto-cpufreq-installer
