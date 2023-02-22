@@ -99,7 +99,7 @@ enable_cache_management() {
 # TODO: only on laptops
 # TODO: install https://github.com/AdnanHodzic/auto-cpufreq#auto-cpufreq-installer
 # TODO: and setup into /etc/auto-cpufreq.conf https://github.com/AdnanHodzic/auto-cpufreq#auto-cpufreq-modes-and-options (min freq on battery and so on)
-# TODO: also this: https://github.com/intel/dptf
+# TODO: also this: https://github.com/intel/dptf or use "thermald"
 # install_auto_cpufreq() {
 #   git clone https://github.com/AdnanHodzic/auto-cpufreq.git
 #   cd auto-cpufreq && sudo ./auto-cpufreq-installer
