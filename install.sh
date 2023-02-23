@@ -1,6 +1,6 @@
 #!/bin/sh
 # TODO: provide options for "primary, secondary, work" pkgtypes
-# TODO: 
+# TODO: base more things on this: https://github.com/linuxmobile/hyprland-dots
 
 dotfiles_dir="$HOME/.config/personal/testing"
 dotfiles_repo="https://github.com/jakubreron/voidrice.git"
