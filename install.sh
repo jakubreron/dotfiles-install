@@ -2,6 +2,7 @@
 # TODO: provide options for "primary, secondary, work" pkgtypes
 # TODO: base more things on this: https://github.com/linuxmobile/hyprland-dots
 # TODO: base more things on this: https://github.com/ChrisTitusTech/hyprland-titus
+# TODO: setup SDDM/autologin https://youtu.be/wNL6eIoksd8?t=482
 
 dotfiles_dir="$HOME/.config/personal/testing"
 dotfiles_repo="https://github.com/jakubreron/voidrice.git"
