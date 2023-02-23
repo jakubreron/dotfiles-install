@@ -1,6 +1,6 @@
 #!/bin/sh
-# TODO: run "setup" functions after cloning, installing and stowing all packages and dotfiles
 # TODO: provide options for "primary, secondary, work" pkgtypes
+# TODO: 
 
 dotfiles_dir="$HOME/.config/personal/testing"
 dotfiles_repo="https://github.com/jakubreron/voidrice.git"
@@ -63,7 +63,7 @@ clone_dotfiles_repos() {
 }
 
 install_pkglists() {
-  paru -S --needed - < "$dotfiles_dir/pkglists/$pkgtype/pacman.txt";
+  paru --noconfirm --needed -S - < "$dotfiles_dir/pkglists/$pkgtype/pacman.txt";
 }
 
 replace_stow() {
@@ -152,52 +152,59 @@ setup_cloud() {
 
 ### THE ACTUAL SCRIPT ###
 
-pacman --noconfirm --needed -Sy libnewt ||
-	error "Are you sure you're running this as the root user, are on an Arch-based distribution and have an internet connection?"
+setup_basics() {
+  pacman --noconfirm --needed -Sy libnewt ||
+    error "Are you sure you're running this as the root user, are on an Arch-based distribution and have an internet connection?"
 
-for x in curl ca-certificates base-devel git ntp zsh; do
-	whiptail --title "Setting up the basics" \
-		--infobox "Installing \`$x\` which is required to install and configure other programs." 8 70
-	install_pkg "$x"
-done
+  for x in curl ca-certificates base-devel git ntp zsh; do
+    whiptail --title "Setting up the basics" \
+      --infobox "Installing \`$x\` which is required to install and configure other programs." 8 70
+    install_pkg "$x"
+  done
 
-refresh_keys ||
-	error "Error automatically refreshing Arch keyring. Consider doing so manually."
+  refresh_keys ||
+    error "Error automatically refreshing Arch keyring. Consider doing so manually."
 
-[ -f /etc/sudoers.pacnew ] && cp /etc/sudoers.pacnew /etc/sudoers # copy just in case
+  [ -f /etc/sudoers.pacnew ] && cp /etc/sudoers.pacnew /etc/sudoers # copy just in case
 
-# Allow user to run sudo without password. Since AUR programs must be installed
-# in a fakeroot environment, this is required for all builds with AUR.
-trap 'rm -f /etc/sudoers.d/larbs-temp' HUP INT QUIT TERM PWR EXIT
-echo "%wheel ALL=(ALL) NOPASSWD: ALL" >/etc/sudoers.d/larbs-temp
+  # Allow user to run sudo without password. Since AUR programs must be installed
+  # in a fakeroot environment, this is required for all builds with AUR.
+  trap 'rm -f /etc/sudoers.d/larbs-temp' HUP INT QUIT TERM PWR EXIT
+  echo "%wheel ALL=(ALL) NOPASSWD: ALL" >/etc/sudoers.d/larbs-temp
 
-# Make pacman colorful, concurrent downloads and Pacman eye-candy.
-grep -q "ILoveCandy" /etc/pacman.conf || sed -i "/#VerbosePkgLists/a ILoveCandy" /etc/pacman.conf
-sed -Ei "s/^#(ParallelDownloads).*/\1 = 15/;/^#Color$/s/#//" /etc/pacman.conf
+  # Make pacman colorful, concurrent downloads and Pacman eye-candy.
+  grep -q "ILoveCandy" /etc/pacman.conf || sed -i "/#VerbosePkgLists/a ILoveCandy" /etc/pacman.conf
+  sed -Ei "s/^#(ParallelDownloads).*/\1 = 15/;/^#Color$/s/#//" /etc/pacman.conf
 
-# Use all cores for compilation.
-sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
+  # Use all cores for compilation.
+  sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
 
-# TODO: install AUR helper
-# install_manually paru || error "Failed to install AUR helper."
+  # Allow wheel users to sudo with password and allow several system commands
+  # (like `shutdown` to run without password).
+  echo "%wheel ALL=(ALL:ALL) ALL" >/etc/sudoers.d/00-larbs-wheel-can-sudo
+  echo "%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/shutdown,/usr/bin/reboot,/usr/bin/systemctl suspend,/usr/bin/wifi-menu,/usr/bin/mount,/usr/bin/umount,/usr/bin/pacman -Syu,/usr/bin/pacman -Syyu,/usr/bin/pacman -Syyu --noconfirm,/usr/bin/loadkeys,/usr/bin/pacman -Syyuw --noconfirm,/usr/bin/pacman -S -u -y --config /etc/pacman.conf --,/usr/bin/pacman -S -y -u --config /etc/pacman.conf --" >/etc/sudoers.d/01-larbs-cmds-without-password
+  echo "Defaults editor=/usr/bin/nvim" >/etc/sudoers.d/02-larbs-visudo-editor
+  mkdir -p /etc/sysctl.d
+  echo "kernel.dmesg_restrict = 0" > /etc/sysctl.d/dmesg.conf
+}
 
-# Allow wheel users to sudo with password and allow several system commands
-# (like `shutdown` to run without password).
-echo "%wheel ALL=(ALL:ALL) ALL" >/etc/sudoers.d/00-larbs-wheel-can-sudo
-echo "%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/shutdown,/usr/bin/reboot,/usr/bin/systemctl suspend,/usr/bin/wifi-menu,/usr/bin/mount,/usr/bin/umount,/usr/bin/pacman -Syu,/usr/bin/pacman -Syyu,/usr/bin/pacman -Syyu --noconfirm,/usr/bin/loadkeys,/usr/bin/pacman -Syyuw --noconfirm,/usr/bin/pacman -S -u -y --config /etc/pacman.conf --,/usr/bin/pacman -S -y -u --config /etc/pacman.conf --" >/etc/sudoers.d/01-larbs-cmds-without-password
-echo "Defaults editor=/usr/bin/nvim" >/etc/sudoers.d/02-larbs-visudo-editor
-mkdir -p /etc/sysctl.d
-echo "kernel.dmesg_restrict = 0" > /etc/sysctl.d/dmesg.conf
 
+# Basics
+setup_basics
+# install_manually paru || error "Failed to install AUR helper." # TODO: install AUR helper, create install_manually scirpt
 create_dirs
+
+# Start installing dotfiles after setting up the basics
 clone_dotfiles_repos
 install_pkglists
 replace_stow
 enable_cache_management
 
+# Custom programs with their custom configurations (no AUR)
 [ -x "$(command -v "zap")" ] || install_zap
 [ -x "$(command -v "keyd")" ] || install_keyd
 
+# Setup after installing everything
 setup_basics
 setup_bluetooth
 setup_program_settings
