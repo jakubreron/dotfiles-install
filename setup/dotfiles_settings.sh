@@ -5,12 +5,18 @@
 setup_program_settings() {
   touch /home/$user/.config/mpd/{database,mpdstate} || return 1
 
-  gsettings set org.gnome.nautilus.preferences show-hidden-files true
+  # TODO: add more gsettings
+  if command -v gsettings &> /dev/null; then
+     gsettings set org.gnome.nautilus.preferences show-hidden-files true
+  fi
 }
 
 setup_cloud() {
-  systemctl --user enable grive@$(systemd-escape Cloud).service
-  systemctl --user start grive@$(systemd-escape Cloud).service
+  # TODO: add more setup and init sync
+  if command -v grive &> /dev/null; then
+    systemctl --user enable grive@$(systemd-escape Cloud).service
+    systemctl --user start grive@$(systemd-escape Cloud).service
+  fi
 }
 
 setup_dotfiles_settings() {

@@ -20,5 +20,5 @@ setup_basics
 setup_dotfiles_packages
 setup_custom_packages
 
-# setup_dotfiles_settings
+setup_dotfiles_settings
 setup_custom_settings

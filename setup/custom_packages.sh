@@ -11,19 +11,20 @@
 # }
 
 install_zap() {
-  zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh)
+  [ -x "$(command -v "zap")" ] || zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh)
 }
 
 install_keyd() {
-  path="/home/$user/Downloads/keyd"
-  git clone https://github.com/rvaiya/keyd "$path" || exit
-  cd "$path" || exit
-  make && sudo make install
-  sudo systemctl enable keyd && sudo systemctl start keyd
-  cd ..
-  rm -rf "$path"
-  global_config_path="/etc/keyd/defaulf.conf"
-  echo "[ids]
+  if command -v keyd &> /dev/null; then 
+    path="/home/$user/Downloads/keyd"
+    git clone https://github.com/rvaiya/keyd "$path" || exit
+    cd "$path" || exit
+    make && sudo make install
+    sudo systemctl enable keyd && sudo systemctl start keyd
+    cd ..
+    rm -rf "$path"
+    global_config_path="/etc/keyd/defaulf.conf"
+    echo "[ids]
 
 *
 
@@ -33,9 +34,10 @@ capslock = overload(meta, esc)
 
 # Remaps the escape key to capslock
 esc = capslock" | sudo tee "$global_config_path"
+  fi
 }
 
 setup_custom_packages() {
-  [ -x "$(command -v "zap")" ] || install_zap
-  [ -x "$(command -v "keyd")" ] || install_keyd
+  install_zap
+  install_keyd
 }
