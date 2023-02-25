@@ -6,8 +6,6 @@ update_system() {
 }
 
 setup_core_packages() {
-  update_system
-
   for package in curl ca-certificates base-devel git ntp zsh rust laptop-detect stow; do
     install_pkg "$package"
   done
@@ -34,7 +32,10 @@ setup_core_settings() {
 create_dirs() {
   mkdir /home/$user/{Documents,Downloads,Music,Pictures,Videos,Cloud,Storage}
   mkdir -p /home/$user/.local/{bin,share,src}
+
   mkdir -p "$dotfiles_dir"
+  mkdir -p "$voidrice_dir"
+  mkdir -p "$pkglists_dir"
 }
 
 clone_dotfiles_repos() {
@@ -47,6 +48,7 @@ replace_stow() {
 }
 
 setup_basics() {
+  update_system
   setup_core_packages
   setup_core_settings
   create_dirs

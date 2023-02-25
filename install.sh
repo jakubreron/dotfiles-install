@@ -4,7 +4,7 @@ user="jakub" # TODO  prompt for user
 
 dotfiles_dir="/home/$user/.config/dotfiles"
 
-voidrice_dir="$dotfiles_dir/voidrice1"
+voidrice_dir="$dotfiles_dir/voidrice"
 voidrice_repo="https://github.com/jakubreron/voidrice.git"
 
 pkglists_dir="$dotfiles_dir/pkglists"
