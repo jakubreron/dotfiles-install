@@ -34,13 +34,11 @@ create_dirs() {
   mkdir -p /home/$user/.local/{bin,share,src}
 
   mkdir -p "$dotfiles_dir"
-  mkdir -p "$voidrice_dir"
-  mkdir -p "$pkglists_dir"
 }
 
 clone_dotfiles_repos() {
-  [ -f $voidrice_dir ] && git clone "$voidrice_repo" "$voidrice_dir"
-  [ -f $pkglists_dir ] && git clone "$pkglists_repo" "$pkglists_dir"
+  [ -f $voidrice_dir ] || git clone "$voidrice_repo" "$voidrice_dir"
+  [ -f $pkglists_dir ] || git clone "$pkglists_repo" "$pkglists_dir"
 }
 
 replace_stow() {
