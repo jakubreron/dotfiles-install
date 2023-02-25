@@ -15,5 +15,5 @@ install_pkg() {
     pkg_manager=pacman
   fi
 
-	sudo $pkg_manager --noconfirm --needed -S "$1" >/dev/null 2>&1
+	sudo $pkg_manager --noconfirm --needed -S "$1"
 }
