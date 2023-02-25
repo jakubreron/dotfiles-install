@@ -1,6 +1,7 @@
 #!/bin/sh
 
 setup_core_packages() {
+  remove_db_lock
   sudo pacman --noconfirm --needed -Sy libnewt
 
   for x in curl ca-certificates base-devel git ntp zsh; do

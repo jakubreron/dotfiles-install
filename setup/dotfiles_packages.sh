@@ -10,7 +10,7 @@ install_aur_helper() {
 }
 
 install_pkglists() {
-  sudo paru --noconfirm --needed -S - < "$dotfiles_dir/pkglists/$pkgtype/pacman.txt";
+  install_pkg - < "$dotfiles_dir/pkglists/$pkgtype/pacman.txt";
 }
 
 setup_dotfiles_packages() {
