@@ -1,22 +1,26 @@
 #!/bin/sh
 
-# TODO: only on laptops
-# TODO: install https://github.com/AdnanHodzic/auto-cpufreq#auto-cpufreq-installer
-# TODO: and setup into /etc/auto-cpufreq.conf https://github.com/AdnanHodzic/auto-cpufreq#auto-cpufreq-modes-and-options (min freq on battery and so on)
-# TODO: also this: https://github.com/intel/dptf or use "thermald"
-# install_auto_cpufreq() {
-#   git clone https://github.com/AdnanHodzic/auto-cpufreq.git
-#   cd auto-cpufreq && sudo ./auto-cpufreq-installer
-#   sudo auto-cpufreq --install
-# }
+# TODO: setup intel/dptf or thermald on laptop
+
+install_auto_cpufreq() {
+  if laptop-detect -s > /dev/null; then
+    echo "Running on a laptop"
+    path="$git_clone_path/auto-cpufreq"
+    git clone https://github.com/AdnanHodzic/auto-cpufreq.git "$path"
+    cd "$path" && sudo ./auto-cpufreq-installer
+    sudo auto-cpufreq --install
+    rm -rf "$path"
+  fi
+}
+
 install_zap() {
   [ -x "$(command -v "zap")" ] && zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh)
 }
 
 install_keyd() {
   if ! command -v keyd &> /dev/null; then 
-    path="/home/$user/Downloads/keyd"
-    git clone https://github.com/rvaiya/keyd "$path" || exit
+    path="$git_clone_path/keyd"
+    git clone https://github.com/rvaiya/keyd "$path"
     cd "$path" || exit
     make && sudo make install
     sudo systemctl enable keyd && sudo systemctl start keyd
@@ -37,6 +41,7 @@ esc = capslock" | sudo tee "$global_config_path"
 }
 
 setup_custom_packages() {
+  install_auto_cpufreq
   install_zap
   install_keyd
 }

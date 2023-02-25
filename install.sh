@@ -1,10 +1,18 @@
 #!/bin/sh
 
 user="jakub" # TODO  prompt for user
-dotfiles_dir="/home/$user/.config/personal"
-dotfiles_repo="https://github.com/jakubreron/voidrice.git"
+
+dotfiles_dir="/home/$user/.config/dotfiles"
+
+voidrice_dir="$dotfiles_dir/voidrice"
+voidrice_repo="https://github.com/jakubreron/voidrice.git"
+
+pkglists_dir="$dotfiles_dir/pkglists"
 pkglists_repo="https://github.com/jakubreron/pkglists.git"
 pkgtype="secondary" # TODO: prompt for "primary, secondary, work" pkgtypes
+
+git_clone_path="/home/$user/Downloads/git-clone"
+mkdir -p "$git_clone_path"
 
 . ./helpers.sh
 . ./setup/basics.sh
