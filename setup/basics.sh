@@ -1,12 +1,14 @@
 #!/bin/sh
 
-setup_bare_minimum() {
+setup_core_packages() {
   pacman --noconfirm --needed -Sy libnewt
 
   for x in curl ca-certificates base-devel git ntp zsh; do
     install_pkg "$x"
   done
+}
 
+setup_core_settings() {
   # Make pacman colorful, concurrent downloads and Pacman eye-candy.
   grep -q "ILoveCandy" /etc/pacman.conf || sed -i "/#VerbosePkgLists/a ILoveCandy" /etc/pacman.conf
   sed -Ei "s/^#(ParallelDownloads).*/\1 = 15/;/^#Color$/s/#//" /etc/pacman.conf
@@ -30,8 +32,8 @@ create_dirs() {
 }
 
 clone_dotfiles_repos() {
-  git clone "$dotfiles_repo" "$dotfiles_dir" || return 1
-  git clone "$pkglists_repo" "$dotfiles_dir" || return 1
+  git clone "$dotfiles_repo" "$dotfiles_dir/voidrice" || return 1
+  git clone "$pkglists_repo" "$dotfiles_dir/pkglists" || return 1
 }
 
 replace_stow() {
@@ -39,7 +41,8 @@ replace_stow() {
 }
 
 setup_basics() {
-  setup_bare_minimum
+  setup_core_packages
+  setup_core_settings
   create_dirs
   clone_dotfiles_repos
   replace_stow
