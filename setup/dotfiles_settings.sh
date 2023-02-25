@@ -3,7 +3,7 @@
 # TODO: setup SDDM/autologin https://youtu.be/wNL6eIoksd8?t=482
 
 setup_program_settings() {
-  touch /home/$user/.config/mpd/{database,mpdstate} || return 1
+  [ -f "/home/$user/.config/mpd" ] && touch /home/$user/.config/mpd/{database,mpdstate}
 
   # TODO: add more gsettings
   if command -v gsettings &> /dev/null; then

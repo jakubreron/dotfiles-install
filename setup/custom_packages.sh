@@ -9,13 +9,12 @@
 #   cd auto-cpufreq && sudo ./auto-cpufreq-installer
 #   sudo auto-cpufreq --install
 # }
-
 install_zap() {
-  [ -x "$(command -v "zap")" ] || zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh)
+  [ -x "$(command -v "zap")" ] && zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh)
 }
 
 install_keyd() {
-  if command -v keyd &> /dev/null; then 
+  if ! command -v keyd &> /dev/null; then 
     path="/home/$user/Downloads/keyd"
     git clone https://github.com/rvaiya/keyd "$path" || exit
     cd "$path" || exit

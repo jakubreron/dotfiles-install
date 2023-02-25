@@ -1,9 +1,8 @@
 #!/bin/sh
 
 aur_helper="paru"
-
 install_aur_helper() {
-  if command -v $aur_helper &> /dev/null; then
+  if ! command -v $aur_helper &> /dev/null; then
     path="/home/$user/Downloads/$aur_helper"
     git clone "https://aur.archlinux.org/$aur_helper.git" "$path" || exit
     cd "$path" || exit
