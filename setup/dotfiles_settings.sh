@@ -14,8 +14,7 @@ setup_program_settings() {
 setup_cloud() {
   # TODO: add more setup and init sync
   if command -v grive &> /dev/null; then
-    systemctl --user enable grive@$(systemd-escape Cloud).service
-    systemctl --user start grive@$(systemd-escape Cloud).service
+    systemctl --user enable --now grive@$(systemd-escape Cloud).service
   fi
 }
 

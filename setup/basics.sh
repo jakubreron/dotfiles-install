@@ -37,8 +37,8 @@ create_dirs() {
 }
 
 clone_dotfiles_repos() {
-  [ -f $voidrice_dir ] || git clone "$voidrice_repo" "$voidrice_dir"
-  [ -f $pkglists_dir ] || git clone "$pkglists_repo" "$pkglists_dir"
+  git clone "$voidrice_repo" "$voidrice_dir"
+  git clone "$pkglists_repo" "$pkglists_dir"
 }
 
 replace_stow() {

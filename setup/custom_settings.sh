@@ -3,27 +3,31 @@
 enable_cache_management() {
   sudo journalctl --vacuum-time=4weeks 
 
+  if ! [ -f /etc/systemd/system/paccache.timer ] &> /dev/null; then
   echo '[Unit]
-  Description=Clean-up old pacman pkg
+Description=Clean-up old pacman pkg
 
-  [Timer]
-  OnCalendar=monthly
-  Persistent=true
+[Timer]
+OnCalendar=monthly
+Persistent=true
 
-  [Install]
-  WantedBy=multi-user.target' | sudo tee -a /etc/systemd/system/paccache.timer
+[Install]
+WantedBy=multi-user.target' | sudo tee /etc/systemd/system/paccache.timer
+  fi
 
+  if ! [ -f /usr/share/libalpm/hooks/paccache.hook ] &> /dev/null; then
   echo '[Trigger]
-  Operation = Upgrade
-  Operation = Install
-  Operation = Remove
-  Type = Package
-  Target = *
+Operation = Upgrade
+Operation = Install
+Operation = Remove
+Type = Package
+Target = *
 
-  [Action]
-  Description = Cleaning pacman cache with paccache …
-  When = PostTransaction
-  Exec = /usr/bin/paccache -r' | sudo tee -a /usr/share/libalpm/hooks/paccache.hook
+[Action]
+Description = Cleaning pacman cache with paccache …
+When = PostTransaction
+Exec = /usr/bin/paccache -r' | sudo tee /usr/share/libalpm/hooks/paccache.hook
+  fi
 }
 
 setup_bluetooth() {
