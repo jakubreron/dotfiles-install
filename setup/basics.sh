@@ -8,7 +8,7 @@ update_system() {
 setup_core_packages() {
   update_system
 
-  for package in curl ca-certificates base-devel git ntp zsh rust laptop-detect; do
+  for package in curl ca-certificates base-devel git ntp zsh rust laptop-detect stow; do
     install_pkg "$package"
   done
 }
