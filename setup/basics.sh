@@ -1,14 +1,14 @@
 #!/bin/sh
 
-setup_core_packages() {
+update_system() {
   remove_db_lock
-  if pacman -Qi libnewt > /dev/null; then
-    sudo pacman --noconfirm -Syu
-  else
-    sudo pacman --noconfirm --needed -Sy libnewt
-  fi
+  sudo pacman --noconfirm -Syu
+}
 
-  for x in curl ca-certificates base-devel git ntp zsh; do
+setup_core_packages() {
+  update_system
+
+  for x in curl ca-certificates base-devel git ntp zsh rust; do
     install_pkg "$x"
   done
 }
@@ -41,8 +41,8 @@ clone_dotfiles_repos() {
   voidrice_dir="$dotfiles_dir/voidrice"
   pkglists_dir="$dotfiles_dir/pkglists"
 
-  [ -f $voidrice_dir ] || git clone "$dotfiles_repo" "$voidrice_dir"
-  [ -f $pkglists_dir ] || git clone "$pkglists_repo" "$pkglists_dir"
+  [ -f $voidrice_dir ] && git clone "$dotfiles_repo" "$voidrice_dir"
+  [ -f $pkglists_dir ] && git clone "$pkglists_repo" "$pkglists_dir"
 }
 
 replace_stow() {
