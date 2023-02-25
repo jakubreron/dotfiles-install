@@ -134,27 +134,7 @@ esc = capslock" | sudo tee "$global_config_path"
 
 setup_basics() {
   timedatectl set-ntp on # network time sync
-}
 
-setup_bluetooth() {
-  sudo sed -i 's/^#AutoEnable=true/AutoEnable=true/g' /etc/bluetooth/main.conf
-  sudo systemctl enable bluetooth.service --now
-}
-
-setup_program_settings() {
-  touch $HOME/.config/mpd/{database,mpdstate} || return 1
-
-  gsettings set org.gnome.nautilus.preferences show-hidden-files true
-}
-
-setup_cloud() {
-  systemctl --user enable grive@$(systemd-escape Cloud).service
-  systemctl --user start grive@$(systemd-escape Cloud).service
-}
-
-### THE ACTUAL SCRIPT ###
-
-setup_basics() {
   pacman --noconfirm --needed -Sy libnewt ||
     error "Are you sure you're running this as the root user, are on an Arch-based distribution and have an internet connection?"
 
@@ -190,6 +170,23 @@ setup_basics() {
   echo "kernel.dmesg_restrict = 0" > /etc/sysctl.d/dmesg.conf
 }
 
+setup_bluetooth() {
+  sudo sed -i 's/^#AutoEnable=true/AutoEnable=true/g' /etc/bluetooth/main.conf
+  sudo systemctl enable bluetooth.service --now
+}
+
+setup_program_settings() {
+  touch $HOME/.config/mpd/{database,mpdstate} || return 1
+
+  gsettings set org.gnome.nautilus.preferences show-hidden-files true
+}
+
+setup_cloud() {
+  systemctl --user enable grive@$(systemd-escape Cloud).service
+  systemctl --user start grive@$(systemd-escape Cloud).service
+}
+
+### THE ACTUAL SCRIPT ###
 
 # Basics
 setup_basics
@@ -207,7 +204,6 @@ enable_cache_management
 [ -x "$(command -v "keyd")" ] || install_keyd
 
 # Setup after installing everything
-setup_basics
-setup_bluetooth
-setup_program_settings
-setup_cloud
+# setup_bluetooth
+# setup_program_settings
+# setup_cloud
