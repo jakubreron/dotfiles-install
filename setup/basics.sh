@@ -1,13 +1,14 @@
 #!/bin/sh
 
 setup_core_packages() {
-  pacman --noconfirm --needed -Sy libnewt
+  sudo pacman --noconfirm --needed -Sy libnewt
 
   for x in curl ca-certificates base-devel git ntp zsh; do
     install_pkg "$x"
   done
 }
 
+# TODO: fix with sudo
 setup_core_settings() {
   # Make pacman colorful, concurrent downloads and Pacman eye-candy.
   grep -q "ILoveCandy" /etc/pacman.conf || sed -i "/#VerbosePkgLists/a ILoveCandy" /etc/pacman.conf
@@ -42,7 +43,7 @@ replace_stow() {
 
 setup_basics() {
   setup_core_packages
-  setup_core_settings
+  # setup_core_settings
   create_dirs
   clone_dotfiles_repos
   replace_stow

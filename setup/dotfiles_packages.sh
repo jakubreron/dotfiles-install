@@ -1,15 +1,16 @@
 #!/bin/sh
 
 install_aur_helper() {
-  mkdir "/home/$user/Downloads/_cloned-repos"
-  cd "/home/$user/Downloads/_cloned-repos" || exit
-  git clone https://aur.archlinux.org/paru.git
-  cd paru || exit
+  path="/home/$user/Downloads/paru"
+  git clone https://aur.archlinux.org/paru.git "$path" || exit
+  cd "$path" || exit
   makepkg -si  
+  cd ..
+  rm -rf "$path"
 }
 
 install_pkglists() {
-  paru --noconfirm --needed -S - < "$dotfiles_dir/pkglists/$pkgtype/pacman.txt";
+  sudo paru --noconfirm --needed -S - < "$dotfiles_dir/pkglists/$pkgtype/pacman.txt";
 }
 
 setup_dotfiles_packages() {

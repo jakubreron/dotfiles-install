@@ -16,10 +16,11 @@ install_zap() {
 
 install_keyd() {
   path="/home/$user/Downloads/keyd"
-  git clone https://github.com/rvaiya/keyd "$path" || return 1
-  cd "$path" || return 1
+  git clone https://github.com/rvaiya/keyd "$path" || exit
+  cd "$path" || exit
   make && sudo make install
   sudo systemctl enable keyd && sudo systemctl start keyd
+  cd ..
   rm -rf "$path"
   global_config_path="/etc/keyd/defaulf.conf"
   echo "[ids]
