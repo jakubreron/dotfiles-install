@@ -59,7 +59,7 @@ replace_stow() {
 }
 
 set_zsh_shell() {
-  chsh -s /bin/zsh "$user" >/dev/null 2>&1
+  chsh -s /usr/bin/zsh "$user" >/dev/null 2>&1
   mkdir -p "/home/$user/.cache/zsh/"
 }
 
