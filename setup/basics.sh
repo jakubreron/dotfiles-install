@@ -1,4 +1,5 @@
 #!/bin/sh
+# TODO: setup infinite timeout for sudo
 
 update_system() {
   remove_db_lock
