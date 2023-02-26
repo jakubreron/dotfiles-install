@@ -40,6 +40,8 @@ create_dirs() {
 clone_dotfiles_repos() {
   git clone "$voidrice_repo" "$voidrice_dir"
   git clone "$pkglists_repo" "$pkglists_dir"
+  git -C "$voidrice_dir" pull
+  git -C "$pkglists_repo" pull
 }
 
 replace_stow() {
