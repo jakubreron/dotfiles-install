@@ -1,6 +1,9 @@
 #!/bin/sh
 
-user="jakub" # TODO  prompt for user
+# TODO  prompt for these settings
+user="jakub" 
+aur_helper="paru"
+npm_helper="yarn"
 
 dotfiles_dir="/home/$user/.config/dotfiles"
 
@@ -17,11 +20,11 @@ mkdir -p "$git_clone_path"
 . ./helpers.sh
 . ./setup/basics.sh
 
-. ./setup/dotfiles_packages.sh
-. ./setup/custom_packages.sh
+. ./setup/packages/dotfiles_packages.sh
+. ./setup/packages/custom_packages.sh
 
-. ./setup/dotfiles_settings.sh
-. ./setup/custom_settings.sh
+. ./setup/settings/dotfiles_settings.sh
+. ./setup/settings/custom_settings.sh
 
 setup_basics
 
