@@ -14,7 +14,9 @@ install_auto_cpufreq() {
 }
 
 install_zap() {
-  [ -x "$(command -v "zap")" ] && zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh)
+  if ! command -v zap &> /dev/null; then 
+    zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh)
+  fi
 }
 
 install_keyd() {

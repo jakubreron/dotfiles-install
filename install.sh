@@ -1,6 +1,5 @@
 #!/bin/sh
 
-# TODO  prompt for these settings
 user="jakub" 
 aur_helper="paru"
 npm_helper="yarn"
