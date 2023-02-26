@@ -1,5 +1,13 @@
 #!/bin/sh
 # TODO: setup infinite timeout for sudo
+# TODO: setup grub options:
+# ```sh
+#   echo '
+#     GRUB_FORCE_HIDDEN_MENU="true"
+#     GRUB_HIDDEN_TIMEOUT="0"
+#   ' | sudo tee -a /etc/default/grub
+# ```
+# sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 update_system() {
   remove_db_lock
