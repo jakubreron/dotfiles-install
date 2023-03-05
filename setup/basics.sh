@@ -39,6 +39,21 @@ setup_core_settings() {
   echo "Defaults editor=/usr/bin/nvim" | sudo tee /etc/sudoers.d/02-visudo-editor
   sudo mkdir -p /etc/sysctl.d
   echo "kernel.dmesg_restrict = 0" | sudo tee /etc/sysctl.d/dmesg.conf
+
+  echo "export \$(dbus-launch)" | sudo tee /etc/profile.d/dbus.sh
+}
+
+setup_touchpad() {
+  if laptop-detect -s > /dev/null; then
+    [ ! -f /etc/X11/xorg.conf.d/40-libinput.conf ] && printf 'Section "InputClass"
+        Identifier "libinput touchpad catchall"
+        MatchIsTouchpad "on"
+        MatchDevicePath "/dev/input/event*"
+        Driver "libinput"
+	Option "Tapping" "on"
+  Option "NaturalScrolling" "true"
+EndSection' | sudo tee /etc/X11/xorg.conf.d/40-libinput.conf
+  fi
 }
 
 create_dirs() {
@@ -72,6 +87,7 @@ setup_basics() {
   update_system
   setup_core_packages
   setup_core_settings
+  setup_touchpad
   create_dirs
   clone_dotfiles_repos
   replace_stow

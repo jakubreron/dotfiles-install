@@ -35,12 +35,15 @@ setup_bluetooth() {
   sudo systemctl enable bluetooth.service --now
 }
 
-browser_dir="/home/$user/.mozilla/firefox"
-browser_profiles_ini_dir="$browser_dir/profiles.ini"
-profile="$(sed -n "/Default=.*.default-release/ s/.*=//p" "$browser_profiles_ini_dir")"
-browser_profile_dir="$browser_dir/$profile"
-
 make_userjs(){
+  sudo -u "$user" firefox --headless >/dev/null 2>&1 &
+  sleep 1
+
+  browser_dir="/home/$user/.mozilla/firefox"
+  browser_profiles_ini_dir="$browser_dir/profiles.ini"
+  profile="$(sed -n "/Default=.*.default-release/ s/.*=//p" "$browser_profiles_ini_dir")"
+  browser_profile_dir="$browser_dir/$profile"
+
 	# Get the Arkenfox user.js and prepare it.
 	arkenfox="$browser_profile_dir/arkenfox.js"
 	overrides="$browser_profile_dir/user-overrides.js"
@@ -66,6 +69,8 @@ Description=Update Arkenfox user.js
 When=PostTransaction
 Depends=arkenfox-user.js
 Exec=/usr/local/lib/arkenfox-auto-update" | sudo tee /etc/pacman.d/hooks/arkenfox.hook
+
+sudo pkill -u "$user" firefox
 }
 
 setup_custom_settings() {
