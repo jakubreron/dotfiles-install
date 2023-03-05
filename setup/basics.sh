@@ -53,9 +53,9 @@ clone_dotfiles_repos() {
   git clone "$pkglists_repo" "$pkglists_dir"
 
   git -C "$voidrice_dir" pull
-  git -C "$voidrice_dir" submodule update --init --remote --recursive
+  git -C "$pkglists_dir" pull
 
-  git -C "$pkglists_repo" pull
+  git -C "$voidrice_dir" submodule update --init --remote --recursive
 }
 
 replace_stow() {
