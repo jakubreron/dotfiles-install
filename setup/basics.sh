@@ -9,6 +9,10 @@
 # ```
 # sudo grub-mkconfig -o /boot/grub/grub.cfg
 
+prepare_user() {
+  sudo usermod -a -G wheel "$user" && mkdir -p /home/"$user" && sudo chown "$user":wheel /home/"$user"
+}
+
 update_system() {
   remove_db_lock
   sudo pacman --noconfirm -Syu
@@ -64,6 +68,7 @@ set_zsh_shell() {
 }
 
 setup_basics() {
+  prepare_user
   update_system
   setup_core_packages
   setup_core_settings
