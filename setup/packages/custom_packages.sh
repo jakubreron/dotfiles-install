@@ -8,7 +8,8 @@ install_auto_cpufreq() {
     path="$git_clone_path/auto-cpufreq"
     git clone https://github.com/AdnanHodzic/auto-cpufreq.git "$path"
     cd "$path" && sudo ./auto-cpufreq-installer
-    sudo auto-cpufreq --install
+    sudo systemctl enable --now auto-cpufreq.service
+    sudo systemctl mask power-profiles-daemon.service
     rm -rf "$path"
   fi
 }
