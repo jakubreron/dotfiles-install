@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# TODO: preinstall keepassxc addon (and maybe more essential addons) to the firefox
+
 user="jakub" 
 aur_helper="paru"
 npm_helper="yarn"
