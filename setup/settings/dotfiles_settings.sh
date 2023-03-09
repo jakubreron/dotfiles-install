@@ -2,6 +2,11 @@
 
 # TODO: setup SDDM/autologin https://youtu.be/wNL6eIoksd8?t=482
 
+set_zsh_shell() {
+  chsh -s /usr/bin/zsh "$user"
+  mkdir -p "/home/$user/.cache/zsh/"
+}
+
 setup_program_settings() {
   [ -f "/home/$user/.config/mpd" ] && touch /home/$user/.config/mpd/{database,mpdstate}
 
@@ -17,6 +22,7 @@ setup_cloud() {
 }
 
 setup_dotfiles_settings() {
+  set_zsh_shell
   setup_program_settings
   setup_cloud
 }
