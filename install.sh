@@ -9,7 +9,7 @@
 # TODO: clone lunarvim config and replace the default one
 # TODO: add darkman
 # TODO: create more ~/Documents folders (like projects, torrents, etc)
-# TODO: fix packages with choices (like darkman)
+# TODO: fix packages with choices (like darkman, adw-gtk3, grive)
 
 user="jakub" 
 aur_helper="paru"
