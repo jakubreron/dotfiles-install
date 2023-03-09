@@ -9,6 +9,10 @@
 # ```
 # sudo grub-mkconfig -o /boot/grub/grub.cfg
 
+prepare_user() {
+  sudo usermod -a -G wheel "$user" && mkdir -p /home/"$user" && sudo chown "$user":wheel /home/"$user"
+}
+
 update_system() {
   remove_db_lock
   sudo pacman --noconfirm -Syu
@@ -33,8 +37,24 @@ setup_core_settings() {
   echo "%wheel ALL=(ALL:ALL) ALL" | sudo tee /etc/sudoers.d/00-wheel-can-sudo
   echo "%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/shutdown,/usr/bin/reboot,/usr/bin/systemctl suspend,/usr/bin/wifi-menu,/usr/bin/mount,/usr/bin/umount,/usr/bin/pacman -Syu,/usr/bin/pacman -Syyu,/usr/bin/pacman -Syyu --noconfirm,/usr/bin/loadkeys,/usr/bin/pacman -Syyuw --noconfirm,/usr/bin/pacman -S -u -y --config /etc/pacman.conf --,/usr/bin/pacman -S -y -u --config /etc/pacman.conf --" | sudo tee /etc/sudoers.d/01-cmds-without-password
   echo "Defaults editor=/usr/bin/nvim" | sudo tee /etc/sudoers.d/02-visudo-editor
+  echo "Defaults timestamp_timeout=1440" | sudo tee /etc/sudoers.d/03-sudo-timeout
   sudo mkdir -p /etc/sysctl.d
   echo "kernel.dmesg_restrict = 0" | sudo tee /etc/sysctl.d/dmesg.conf
+
+  echo "export \$(dbus-launch)" | sudo tee /etc/profile.d/dbus.sh
+}
+
+setup_touchpad() {
+  if laptop-detect -s > /dev/null; then
+    [ ! -f /etc/X11/xorg.conf.d/40-libinput.conf ] && printf 'Section "InputClass"
+        Identifier "libinput touchpad catchall"
+        MatchIsTouchpad "on"
+        MatchDevicePath "/dev/input/event*"
+        Driver "libinput"
+	Option "Tapping" "on"
+  Option "NaturalScrolling" "true"
+EndSection' | sudo tee /etc/X11/xorg.conf.d/40-libinput.conf
+  fi
 }
 
 create_dirs() {
@@ -49,9 +69,9 @@ clone_dotfiles_repos() {
   git clone "$pkglists_repo" "$pkglists_dir"
 
   git -C "$voidrice_dir" pull
-  git -C "$voidrice_dir" submodule update --init --remote --recursive
+  git -C "$pkglists_dir" pull
 
-  git -C "$pkglists_repo" pull
+  git -C "$voidrice_dir" submodule update --init --remote --recursive
 }
 
 replace_stow() {
@@ -64,9 +84,11 @@ set_zsh_shell() {
 }
 
 setup_basics() {
+  prepare_user
   update_system
   setup_core_packages
   setup_core_settings
+  setup_touchpad
   create_dirs
   clone_dotfiles_repos
   replace_stow

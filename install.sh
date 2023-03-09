@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# TODO: preinstall keepassxc addon (and maybe more essential addons) to the firefox
+
 user="jakub" 
 aur_helper="paru"
 npm_helper="yarn"
@@ -11,7 +13,7 @@ voidrice_repo="https://github.com/jakubreron/voidrice.git"
 
 pkglists_dir="$dotfiles_dir/pkglists"
 pkglists_repo="https://github.com/jakubreron/pkglists.git"
-pkgtype="secondary" # TODO: prompt for "primary, secondary, work" pkgtypes
+pkgtype="secondary"
 
 git_clone_path="/home/$user/Downloads/git-clone"
 mkdir -p "$git_clone_path"
