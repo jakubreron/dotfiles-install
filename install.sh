@@ -8,6 +8,8 @@
 # TODO: create .local/bin/{cron,dmenu,etc...} folders first before stowing
 # TODO: clone lunarvim config and replace the default one
 # TODO: add darkman
+# TODO: create more ~/Documents folders (like projects, torrents, etc)
+# TODO: fix packages with choices (like darkman)
 
 user="jakub" 
 aur_helper="paru"
