@@ -60,6 +60,7 @@ EndSection' | sudo tee /etc/X11/xorg.conf.d/40-libinput.conf
 create_dirs() {
   mkdir /home/$user/{Documents,Downloads,Music,Pictures,Videos,Cloud,Storage}
   mkdir -p /home/$user/.local/{bin,share,src}
+  mkdir -p /home/$user/.local/bin/{cron,dmenu,git,layouts,qemu,statusbar,sync,video,volume}
 
   mkdir -p "$dotfiles_dir"
 }
@@ -68,19 +69,16 @@ clone_dotfiles_repos() {
   git clone "$voidrice_repo" "$voidrice_dir"
   git clone "$pkglists_repo" "$pkglists_dir"
 
-  git -C "$voidrice_dir" pull
-  git -C "$pkglists_dir" pull
+  # TODO: test and fix if broken
+  # git -C "$voidrice_dir" pull
+  # git -C "$pkglists_dir" pull
 
-  git -C "$voidrice_dir" submodule update --init --remote --recursive
+  # TODO: fix
+  # git -C "$voidrice_dir" submodule update --init --remote --recursive
 }
 
 replace_stow() {
   stow --adopt --target="/home/$user" --dir="$dotfiles_dir" voidrice
-}
-
-set_zsh_shell() {
-  chsh -s /usr/bin/zsh "$user" >/dev/null 2>&1
-  mkdir -p "/home/$user/.cache/zsh/"
 }
 
 setup_basics() {
@@ -92,5 +90,4 @@ setup_basics() {
   create_dirs
   clone_dotfiles_repos
   replace_stow
-  set_zsh_shell
 }
