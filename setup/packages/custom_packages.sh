@@ -42,8 +42,13 @@ esc = capslock" | sudo tee "$global_config_path"
   fi
 }
 
+install_lvim() {
+  bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
+}
+
 setup_custom_packages() {
   install_auto_cpufreq
   install_zap
   install_keyd
+  install_lvim
 }
