@@ -12,6 +12,7 @@
 # TODO: enable multilib
 
 . ../shared/variables.sh
+. ../shared/setup/basics.sh
 
 user="jakub" 
 
@@ -19,18 +20,13 @@ pkgtype="secondary"
 pkg_manager_helper="paru"
 
 . ./helpers.sh
+
 . ./setup/basics.sh
-
-. ./setup/packages/dotfiles_packages.sh
-. ./setup/packages/custom_packages.sh
-
-. ./setup/settings/dotfiles_settings.sh
-. ./setup/settings/custom_settings.sh
+. ./setup/packages/pkg-manager.sh
+. ./setup/packages/custom.sh
+. ./setup/settings.sh
 
 setup_basics
-
-setup_dotfiles_packages
+setup_pkgmanager_packages
 setup_custom_packages
-
-setup_dotfiles_settings
-setup_custom_settings
+setup_settings

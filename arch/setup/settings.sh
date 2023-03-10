@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# TODO: setup SDDM/autologin https://youtu.be/wNL6eIoksd8?t=482
+
 enable_cache_management() {
   sudo journalctl --vacuum-time=4weeks 
 
@@ -72,8 +74,36 @@ Exec=/usr/local/lib/arkenfox-auto-update" | sudo tee /etc/pacman.d/hooks/arkenfo
 sudo pkill -u "$user" firefox
 }
 
-setup_custom_settings() {
+set_zsh_shell() {
+  chsh -s /usr/bin/zsh "$user"
+  mkdir -p "$home/.cache/zsh/"
+}
+
+setup_program_settings() {
+  [ -f "$home/.config/mpd" ] && touch $home/.config/mpd/{database,mpdstate}
+
+  if command -v gsettings &> /dev/null; then
+     gsettings set org.gnome.nautilus.preferences show-hidden-files true
+  fi
+}
+
+setup_darkman() {
+  sudo systemctl enable --now avahi-daemon.service
+  sudo systemctl restart geoclue.service
+  systemctl --user enable --now darkman.service
+}
+
+setup_cloud() {
+  if command -v grive &> /dev/null; then
+    systemctl --user enable --now grive@$(systemd-escape Cloud).service
+  fi
+}
+
+setup_settings() {
   enable_cache_management
   setup_bluetooth
   [ -d "$browser_profile_dir" ] && make_userjs
+  set_zsh_shell
+  setup_program_settings
+  setup_cloud
 }

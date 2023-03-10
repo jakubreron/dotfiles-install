@@ -32,7 +32,7 @@ install_node_packages() {
   fi
 }
 
-setup_dotfiles_packages() {
+setup_pkgmanager_packages() {
   install_pkg_manager_helper
   get_fastest_mirrors
   install_node_packages
