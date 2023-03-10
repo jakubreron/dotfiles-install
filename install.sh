@@ -15,7 +15,9 @@ user="jakub"
 aur_helper="paru"
 npm_helper="yarn"
 
-dotfiles_dir="/home/$user/.config/dotfiles"
+home="/home/$user"
+
+dotfiles_dir="$home/.config/dotfiles"
 
 voidrice_dir="$dotfiles_dir/voidrice"
 voidrice_repo="https://github.com/jakubreron/voidrice.git"
@@ -24,7 +26,7 @@ pkglists_dir="$dotfiles_dir/pkglists"
 pkglists_repo="https://github.com/jakubreron/pkglists.git"
 pkgtype="secondary"
 
-git_clone_path="/home/$user/Downloads/git-clone"
+git_clone_path="$home/Downloads/git-clone"
 mkdir -p "$git_clone_path"
 
 . ./helpers.sh

@@ -4,11 +4,11 @@
 
 set_zsh_shell() {
   chsh -s /usr/bin/zsh "$user"
-  mkdir -p "/home/$user/.cache/zsh/"
+  mkdir -p "$home/.cache/zsh/"
 }
 
 setup_program_settings() {
-  [ -f "/home/$user/.config/mpd" ] && touch /home/$user/.config/mpd/{database,mpdstate}
+  [ -f "$home/.config/mpd" ] && touch $home/.config/mpd/{database,mpdstate}
 
   if command -v gsettings &> /dev/null; then
      gsettings set org.gnome.nautilus.preferences show-hidden-files true

@@ -10,7 +10,7 @@
 # sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 prepare_user() {
-  sudo usermod -a -G wheel "$user" && mkdir -p /home/"$user" && sudo chown "$user":wheel /home/"$user"
+  sudo usermod -a -G wheel "$user" && mkdir -p "$home" && sudo chown "$user":wheel /home/"$user"
 }
 
 update_system() {
@@ -58,9 +58,9 @@ EndSection' | sudo tee /etc/X11/xorg.conf.d/40-libinput.conf
 }
 
 create_dirs() {
-  mkdir /home/$user/{Documents,Downloads,Music,Pictures,Videos,Cloud,Storage}
-  mkdir -p /home/$user/.local/{bin,share,src}
-  mkdir -p /home/$user/.local/bin/{cron,dmenu,git,layouts,qemu,statusbar,sync,video,volume}
+  mkdir $home/{Documents,Downloads,Music,Pictures,Videos,Cloud,Storage}
+  mkdir -p $home/.local/{bin,share,src}
+  mkdir -p $home/.local/bin/{cron,dmenu,git,layouts,qemu,statusbar,sync,video,volume}
 
   mkdir -p "$dotfiles_dir"
 }
@@ -78,7 +78,7 @@ clone_dotfiles_repos() {
 }
 
 replace_stow() {
-  stow --adopt --target="/home/$user" --dir="$dotfiles_dir" voidrice
+  stow --adopt --target="$home" --dir="$dotfiles_dir" voidrice
 }
 
 setup_basics() {
