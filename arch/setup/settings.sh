@@ -80,6 +80,7 @@ set_zsh_shell() {
 }
 
 setup_program_settings() {
+  systemctl --user enable --now mpd.service
   [ -f "$home/.config/mpd" ] && touch $home/.config/mpd/{database,mpdstate}
 
   if command -v gsettings &> /dev/null; then
