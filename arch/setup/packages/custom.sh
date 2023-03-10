@@ -16,12 +16,6 @@ install_auto_cpufreq() {
   fi
 }
 
-install_zap() {
-  if ! command -v zap &> /dev/null; then 
-    zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh)
-  fi
-}
-
 install_keyd() {
   if ! command -v keyd &> /dev/null; then 
     path="$git_clone_path/keyd"
@@ -45,13 +39,5 @@ esc = capslock" | sudo tee "$global_config_path"
   fi
 }
 
-install_lvim() {
-  bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
-}
-
-setup_custom_packages() {
-  install_auto_cpufreq
-  install_zap
-  install_keyd
-  install_lvim
-}
+install_auto_cpufreq
+install_keyd

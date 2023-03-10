@@ -13,9 +13,6 @@
 # TODO: setup email
 # TODO: create Screenshots and Recordings folders
 
-. ../shared/variables.sh
-. ../shared/setup/basics.sh
-
 user="jakub" 
 
 pkgtype="secondary"
@@ -23,12 +20,9 @@ pkg_manager_helper="paru"
 
 . ./helpers.sh
 
-. ./setup/basics.sh
-. ./setup/packages/pkg-manager.sh
-. ./setup/packages/custom.sh
-. ./setup/settings.sh
+for package in curl ca-certificates base-devel git ntp zsh rust laptop-detect stow reflector rsync; do
+  install_pkg "$package"
+done
 
-setup_basics
-setup_pkgmanager_packages
-setup_custom_packages
-setup_settings
+. ../shared/index.sh
+. ./setup/index.sh

@@ -1,18 +1,12 @@
 #!/bin/sh
 
 prepare_user() {
-  sudo usermod -a -G wheel "$user" && mkdir -p "$home" && sudo chown "$user":wheel /home/"$user"
+  sudo usermod -a -G wheel "$user" && mkdir -p "/home/$user" && sudo chown "$user":wheel /home/"$user"
 }
 
 update_system() {
   remove_db_lock
   sudo pacman --noconfirm -Syu
-}
-
-setup_core_packages() {
-  for package in curl ca-certificates base-devel git ntp zsh rust laptop-detect stow reflector rsync; do
-    install_pkg "$package"
-  done
 }
 
 setup_core_settings() {
@@ -62,36 +56,8 @@ EndSection' | sudo tee /etc/X11/xorg.conf.d/40-libinput.conf
   fi
 }
 
-create_dirs() {
-  mkdir $home/{Documents,Downloads,Music,Pictures,Videos,Cloud,Storage}
-  mkdir -p $home/.local/{bin,share,src}
-  mkdir -p $home/.local/bin/{cron,dmenu,git,layouts,qemu,statusbar,sync,video,volume}
-
-  mkdir -p "$dotfiles_dir"
-}
-
-clone_dotfiles_repos() {
-  git clone "$voidrice_repo" "$voidrice_dir"
-  git clone "$pkglists_repo" "$pkglists_dir"
-
-  git --git-dir "$voidrice_dir" pull
-  git --git-dir "$pkglists_dir" pull
-
-  git --git-dir "$voidrice_dir" submodule update --init --remote --recursive
-}
-
-replace_stow() {
-  stow --adopt --target="$home" --dir="$dotfiles_dir" voidrice
-}
-
-setup_basics() {
-  prepare_user
-  update_system
-  setup_core_packages
-  setup_core_settings
-  setup_grub
-  setup_touchpad
-  create_dirs
-  clone_dotfiles_repos
-  replace_stow
-}
+prepare_user
+update_system
+setup_core_settings
+setup_grub
+setup_touchpad
