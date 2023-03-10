@@ -1,13 +1,4 @@
 #!/bin/sh
-# TODO: setup infinite timeout for sudo
-# TODO: setup grub options:
-# ```sh
-#   echo '
-#     GRUB_FORCE_HIDDEN_MENU="true"
-#     GRUB_HIDDEN_TIMEOUT="0"
-#   ' | sudo tee -a /etc/default/grub
-# ```
-# sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 prepare_user() {
   sudo usermod -a -G wheel "$user" && mkdir -p "$home" && sudo chown "$user":wheel /home/"$user"
@@ -42,6 +33,20 @@ setup_core_settings() {
   echo "kernel.dmesg_restrict = 0" | sudo tee /etc/sysctl.d/dmesg.conf
 
   echo "export \$(dbus-launch)" | sudo tee /etc/profile.d/dbus.sh
+}
+
+setup_grub() {
+  grub_path="/etc/default/grub"
+  if ! grep -q "GRUB_FORCE_HIDDEN_MENU=\"true\"" "$grub_path" || ! grep -q "GRUB_HIDDEN_TIMEOUT=\"0\"" "$grub_path"; then
+    echo '
+GRUB_FORCE_HIDDEN_MENU="true"
+GRUB_HIDDEN_TIMEOUT="0"
+  ' | sudo tee -a "$grub_path" >/dev/null
+  fi
+
+  sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"$/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3"/' "$grub_path"
+
+  sudo grub-mkconfig -o /boot/grub/grub.cfg
 }
 
 setup_touchpad() {
@@ -84,6 +89,7 @@ setup_basics() {
   update_system
   setup_core_packages
   setup_core_settings
+  setup_grub
   setup_touchpad
   create_dirs
   clone_dotfiles_repos
