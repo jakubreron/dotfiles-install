@@ -11,23 +11,12 @@
 # TODO: create more ~/Documents folders (like projects, torrents, etc)
 # TODO: fix packages with choices (like darkman, adw-gtk3, grive)
 
+. ../shared/variables.sh
+
 user="jakub" 
-aur_helper="paru"
-npm_helper="yarn"
 
-home="/home/$user"
-
-dotfiles_dir="$home/.config/dotfiles"
-
-voidrice_dir="$dotfiles_dir/voidrice"
-voidrice_repo="https://github.com/jakubreron/voidrice.git"
-
-pkglists_dir="$dotfiles_dir/pkglists"
-pkglists_repo="https://github.com/jakubreron/pkglists.git"
 pkgtype="secondary"
-
-git_clone_path="$home/Downloads/git-clone"
-mkdir -p "$git_clone_path"
+pkg_manager_helper="paru"
 
 . ./helpers.sh
 . ./setup/basics.sh

@@ -1,9 +1,9 @@
 #!/bin/sh
 
-install_aur_helper() {
-  if ! command -v "$aur_helper" &> /dev/null; then
-    path="$git_clone_path/$aur_helper"
-    git clone "https://aur.archlinux.org/$aur_helper.git" "$path"
+install_pkg_manager_helper() {
+  if ! command -v "$pkg_manager_helper" &> /dev/null; then
+    path="$git_clone_path/$pkg_manager_helper"
+    git clone "https://aur.archlinux.org/$pkg_manager_helper.git" "$path"
     cd "$path" || exit
     makepkg -si  
     cd ..
@@ -16,7 +16,7 @@ get_fastest_mirrors() {
 }
 
 install_pkglists() {
-  if command -v "$aur_helper" &> /dev/null; then
+  if command -v "$pkg_manager_helper" &> /dev/null; then
     install_pkg - < "$pkglists_dir/$pkgtype/pacman.txt";
   fi
 }
@@ -33,7 +33,7 @@ install_node_packages() {
 }
 
 setup_dotfiles_packages() {
-  install_aur_helper
+  install_pkg_manager_helper
   get_fastest_mirrors
   install_node_packages
   install_pkglists
