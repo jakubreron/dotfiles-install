@@ -15,6 +15,12 @@ setup_program_settings() {
   fi
 }
 
+setup_darkman() {
+  sudo systemctl enable --now avahi-daemon.service
+  sudo systemctl restart geoclue.service
+  systemctl --user enable --now darkman.service
+}
+
 setup_cloud() {
   if command -v grive &> /dev/null; then
     systemctl --user enable --now grive@$(systemd-escape Cloud).service
