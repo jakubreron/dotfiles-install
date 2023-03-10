@@ -11,6 +11,7 @@
 # TODO: create more ~/Documents folders (like projects, torrents, etc)
 # TODO: enable multilib in pacman
 # TODO: setup email
+# TODO: create Screenshots and Recordings folders
 
 . ../shared/variables.sh
 . ../shared/setup/basics.sh
