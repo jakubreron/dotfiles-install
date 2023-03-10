@@ -9,7 +9,8 @@
 # TODO: clone lunarvim config and replace the default one
 # TODO: add darkman
 # TODO: create more ~/Documents folders (like projects, torrents, etc)
-# TODO: enable multilib
+# TODO: enable multilib in pacman
+# TODO: setup email
 
 . ../shared/variables.sh
 . ../shared/setup/basics.sh
