@@ -69,12 +69,10 @@ clone_dotfiles_repos() {
   git clone "$voidrice_repo" "$voidrice_dir"
   git clone "$pkglists_repo" "$pkglists_dir"
 
-  # TODO: test and fix if broken
-  # git -C "$voidrice_dir" pull
-  # git -C "$pkglists_dir" pull
+  git --git-dir "$voidrice_dir" pull
+  git --git-dir "$pkglists_dir" pull
 
-  # TODO: fix
-  # git -C "$voidrice_dir" submodule update --init --remote --recursive
+  git --git-dir "$voidrice_dir" submodule update --init --remote --recursive
 }
 
 replace_stow() {
