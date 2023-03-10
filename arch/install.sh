@@ -17,6 +17,7 @@ user="jakub"
 
 pkgtype="secondary"
 pkg_manager_helper="paru"
+browser="firefox-developer-edition"
 
 . ./helpers.sh
 

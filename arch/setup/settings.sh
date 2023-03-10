@@ -37,12 +37,12 @@ setup_bluetooth() {
   sudo systemctl enable bluetooth.service --now
 }
 
-sudo -u "$user" firefox --headless >/dev/null 2>&1 &
+sudo -u "$user" "$browser" --headless >/dev/null 2>&1 &
 sleep 1
 
 browser_dir="~/.mozilla/firefox"
 browser_profiles_ini_dir="$browser_dir/profiles.ini"
-profile="$(sed -n "/Default=.*.default-release/ s/.*=//p" "$browser_profiles_ini_dir")"
+profile="$(sed -n "/Default=.*.dev-edition-default/ s/.*=//p" "$browser_profiles_ini_dir")"
 browser_profile_dir="$browser_dir/$profile"
 
 make_userjs(){
@@ -63,6 +63,7 @@ make_userjs(){
 Operation = Upgrade
 Type = Package
 Target = firefox
+Target = firefox-developer-edition
 Target = librewolf
 Target = librewolf-bin
 [Action]
@@ -71,7 +72,7 @@ When=PostTransaction
 Depends=arkenfox-user.js
 Exec=/usr/local/lib/arkenfox-auto-update" | sudo tee /etc/pacman.d/hooks/arkenfox.hook
 
-sudo pkill -u "$user" firefox
+sudo pkill -u "$user" "$browser"
 }
 
 setup_program_settings() {
