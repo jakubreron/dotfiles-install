@@ -29,6 +29,15 @@ setup_core_settings() {
   echo "export \$(dbus-launch)" | sudo tee /etc/profile.d/dbus.sh
 }
 
+# TODO: update to this:
+# GRUB_DEFAULT=0
+# GRUB_TIMEOUT=0
+# GRUB_TIMEOUT_STYLE=hidden
+# GRUB_HIDDEN_TIMEOUT=0
+# GRUB_HIDDEN_TIMEOUT_QUIET=true
+# GRUB_DISTRIBUTOR= [...]
+# GRUB_DISABLE_OS_PROBER=true
+# GRUB_RECORDFAIL_TIMEOUT=0
 setup_grub() {
   grub_path="/etc/default/grub"
   if ! grep -q "GRUB_FORCE_HIDDEN_MENU=\"true\"" "$grub_path" || ! grep -q "GRUB_HIDDEN_TIMEOUT=\"0\"" "$grub_path"; then
