@@ -54,7 +54,7 @@ GRUB_HIDDEN_TIMEOUT="0"
 
 setup_touchpad() {
   if laptop-detect -s > /dev/null; then
-    [ ! -f /etc/X11/xorg.conf.d/40-libinput.conf ] && printf 'Section "InputClass"
+    printf 'Section "InputClass"
         Identifier "libinput touchpad catchall"
         MatchIsTouchpad "on"
         MatchDevicePath "/dev/input/event*"
