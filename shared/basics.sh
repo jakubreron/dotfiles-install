@@ -5,7 +5,7 @@ create_dirs() {
   mkdir ~/Videos/Recordings ~/Pictures/Screenshots
 
   mkdir -p ~/.local/{bin,share,src}
-  mkdir -p ~/.local/bin/{cron,dmenu,git,layouts,qemu,statusbar,sync,video,volume}
+  mkdir -p ~/.local/bin/{cron,dmenu,rofi,git,layouts,qemu,statusbar,sync,video,volume}
 
   mkdir -p "$dotfiles_dir"
 }
