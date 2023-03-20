@@ -37,7 +37,8 @@ install_keyd() {
 capslock = overload(meta, esc)
 
 # Remaps the escape key to capslock
-esc = capslock" | sudo tee "$global_config_path"
+esc = capslock
+rightalt = alt" | sudo tee "$global_config_path"
   fi
 }
 
