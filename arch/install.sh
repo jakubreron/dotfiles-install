@@ -11,23 +11,19 @@
 # TODO: create more ~/Documents folders (like projects, torrents, etc)
 # TODO: enable multilib in pacman
 # TODO: setup email
-
-. ../shared/variables.sh
-. ../shared/setup/basics.sh
+# TODO: create Screenshots and Recordings folders
 
 user="jakub" 
 
 pkgtype="secondary"
 pkg_manager_helper="paru"
+browser="firefox-developer-edition"
 
 . ./helpers.sh
 
-. ./setup/basics.sh
-. ./setup/packages/pkg-manager.sh
-. ./setup/packages/custom.sh
-. ./setup/settings.sh
+for package in curl ca-certificates base-devel git ntp zsh rust laptop-detect stow reflector rsync; do
+  install_pkg "$package"
+done
 
-setup_basics
-setup_pkgmanager_packages
-setup_custom_packages
-setup_settings
+. ../shared/index.sh
+. ./setup/index.sh

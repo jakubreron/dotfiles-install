@@ -14,7 +14,7 @@ install_pkg_manager_helper() {
 get_fastest_mirrors() {
   sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/mirrorlist
 }
-
+e
 install_pkglists() {
   if command -v "$pkg_manager_helper" &> /dev/null; then
     install_pkg - < "$pkglists_dir/$pkgtype/pacman.txt";
@@ -32,9 +32,7 @@ install_node_packages() {
   fi
 }
 
-setup_pkgmanager_packages() {
-  install_pkg_manager_helper
-  get_fastest_mirrors
-  install_node_packages
-  install_pkglists
-}
+install_pkg_manager_helper
+get_fastest_mirrors
+install_node_packages
+install_pkglists
