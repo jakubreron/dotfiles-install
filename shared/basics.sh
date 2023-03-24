@@ -1,17 +1,17 @@
 #!/bin/sh
 
 create_dirs() {
-  mkdir ~/{Documents,Downloads,Music,Pictures,Videos,Cloud,Storage}
-  mkdir ~/Documents/Projects/{personal,work}
-  mkdir ~/Videos/Recordings ~/Pictures/Screenshots
+  mkdir "$HOME"/{Documents,Downloads,Music,Pictures,Videos,Cloud,Storage}
+  mkdir "$HOME"/Documents/Projects/{personal,work}
+  mkdir "$HOME"/Videos/Recordings "$HOME"/Pictures/Screenshots
 
-  mkdir -p ~/.local/{bin,share,src}
-  mkdir -p ~/.local/bin/{dmenu,entr,git,layouts,music,qemu,rofi,statusbar,tmux,update,volume}
+  mkdir -p "$HOME"/.local/{bin,share,src}
+  mkdir -p "$HOME"/.local/bin/{dmenu,entr,git,layouts,music,qemu,rofi,statusbar,tmux,update,volume}
 
   case "$(uname -s)" in
     Linux*)
-        mkdir -p ~/Videos/Recordings
-        mkdir -p ~/Pictures/Screenshots
+        mkdir -p "$HOME"/Videos/Recordings
+        mkdir -p "$HOME"/Pictures/Screenshots
       ;;
     Darwin)
       ;;
@@ -31,7 +31,7 @@ clone_dotfiles_repos() {
 }
 
 replace_stow() {
-  stow --adopt --target="$home" --dir="$dotfiles_dir" voidrice
+  stow --adopt --target="$HOME" --dir="$dotfiles_dir" voidrice
 }
 
 create_dirs

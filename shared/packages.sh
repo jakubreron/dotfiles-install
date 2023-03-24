@@ -2,7 +2,7 @@
 
 set_zsh_shell() {
   chsh -s /usr/bin/zsh "$user"
-  mkdir -p "~/.cache/zsh/"
+  mkdir -p "$HOME/.cache/zsh/"
 }
 
 install_zap() {
