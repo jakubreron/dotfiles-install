@@ -1,7 +1,6 @@
 #!/bin/sh
 
-# NOTE: setup shared between all unix systems
-
 . ./variables.sh
+. ./helpers.sh
 . ./basics.sh
 . ./packages.sh

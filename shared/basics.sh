@@ -2,10 +2,20 @@
 
 create_dirs() {
   mkdir ~/{Documents,Downloads,Music,Pictures,Videos,Cloud,Storage}
+  mkdir ~/Documents/Projects/{personal,work}
   mkdir ~/Videos/Recordings ~/Pictures/Screenshots
 
   mkdir -p ~/.local/{bin,share,src}
-  mkdir -p ~/.local/bin/{cron,dmenu,rofi,git,layouts,qemu,statusbar,sync,video,volume}
+  mkdir -p ~/.local/bin/{dmenu,entr,git,layouts,music,qemu,rofi,statusbar,tmux,update,volume}
+
+  case "$(uname -s)" in
+    Linux*)
+        mkdir -p ~/Videos/Recordings
+        mkdir -p ~/Pictures/Screenshots
+      ;;
+    Darwin)
+      ;;
+  esac
 
   mkdir -p "$dotfiles_dir"
 }

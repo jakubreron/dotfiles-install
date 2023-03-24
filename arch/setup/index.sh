@@ -7,5 +7,8 @@
 # NOTE: packages not installable with aur helper
 . ./packages/custom.sh
 
+# NOTE: packages compiled from source
+. ./packages/compiled.sh
+
 # NOTE: settings for pacakges after installation
 . ./settings.sh
