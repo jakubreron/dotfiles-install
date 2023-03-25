@@ -29,16 +29,54 @@ install_keyd() {
     rm -rf "$path"
     global_config_path="/etc/keyd/defaulf.conf"
     echo "[ids]
-
 *
 
 [main]
+leftcontrol = layer(emacs_control)
+rightcontrol = layer(emacs_control)
+leftalt = layer(meta_mac)
 
 capslock = overload(meta, esc)
-
-# Remaps the escape key to capslock
 esc = capslock
-rightalt = alt" | sudo tee "$global_config_path"
+rightalt = alt
+leftmeta = alt
+
+[emacs_control:C]
+b = left
+f = right 
+p = up
+n = down
+h = backspace
+a = home
+e = end
+m = enter
+w = C-backspace
+d = delete
+# S-m = S-enter
+
+[meta_mac:C]
+# Switch directly to an open tab (e.g. Firefox, VS code)
+1 = A-1
+2 = A-2
+3 = A-3
+4 = A-4
+5 = A-5
+6 = A-6
+7 = A-7
+8 = A-8
+9 = A-9
+
+# Copy
+c = C-insert
+# Paste
+v = S-insert
+# Cut
+x = S-delete
+
+# Move cursor to beginning of line
+left = home
+# Move cursor to end of Line
+right = end" | sudo tee "$global_config_path"
   fi
 }
 
