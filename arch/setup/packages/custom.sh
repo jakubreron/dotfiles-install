@@ -32,29 +32,28 @@ install_keyd() {
 *
 
 [main]
-leftcontrol = layer(emacs_control)
-rightcontrol = layer(emacs_control)
-leftalt = layer(meta_mac)
+# leftcontrol = layer(emacs_control)
+# rightcontrol = layer(emacs_control)
+leftalt = layer(mac_meta)
+leftmeta = leftalt
 
 capslock = overload(meta, esc)
 esc = capslock
-rightalt = alt
-leftmeta = alt
 
-[emacs_control:C]
-b = left
-f = right 
-p = up
-n = down
-h = backspace
-a = home
-e = end
-m = enter
-w = C-backspace
-d = delete
+# [emacs_control:C]
+# b = left
+# f = right 
+# p = up
+# n = down
+# h = backspace
+# a = home
+# e = end
+# m = enter
+# w = C-backspace
+# d = delete
 # S-m = S-enter
 
-[meta_mac:C]
+[mac_meta:C]
 # Switch directly to an open tab (e.g. Firefox, VS code)
 1 = A-1
 2 = A-2
