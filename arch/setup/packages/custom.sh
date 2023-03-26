@@ -34,11 +34,11 @@ install_keyd() {
 
 [main]
 # control = layer(emacs_control)
-capslock = overload(meta, esc)
-esc = capslock
-
 leftalt = layer(mac_meta)
 leftmeta = layer(mac_option)
+
+capslock = overload(meta, esc)
+esc = capslock
 
 # [emacs_control:C]
 # b = left
