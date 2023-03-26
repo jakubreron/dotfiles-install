@@ -7,9 +7,9 @@ remove_db_lock() {
 install_pkg() {
   remove_db_lock
 
-  if command -v paru &> /dev/null; then
+  if command -v paru >/dev/null 2>&1; then
     pkg_manager=paru
-  elif command -v yay &> /dev/null; then
+  elif command -v yay >/dev/null 2>&1; then
     pkg_manager=yay
   else
     pkg_manager=pacman

@@ -5,7 +5,7 @@
 enable_cache_management() {
   sudo journalctl --vacuum-time=4weeks 
 
-  if ! [ -f /etc/systemd/system/paccache.timer ] &> /dev/null; then
+  if ! [ -f /etc/systemd/system/paccache.timer ] >/dev/null 2>&1; then
   echo '[Unit]
 Description=Clean-up old pacman pkg
 
@@ -17,7 +17,7 @@ Persistent=true
 WantedBy=multi-user.target' | sudo tee /etc/systemd/system/paccache.timer
   fi
 
-  if ! [ -f /usr/share/libalpm/hooks/paccache.hook ] &> /dev/null; then
+  if ! [ -f /usr/share/libalpm/hooks/paccache.hook ] >/dev/null 2>&1; then
   echo '[Trigger]
 Operation = Upgrade
 Operation = Install
@@ -79,7 +79,7 @@ setup_program_settings() {
   systemctl --user enable --now mpd.service
   [ -f "$HOME/.config/mpd" ] && touch "$HOME"/.config/mpd/{database,mpdstate}
 
-  if command -v gsettings &> /dev/null; then
+  if command -v gsettings >/dev/null 2>&1; then
      gsettings set org.gnome.nautilus.preferences show-hidden-files true
   fi
 }
@@ -91,13 +91,29 @@ setup_darkman() {
 }
 
 setup_cloud() {
-  if command -v grive &> /dev/null; then
+  if command -v grive >/dev/null 2>&1; then
     systemctl --user enable --now grive@$(systemd-escape Cloud).service
   fi
 }
+
+setup_intel_hd_xorg() {
+  if laptop-detect -s >/dev/null 2>&1; then
+    printf 'Section "Device"
+  Identifier "Intel Graphics"
+  Driver "intel"
+  Option      "TearFree"        "false"
+  Option      "TripleBuffer"    "false"
+  Option      "SwapbuffersWait" "false"
+EndSection' | sudo tee /etc/X11/xorg.conf.d/20-intel.conf
+  fi
+}
+
 
 enable_cache_management
 setup_bluetooth
 [ -d "$browser_profile_dir" ] && make_userjs
 setup_program_settings
 setup_cloud
+if command -v Xorg >/dev/null 2>&1; then
+  setup_intel_hd_xorg
+fi

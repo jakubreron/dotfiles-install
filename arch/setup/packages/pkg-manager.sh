@@ -1,7 +1,7 @@
 #!/bin/sh
 
 install_pkg_manager_helper() {
-  if ! command -v "$pkg_manager_helper" &> /dev/null; then
+  if ! command -v "$pkg_manager_helper" >/dev/null 2>&1; then
     path="$git_clone_path/$pkg_manager_helper"
     git clone "https://aur.archlinux.org/$pkg_manager_helper.git" "$path"
     cd "$path" || exit
@@ -16,13 +16,13 @@ get_fastest_mirrors() {
 }
 
 install_pkglists() {
-  if command -v "$pkg_manager_helper" &> /dev/null; then
+  if command -v "$pkg_manager_helper" >/dev/null 2>&1; then
     install_pkg - < "$pkglists_dir/$pkgtype/pacman.txt";
   fi
 }
 
 install_node_packages() {
-  if command -v "$npm_helper" &> /dev/null; then 
+  if command -v "$npm_helper" >/dev/null 2>&1; then 
     packages="$pkglists_dir/$pkgtype/yarn.txt"
     if [ "$npm_helper" = 'yarn' ]; then
       $npm_helper global add < "$packages"

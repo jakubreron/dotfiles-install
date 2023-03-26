@@ -6,7 +6,7 @@ set_zsh_shell() {
 }
 
 install_zap() {
-  if ! command -v zap &> /dev/null; then 
+  if ! command -v zap >/dev/null 2>&1; then 
     zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh)
   fi
 }
