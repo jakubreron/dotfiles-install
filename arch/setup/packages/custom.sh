@@ -33,8 +33,7 @@ install_keyd() {
 *
 
 [main]
-# leftcontrol = layer(emacs_control)
-# rightcontrol = layer(emacs_control)
+# control = layer(emacs_control)
 capslock = overload(meta, esc)
 esc = capslock
 
