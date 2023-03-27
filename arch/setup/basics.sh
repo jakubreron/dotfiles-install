@@ -44,7 +44,7 @@ GRUB_HIDDEN_TIMEOUT="0"
 }
 
 setup_touchpad() {
-  if laptop-detect -s >/dev/null 2>&1; then
+  if laptop-detect >/dev/null 2>&1; then
     printf 'Section "InputClass"
         Identifier "libinput touchpad catchall"
         MatchIsTouchpad "on"

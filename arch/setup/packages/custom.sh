@@ -3,7 +3,7 @@
 # TODO: setup intel/dptf or thermald on laptop
 
 install_auto_cpufreq() {
-  if laptop-detect -s > /dev/null; then
+  if laptop-detect > /dev/null; then
     echo "Running on a laptop"
     path="$git_clone_path/auto-cpufreq"
     git clone https://github.com/AdnanHodzic/auto-cpufreq.git "$path"

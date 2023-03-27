@@ -97,7 +97,7 @@ setup_cloud() {
 }
 
 setup_intel_hd_xorg() {
-  if laptop-detect -s >/dev/null 2>&1; then
+  if laptop-detect >/dev/null 2>&1; then
     printf 'Section "Device"
   Identifier "Intel Graphics"
   Driver "intel"

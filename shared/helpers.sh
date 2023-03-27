@@ -24,7 +24,7 @@ compile_from_git_path() {
   [ ! -d "$path" ] && git clone "$repo" "$destination"
 
   # TODO: switch to "laptop" branch if the script is run on laptop and if the branch exists
-  # if laptop-detect -s /dev/null; then
+  # if laptop-detect /dev/null; then
   #   git -C "$destination" 
   # fi
 
