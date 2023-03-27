@@ -36,6 +36,7 @@ install_keyd() {
 control = layer(emacs_control)
 leftalt = layer(mac_meta)
 leftmeta = layer(mac_option)
+compose = layer(mac_option)
 
 capslock = overload(meta, esc)
 esc = capslock
@@ -54,6 +55,9 @@ d = delete
 S-m = S-enter
 
 [mac_option:A]
+
+b = C-left
+f = C-right
 
 [mac_meta:C]
 # Switch directly to an open tab (e.g. Firefox, VS code)
