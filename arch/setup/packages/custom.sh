@@ -33,25 +33,25 @@ install_keyd() {
 *
 
 [main]
-# control = layer(emacs_control)
+control = layer(emacs_control)
 leftalt = layer(mac_meta)
 leftmeta = layer(mac_option)
 
 capslock = overload(meta, esc)
 esc = capslock
 
-# [emacs_control:C]
-# b = left
-# f = right 
-# p = up
-# n = down
-# h = backspace
-# a = home
-# e = end
-# m = enter
-# w = C-backspace
-# d = delete
-# S-m = S-enter
+[emacs_control:C]
+b = left
+f = right 
+p = up
+n = down
+h = backspace
+a = home
+e = end
+m = enter
+w = C-backspace
+d = delete
+S-m = S-enter
 
 [mac_option:A]
 
@@ -68,11 +68,11 @@ esc = capslock
 9 = A-9
 
 # Copy
-c = C-insert
+# c = C-insert
 # Paste
-v = S-insert
+# v = S-insert
 # Cut
-x = S-delete
+# x = S-delete
 
 # Move cursor to beginning of line
 left = home
