@@ -1,14 +1,8 @@
 # NOTE: basic settings that do not require any previous setup
-. ./basics.sh
+. ./basic_settings.sh
 
-# NOTE: packages installable with aur helper
-. ./packages/pkg-manager.sh
+# NOTE: AUR, custom, and compiled packages installation process
+. ./packages/installation/index.sh
 
-# NOTE: packages not installable with aur helper
-. ./packages/custom.sh
-
-# NOTE: packages compiled from source
-. ./packages/compiled.sh
-
-# NOTE: settings for pacakges after installation
-. ./settings.sh
+# NOTE: all packages settings
+. ./packages/settings/index.sh

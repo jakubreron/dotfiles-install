@@ -1,8 +1,7 @@
 #!/bin/sh
 
-# TODO: setup SDDM/autologin https://youtu.be/wNL6eIoksd8?t=482
-
 enable_cache_management() {
+  log-pretty-message "Setting up the cache management"
   sudo journalctl --vacuum-time=4weeks 
 
   if ! [ -f /etc/systemd/system/paccache.timer ] >/dev/null 2>&1; then
@@ -32,11 +31,7 @@ Exec = /usr/bin/paccache -r' | sudo tee /usr/share/libalpm/hooks/paccache.hook
   fi
 }
 
-setup_bluetooth() {
-  sudo sed -i 's/^#AutoEnable=true/AutoEnable=true/g' /etc/bluetooth/main.conf
-  sudo systemctl enable bluetooth.service --now
-}
-
+log-pretty-message "Launching headless firefox for profile generation"
 sudo -u "$user" "$browser" --headless >/dev/null 2>&1 &
 sleep 1
 
@@ -46,6 +41,7 @@ profile="$(sed -n "/Default=.*.dev-edition-default/ s/.*=//p" "$browser_profiles
 browser_profile_dir="$browser_dir/$profile"
 
 make_userjs(){
+  log-pretty-message "Creating and deploying user.js file for firefox"
 	arkenfox="$browser_profile_dir/arkenfox.js"
 	overrides="$browser_profile_dir/user-overrides.js"
 	userjs="$browser_profile_dir/user.js"
@@ -75,12 +71,18 @@ Exec=/usr/local/lib/arkenfox-auto-update" | sudo tee /etc/pacman.d/hooks/arkenfo
 sudo pkill -u "$user" "$browser"
 }
 
-setup_program_settings() {
+setup_mpd_settings() {
+  log-pretty-message "Setting up mpd"
   systemctl --user enable --now mpd.service
   [ -f "$HOME/.config/mpd" ] && touch "$HOME"/.config/mpd/{database,mpdstate}
+}
 
+setup_gnome_settings() {
   if command -v gsettings >/dev/null 2>&1; then
-     gsettings set org.gnome.nautilus.preferences show-hidden-files true
+    log-pretty-message "Setting up GNOME settings via gsettings"
+    gsettings set org.gnome.nautilus.preferences show-hidden-files true
+  else
+    log-pretty-message "No gsettings detected, skipping GNOME settings"
   fi
 }
 
@@ -92,28 +94,16 @@ setup_darkman() {
 
 setup_cloud() {
   if command -v grive >/dev/null 2>&1; then
+    log-pretty-message "Setting up Google Drive integration"
     systemctl --user enable --now grive@$(systemd-escape Cloud).service
-  fi
-}
-
-setup_intel_hd_xorg() {
-  if laptop-detect >/dev/null 2>&1; then
-    printf 'Section "Device"
-  Identifier "Intel Graphics"
-  Driver "intel"
-  Option      "TearFree"        "false"
-  Option      "TripleBuffer"    "false"
-  Option      "SwapbuffersWait" "false"
-EndSection' | sudo tee /etc/X11/xorg.conf.d/20-intel.conf
+  else
+    log-pretty-message "No grive detected, skipping Google Drive integration"
   fi
 }
 
 
 enable_cache_management
-setup_bluetooth
 [ -d "$browser_profile_dir" ] && make_userjs
-setup_program_settings
+setup_mpd_settings
+setup_gnome_settings
 setup_cloud
-if command -v Xorg >/dev/null 2>&1; then
-  setup_intel_hd_xorg
-fi
