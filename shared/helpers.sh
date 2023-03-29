@@ -9,10 +9,8 @@ install_pkg() {
     Linux*)
       remove_db_lock
 
-      if command -v paru >/dev/null 2>&1; then
-        pkg_manager=paru
-      elif command -v yay >/dev/null 2>&1; then
-        pkg_manager=yay
+      if command -v "$di_pkg_manager_helper" >/dev/null 2>&1; then
+        pkg_manager="$di_pkg_manager_helper"
       else
         pkg_manager=pacman
       fi

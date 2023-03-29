@@ -2,13 +2,12 @@
 
 export npm_helper="yarn"
 
-dotfiles_dir="$HOME/.config/dotfiles"
+export dotfiles_dir="$HOME/.config/dotfiles"
+export voidrice_dir="$dotfiles_dir/voidrice"
+export pkglists_dir="$dotfiles_dir/pkglists"
 
-voidrice_dir="$dotfiles_dir/voidrice"
-voidrice_repo="https://github.com/jakubreron/voidrice.git"
+export voidrice_repo="https://github.com/jakubreron/voidrice.git"
+export pkglists_repo="https://github.com/jakubreron/pkglists.git"
 
-pkglists_dir="$dotfiles_dir/pkglists"
-pkglists_repo="https://github.com/jakubreron/pkglists.git"
-
-git_clone_path="$HOME/Downloads/git-clone"
+export git_clone_path="$HOME/Downloads/git-clone"
 mkdir -p "$git_clone_path"

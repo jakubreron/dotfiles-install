@@ -32,7 +32,7 @@ Exec = /usr/bin/paccache -r' | sudo tee /usr/share/libalpm/hooks/paccache.hook
 }
 
 log_pretty_message "Launching headless firefox for profile generation"
-sudo -u "$user" "$browser" --headless >/dev/null 2>&1 &
+sudo -u "$di_user" "$di_browser" --headless >/dev/null 2>&1 &
 sleep 1
 
 browser_dir="$HOME/.mozilla/firefox"
@@ -68,7 +68,7 @@ When=PostTransaction
 Depends=arkenfox-user.js
 Exec=/usr/local/lib/arkenfox-auto-update" | sudo tee /etc/pacman.d/hooks/arkenfox.hook
 
-sudo pkill -u "$user" "$browser"
+sudo pkill -u "$di_user" "$di_browser"
 }
 
 setup_mpd_settings() {

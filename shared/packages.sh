@@ -13,10 +13,10 @@ set_zsh_shell() {
 
     case "$(uname -s)" in
       Linux*)
-        chsh -s /usr/bin/zsh "$user"
+        chsh -s /usr/bin/zsh "$di_user"
         ;;
       Darwin)
-        chsh -s /bin/zsh "$user"
+        chsh -s /bin/zsh "$di_user"
         ;;
     esac
   else
@@ -54,7 +54,7 @@ install_node_packages() {
   fi
 
   log_pretty_message "Installing node packages via $npm_helper"
-  packages="$pkglists_dir/$pkgtype/yarn.txt"
+  packages="$pkglists_dir/$di_pkg_type/yarn.txt"
   if [ "$npm_helper" = 'yarn' ]; then
     $npm_helper global add < "$packages"
   else

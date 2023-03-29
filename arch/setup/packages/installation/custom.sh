@@ -23,7 +23,7 @@ install_auto_cpufreq() {
 install_keyd() {
   if ! command -v keyd >/dev/null 2>&1; then
     log_pretty_message "Installing and setting up keyd"
-    sudo usermod -aG keyd "$user"
+    sudo usermod -aG keyd "$di_user"
     path="$git_clone_path/keyd"
     git clone https://github.com/rvaiya/keyd "$path"
     cd "$path" || exit
