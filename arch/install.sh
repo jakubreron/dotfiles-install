@@ -16,4 +16,4 @@ for package in curl ca-certificates base-devel ntp laptop-detect reflector rsync
   install_pkg "$package"
 done
 
-. "$PWD/setup/index.sh"
+. "$PWD/arch/setup/index.sh"

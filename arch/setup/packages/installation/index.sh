@@ -1,8 +1,8 @@
 # NOTE: packages installable with aur helper
-. ./pkg-manager.sh
+. "$PWD/arch/setup/packages/installation/pkg-manager.sh"
 
 # NOTE: packages not installable with aur helper
-. ./custom.sh
+. "$PWD/arch/setup/packages/installation/custom.sh"
 
 # NOTE: packages compiled from source
-. .//compiled.sh
+. "$PWD/arch/setup/packages/installation/compiled.sh"

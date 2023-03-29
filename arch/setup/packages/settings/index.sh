@@ -1,5 +1,9 @@
 # NOTE: xorg settings
+. "$PWD/arch/setup/packages/settings/xorg.sh"
 . ./xorg.sh
 
-# NOTE: settings for pacakges after installation
-. ./packages.sh
+# NOTE: all other packages settings
+. "$PWD/arch/setup/packages/settings/misc.sh"
+
+# NOTE: gnome app settings
+. "$PWD/arch/setup/packages/settings/gnome.sh"

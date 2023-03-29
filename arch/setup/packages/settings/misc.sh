@@ -77,15 +77,6 @@ setup_mpd_settings() {
   [ -f "$HOME/.config/mpd" ] && touch "$HOME"/.config/mpd/{database,mpdstate}
 }
 
-setup_gnome_settings() {
-  if command -v gsettings >/dev/null 2>&1; then
-    log_pretty_message "Setting up GNOME settings via gsettings" 
-    gsettings set org.gnome.nautilus.preferences show-hidden-files true
-  else
-    log_pretty_message "No gsettings detected, skipping GNOME settings" ℹ️
-  fi
-}
-
 setup_darkman() {
   sudo systemctl enable --now avahi-daemon.service
   sudo systemctl restart geoclue.service
@@ -103,9 +94,7 @@ setup_cloud() {
   systemctl --user enable --now grive@$(systemd-escape Cloud).service
 }
 
-
 enable_cache_management
 [ -d "$browser_profile_dir" ] && make_userjs
 setup_mpd_settings
-setup_gnome_settings
 setup_cloud
