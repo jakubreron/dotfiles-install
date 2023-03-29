@@ -12,11 +12,11 @@ if command -v Xorg >/dev/null 2>&1; then
       Option      "SwapbuffersWait" "false"
       EndSection' | sudo tee /etc/X11/xorg.conf.d/20-intel.conf
     else
-      log_pretty_message "No laptop detected, skipping Intel HD Graphics setup on Xorg"
+      log_pretty_message "No laptop detected, skipping Intel HD Graphics setup on Xorg" ℹ️
     fi
   }
 
   setup_intel_hd_xorg
 else
-  log_pretty_message "No Xorg detected, skipping the configuration"
+  log_pretty_message "No Xorg detected, skipping the configuration" ℹ️
 fi

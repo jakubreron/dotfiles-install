@@ -10,17 +10,17 @@ install_pkg_manager_helper() {
     cd ..
     rm -rf "$path"
   else
-    log_pretty_message "AUR helper $pkg_manager_helper is already installed" ❌
+    log_pretty_message "AUR helper $pkg_manager_helper is already installed" ℹ️
   fi
 }
 
 get_fastest_mirrors() {
   if ! command -v reflector >/dev/null 2>&1; then
-    log_pretty_message "Getting the fastest mirrors before the installation"
-    sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/mirrorlist
-  else
-    log_pretty_message "Skipping getting the fastest mirrors, reflector not installed" ❌
+    log_pretty_message "Installing reflector"
   fi
+
+  log_pretty_message "Getting the fastest mirrors before installing the dotfiles packages"
+  sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/mirrorlist
 }
 
 install_pkglists() {

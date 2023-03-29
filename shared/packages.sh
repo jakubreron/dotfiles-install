@@ -6,6 +6,8 @@ set_zsh_shell() {
     install_pkg zsh zsh-completions
   fi
 
+  mkdir -p "$HOME/.cache/zsh/"
+
   if ! [[  "$SHELL" =~ .*'zsh' ]]; then
     log_pretty_message "Changing default shell to ZSH"
 
@@ -17,8 +19,8 @@ set_zsh_shell() {
         chsh -s /bin/zsh "$user"
         ;;
     esac
-
-    mkdir -p "$HOME/.cache/zsh/"
+  else
+    log_pretty_message "ZSH is already a default shell"
   fi
 }
 
@@ -46,8 +48,8 @@ install_lvim() {
 }
 
 install_node_packages() {
-  if command -v "$npm_helper" >/dev/null 2>&1; then 
-    log_pretty_message "There is no $npm_helper installed, installing $npm_helper"
+  if ! command -v "$npm_helper" >/dev/null 2>&1; then 
+    log_pretty_message "Installing $npm_helper"
     install_pkg node fnm "$npm_helper"
   fi
 

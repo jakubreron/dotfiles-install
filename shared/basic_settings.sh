@@ -22,7 +22,7 @@ create_dirs() {
 
 clone_dotfiles_repos() {
   if ! command -v git >/dev/null 2>&1; then
-    log_pretty_message "There is no git installed, installing git"
+    log_pretty_message "Installing git"
     install_pkg git
   fi
 
@@ -39,7 +39,7 @@ clone_dotfiles_repos() {
 
 replace_stow() {
   if ! command -v stow >/dev/null 2>&1; then
-    log_pretty_message "There is no stow installed, installing stow"
+    log_pretty_message "Installing stow"
     install_pkg stow
   fi
 

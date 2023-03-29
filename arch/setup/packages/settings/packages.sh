@@ -79,10 +79,10 @@ setup_mpd_settings() {
 
 setup_gnome_settings() {
   if command -v gsettings >/dev/null 2>&1; then
-    log_pretty_message "Setting up GNOME settings via gsettings"
+    log_pretty_message "Setting up GNOME settings via gsettings" 
     gsettings set org.gnome.nautilus.preferences show-hidden-files true
   else
-    log_pretty_message "No gsettings detected, skipping GNOME settings"
+    log_pretty_message "No gsettings detected, skipping GNOME settings" ℹ️
   fi
 }
 
@@ -92,13 +92,15 @@ setup_darkman() {
   systemctl --user enable --now darkman.service
 }
 
+# TODO: add more integration steps
 setup_cloud() {
   if command -v grive >/dev/null 2>&1; then
-    log_pretty_message "Setting up Google Drive integration"
-    systemctl --user enable --now grive@$(systemd-escape Cloud).service
-  else
-    log_pretty_message "No grive detected, skipping Google Drive integration"
+    log_pretty_message "Installing grive"
+    install_pkg grive
   fi
+
+  log_pretty_message "Setting up Google Drive integration"
+  systemctl --user enable --now grive@$(systemd-escape Cloud).service
 }
 
 
