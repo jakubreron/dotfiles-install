@@ -29,11 +29,11 @@ clone_dotfiles_repos() {
   clone_git_repo "$voidrice_repo" "$voidrice_dir"
   clone_git_repo "$pkglists_repo" "$pkglists_dir"
 
-  log_pretty_message "Pulling latest changes in $voidrice_dir, $pkglists_dir"
+  log_pretty_message "[Background] Pulling latest changes in $voidrice_dir, $pkglists_dir"
   git -C "$voidrice_dir" pull &
   git -C "$pkglists_dir" pull &
 
-  log_pretty_message "Initializing submodules in $voidrice_dir"
+  log_pretty_message "[Background] Initializing submodules in $voidrice_dir"
   git -C "$voidrice_dir" submodule update --init --remote --recursive &
 }
 

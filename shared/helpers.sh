@@ -42,7 +42,7 @@ clone_git_repo() {
     log_pretty_message "$destination does not exist, cloning via git"
     git clone "$repo" "$destination"
   else
-    log_pretty_message "Skipping $destination, the repository already exists"
+    log_pretty_message "Skipping $destination, the repository already exists" ℹ️
   fi
 }
 
