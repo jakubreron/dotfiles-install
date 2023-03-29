@@ -1,9 +1,25 @@
 #!/bin/sh
 
 set_zsh_shell() {
-  log_pretty_message "Setting up the ZSH"
-  chsh -s /usr/bin/zsh "$user"
-  mkdir -p "$HOME/.cache/zsh/"
+  if ! command -v zsh >/dev/null 2>&1; then
+    log_pretty_message "Installing ZSH"
+    install_pkg zsh zsh-completions
+  fi
+
+  if ! [[  "$SHELL" =~ .*'zsh' ]]; then
+    log_pretty_message "Changing default shell to ZSH"
+
+    case "$(uname -s)" in
+      Linux*)
+        chsh -s /usr/bin/zsh "$user"
+        ;;
+      Darwin)
+        chsh -s /bin/zsh "$user"
+        ;;
+    esac
+
+    mkdir -p "$HOME/.cache/zsh/"
+  fi
 }
 
 install_zap() {
@@ -29,6 +45,23 @@ install_lvim() {
   fi
 }
 
+install_node_packages() {
+  if command -v "$npm_helper" >/dev/null 2>&1; then 
+    log_pretty_message "There is no $npm_helper installed, installing $npm_helper"
+    install_pkg node fnm "$npm_helper"
+  fi
+
+  log_pretty_message "Installing node packages via $npm_helper"
+  packages="$pkglists_dir/$pkgtype/yarn.txt"
+  if [ "$npm_helper" = 'yarn' ]; then
+    $npm_helper global add < "$packages"
+  else
+    $npm_helper install --global < "$packages"
+  fi
+}
+
+
 set_zsh_shell
 install_zap
 install_lvim
+install_node_packages

@@ -22,28 +22,29 @@ create_dirs() {
 
 clone_dotfiles_repos() {
   if ! command -v git >/dev/null 2>&1; then
-    log_pretty_message "Cloning repositories"
-    git clone "$voidrice_repo" "$voidrice_dir"
-    git clone "$pkglists_repo" "$pkglists_dir"
-
-    log_pretty_message "Pulling latest changes"
-    git --git-dir "$voidrice_dir" pull
-    git --git-dir "$pkglists_dir" pull
-
-    log_pretty_message "Initializing submodules"
-    git --git-dir "$voidrice_dir" submodule update --init --remote --recursive
-  else
-    log_pretty_message "Unable to clone repositories, install git first"
+    log_pretty_message "There is no git installed, installing git"
+    install_pkg git
   fi
+
+  clone_git_repo "$voidrice_repo" "$voidrice_dir"
+  clone_git_repo "$pkglists_repo" "$pkglists_dir"
+
+  log_pretty_message "Pulling latest changes"
+  git --git-dir "$voidrice_dir" pull
+  git --git-dir "$pkglists_dir" pull
+
+  log_pretty_message "Initializing submodules"
+  git --git-dir "$voidrice_dir" submodule update --init --remote --recursive
 }
 
 replace_stow() {
   if ! command -v stow >/dev/null 2>&1; then
-    log_pretty_message "Stowing dotfiles"
-    stow --adopt --target="$HOME" --dir="$dotfiles_dir" voidrice
-  else
-    log_pretty_message "Unable to stow dotfiles, install stow first" ❌
+    log_pretty_message "There is no stow installed, installing stow"
+    install_pkg stow
   fi
+
+  log_pretty_message "Stowing dotfiles"
+  stow --adopt --target="$HOME" --dir="$dotfiles_dir" voidrice
 }
 
 create_dirs

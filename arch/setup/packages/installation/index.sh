@@ -5,4 +5,4 @@
 . ./custom.sh
 
 # NOTE: packages compiled from source
-. ./compiled.sh
+. .//compiled.sh

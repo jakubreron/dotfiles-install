@@ -11,11 +11,10 @@ pkgtype="secondary"
 pkg_manager_helper="paru"
 browser="firefox-developer-edition"
 
-. ./helpers.sh
+. ../shared/index.sh
 
-for package in curl ca-certificates base-devel git ntp zsh rust laptop-detect stow reflector rsync; do
+for package in curl ca-certificates base-devel ntp laptop-detect reflector rsync; do
   install_pkg "$package"
 done
 
-. ../shared/index.sh
 . ./setup/index.sh

@@ -1,5 +1,30 @@
 #!/bin/sh
 
+remove_db_lock() {
+  [ -f /var/lib/pacman/db.lck ] && sudo rm /var/lib/pacman/db.lck
+}
+
+install_pkg() {
+  case "$(uname -s)" in
+    Linux*)
+      remove_db_lock
+
+      if command -v paru >/dev/null 2>&1; then
+        pkg_manager=paru
+      elif command -v yay >/dev/null 2>&1; then
+        pkg_manager=yay
+      else
+        pkg_manager=pacman
+      fi
+
+      sudo $pkg_manager --noconfirm --noprovides --needed -S "$1"
+      ;;
+    Darwin)
+      brew install "$1"
+      ;;
+  esac
+}
+
 log_pretty_message() {
   message="$1"
   emoji="${2:-⏳}"
@@ -9,6 +34,18 @@ log_pretty_message() {
   RESET=$(tput sgr0)
 
   printf "%s${BLUE}${BOLD}$emoji $message...${RESET}\n"
+}
+
+clone_git_repo() {
+  repo="$1"
+  destination="$2"
+
+  if ! [ -f "$destination" ] >/dev/null 2>&1; then
+    log_pretty_message "$destination does not exist, cloning via git"
+    git clone "$repo" "$destination"
+  else
+    log_pretty_message "$destination already exists"
+  fi
 }
 
 compile() {

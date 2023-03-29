@@ -30,21 +30,6 @@ install_pkglists() {
   fi
 }
 
-install_node_packages() {
-  if command -v "$npm_helper" >/dev/null 2>&1; then 
-    log_pretty_message "Installing node packages"
-    packages="$pkglists_dir/$pkgtype/yarn.txt"
-    if [ "$npm_helper" = 'yarn' ]; then
-      $npm_helper global add < "$packages"
-    else
-      $npm_helper install --global < "$packages"
-    fi
-  else
-    log_pretty_message "There is no $npm_helper installed, skipping NPM packages" ❌
-  fi
-}
-
 install_pkg_manager_helper
 get_fastest_mirrors
-install_node_packages
 install_pkglists
