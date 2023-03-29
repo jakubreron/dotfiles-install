@@ -1,10 +1,10 @@
 update_system() {
-  log-pretty-message "Updating software packages"
+  log_pretty_message "Updating software packages"
   softwareupdate -i -a
 }
 
 setup_core_settings() {
-  log-pretty-message "Setting up core settings"
+  log_pretty_message "Setting up core settings"
 }
 
 update_system

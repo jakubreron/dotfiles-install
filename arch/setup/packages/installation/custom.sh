@@ -4,7 +4,7 @@
 
 install_auto_cpufreq() {
   if laptop-detect > /dev/null; then
-    log-pretty-message "Laptop detected, installing auto_cpufreq"
+    log_pretty_message "Laptop detected, installing auto_cpufreq"
     path="$git_clone_path/auto-cpufreq"
     git clone https://github.com/AdnanHodzic/auto-cpufreq.git "$path"
     cd "$path" && sudo ./auto-cpufreq-installer
@@ -16,13 +16,13 @@ install_auto_cpufreq() {
     sudo systemctl restart auto-cpufreq.service
     rm -rf "$path"
   else
-    log-pretty-message "No laptop detected, skipping auto_cpufreq installation"
+    log_pretty_message "No laptop detected, skipping auto_cpufreq installation"
   fi
 }
 
 install_keyd() {
   if ! command -v keyd >/dev/null 2>&1; then
-    log-pretty-message "Setting up keyd"
+    log_pretty_message "Setting up keyd"
     sudo usermod -aG keyd "$user"
     path="$git_clone_path/keyd"
     git clone https://github.com/rvaiya/keyd "$path"
@@ -86,7 +86,7 @@ left = home
 # Move cursor to end of Line
 right = end" | sudo tee "$global_config_path"
 else
-  log-pretty-message "Skipping keyd setup, no keyd installed"
+  log_pretty_message "Skipping keyd setup, no keyd installed"
   fi
 }
 

@@ -1,6 +1,13 @@
 #!/bin/sh
 
-. ./variables.sh
+# NOTE: installation variables
+. ./env_variables.sh
+
+# NOTE: helper functions
 . ./helpers.sh
-. ./basics.sh
+
+# NOTE: basic settings and preparations
+. ./basic_settings.sh
+
+# NOTE: basic packages necessary
 . ./packages.sh

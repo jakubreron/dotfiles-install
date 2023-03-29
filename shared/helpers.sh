@@ -13,7 +13,7 @@ log_pretty_message() {
 
 compile() {
   path="$1"
-  log-pretty-message "Compiling $path"
+  log_pretty_message "Compiling $path"
   [ -d "$path" ] && sudo make -C "$path" && sudo make install -C "$path"
 }
 

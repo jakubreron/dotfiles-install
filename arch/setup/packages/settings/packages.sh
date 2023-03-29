@@ -1,7 +1,7 @@
 #!/bin/sh
 
 enable_cache_management() {
-  log-pretty-message "Setting up the cache management"
+  log_pretty_message "Setting up the cache management"
   sudo journalctl --vacuum-time=4weeks 
 
   if ! [ -f /etc/systemd/system/paccache.timer ] >/dev/null 2>&1; then
@@ -31,7 +31,7 @@ Exec = /usr/bin/paccache -r' | sudo tee /usr/share/libalpm/hooks/paccache.hook
   fi
 }
 
-log-pretty-message "Launching headless firefox for profile generation"
+log_pretty_message "Launching headless firefox for profile generation"
 sudo -u "$user" "$browser" --headless >/dev/null 2>&1 &
 sleep 1
 
@@ -41,7 +41,7 @@ profile="$(sed -n "/Default=.*.dev-edition-default/ s/.*=//p" "$browser_profiles
 browser_profile_dir="$browser_dir/$profile"
 
 make_userjs(){
-  log-pretty-message "Creating and deploying user.js file for firefox"
+  log_pretty_message "Creating and deploying user.js file for firefox"
 	arkenfox="$browser_profile_dir/arkenfox.js"
 	overrides="$browser_profile_dir/user-overrides.js"
 	userjs="$browser_profile_dir/user.js"
@@ -72,17 +72,17 @@ sudo pkill -u "$user" "$browser"
 }
 
 setup_mpd_settings() {
-  log-pretty-message "Setting up mpd"
+  log_pretty_message "Setting up mpd"
   systemctl --user enable --now mpd.service
   [ -f "$HOME/.config/mpd" ] && touch "$HOME"/.config/mpd/{database,mpdstate}
 }
 
 setup_gnome_settings() {
   if command -v gsettings >/dev/null 2>&1; then
-    log-pretty-message "Setting up GNOME settings via gsettings"
+    log_pretty_message "Setting up GNOME settings via gsettings"
     gsettings set org.gnome.nautilus.preferences show-hidden-files true
   else
-    log-pretty-message "No gsettings detected, skipping GNOME settings"
+    log_pretty_message "No gsettings detected, skipping GNOME settings"
   fi
 }
 
@@ -94,10 +94,10 @@ setup_darkman() {
 
 setup_cloud() {
   if command -v grive >/dev/null 2>&1; then
-    log-pretty-message "Setting up Google Drive integration"
+    log_pretty_message "Setting up Google Drive integration"
     systemctl --user enable --now grive@$(systemd-escape Cloud).service
   else
-    log-pretty-message "No grive detected, skipping Google Drive integration"
+    log_pretty_message "No grive detected, skipping Google Drive integration"
   fi
 }
 
