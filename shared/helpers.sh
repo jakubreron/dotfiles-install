@@ -54,14 +54,16 @@ compile() {
 
 compile_from_git_path() {
   repo="https://github.com/jakubreron/$1"
-  destination="$HOME/.local/src/$1"
+  path="$HOME/.local/src/$1"
 
-  [ ! -d "$path" ] && git clone "$repo" "$destination"
+  [ ! -d "$path" ] && git clone "$repo" "$path"
 
-  # TODO: switch to "laptop" branch if the script is run on laptop and if the branch exists
-  # if laptop-detect /dev/null; then
-  #   git -C "$destination" 
-  # fi
+  if laptop-detect >/dev/null 2>&1; then
+    git -C "$path" fetch origin laptop:laptop 2>/dev/null
+    if git -C "$path" fetch origin laptop:laptop 2>/dev/null; then
+      git -C "$path" checkout laptop
+    fi
+  fi
 
-  compile "$destination"
+  compile "$path"
 }
