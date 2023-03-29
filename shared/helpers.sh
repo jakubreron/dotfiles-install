@@ -38,11 +38,11 @@ clone_git_repo() {
   repo="$1"
   destination="$2"
 
-  if ! [ -f "$destination" ] >/dev/null 2>&1; then
+  if [ -f "$destination" ] >/dev/null 2>&1; then
     log_pretty_message "$destination does not exist, cloning via git"
     git clone "$repo" "$destination"
   else
-    log_pretty_message "$destination already exists"
+    log_pretty_message "Skipping $destination, the repository already exists"
   fi
 }
 

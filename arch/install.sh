@@ -10,10 +10,10 @@ export di_pkg_type="secondary"
 export di_pkg_manager_helper="paru"
 export di_browser="firefox-developer-edition"
 
-. ../shared/index.sh
+. "$PWD/shared/index.sh"
 
 for package in curl ca-certificates base-devel ntp laptop-detect reflector rsync; do
   install_pkg "$package"
 done
 
-. ./setup/index.sh
+. "$PWD/setup/index.sh"

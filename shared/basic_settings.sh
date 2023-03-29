@@ -29,12 +29,12 @@ clone_dotfiles_repos() {
   clone_git_repo "$voidrice_repo" "$voidrice_dir"
   clone_git_repo "$pkglists_repo" "$pkglists_dir"
 
-  log_pretty_message "Pulling latest changes"
-  git --git-dir "$voidrice_dir" pull
-  git --git-dir "$pkglists_dir" pull
+  log_pretty_message "Pulling latest changes in $voidrice_dir, $pkglists_dir"
+  git -C "$voidrice_dir" pull &
+  git -C "$pkglists_dir" pull &
 
-  log_pretty_message "Initializing submodules"
-  git --git-dir "$voidrice_dir" submodule update --init --remote --recursive
+  log_pretty_message "Initializing submodules in $voidrice_dir"
+  git -C "$voidrice_dir" submodule update --init --remote --recursive &
 }
 
 replace_stow() {
@@ -43,7 +43,7 @@ replace_stow() {
     install_pkg stow
   fi
 
-  log_pretty_message "Stowing dotfiles"
+  log_pretty_message "Stowing voidrice dotfiles"
   stow --adopt --target="$HOME" --dir="$dotfiles_dir" voidrice
 }
 
