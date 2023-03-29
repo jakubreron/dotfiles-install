@@ -31,7 +31,7 @@ log_pretty_message() {
   BLUE=$(tput setaf 4)
   RESET=$(tput sgr0)
 
-  printf "%s${BLUE}${BOLD}$emoji $message...${RESET}\n\n"
+  printf "%s${BLUE}${BOLD}$emoji $message...${RESET}\n"
 }
 
 clone_git_repo() {
