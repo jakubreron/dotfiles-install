@@ -23,7 +23,7 @@ install_pkg() {
   esac
 }
 
-log_pretty_message() {
+log_progress() {
   message="$1"
   emoji="${2:-⏳}"
 
@@ -34,21 +34,32 @@ log_pretty_message() {
   printf "%s${BLUE}${BOLD}$emoji $message...${RESET}\n"
 }
 
+log_status() {
+  message="$1"
+  emoji="${2:-ℹ️}"
+
+  BOLD=$(tput bold)
+  BLUE=$(tput setaf 4)
+  RESET=$(tput sgr0)
+
+  printf "%s${BLUE}${BOLD}$emoji $message${RESET}\n"
+}
+
 clone_git_repo() {
   repo="$1"
   destination="$2"
 
   if [ -f "$destination" ] >/dev/null 2>&1; then
-    log_pretty_message "$destination does not exist, cloning via git"
+    log_progress "$destination does not exist, cloning via git"
     git clone "$repo" "$destination"
   else
-    log_pretty_message "Skipping $destination, the repository already exists" ℹ️
+    log_status "Skipping $destination, the repository already exists"️
   fi
 }
 
 compile() {
   path="$1"
-  log_pretty_message "Compiling $path"
+  log_progress "Compiling $path"
   [ -d "$path" ] && sudo make -C "$path" && sudo make install -C "$path"
 }
 

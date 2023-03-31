@@ -3,18 +3,18 @@
 # TODO: setup SDDM/autologin https://youtu.be/wNL6eIoksd8?t=482
 
 prepare_user() {
-  log_pretty_message "Preparing the user permissions"
+  log_progress "Preparing the user permissions"
   sudo usermod -a -G wheel "$di_user" && mkdir -p "/home/$user" && sudo chown "$di_user":wheel /home/"$di_user"
 }
 
 update_system() {
-  log_pretty_message "Updating the system via pacman"
+  log_progress "Updating the system via pacman"
   remove_db_lock
   sudo pacman --noconfirm -Syu
 }
 
 setup_core_settings() {
-  log_pretty_message "Setting up core settings"
+  log_progress "Setting up core settings"
   # Make pacman colorful, concurrent downloads and Pacman eye-candy.
   grep -q "ILoveCandy" /etc/pacman.conf || sudo sed -i "/#VerbosePkgLists/a ILoveCandy" /etc/pacman.conf
   sudo sed -Ei "s/^#(ParallelDownloads).*/\1 = 15/;/^#Color$/s/#//" /etc/pacman.conf
@@ -35,7 +35,7 @@ setup_core_settings() {
 }
 
 setup_grub() {
-  log_pretty_message "Setting up grub"
+  log_progress "Setting up grub"
   grub_path="/etc/default/grub"
   if ! grep -q "GRUB_FORCE_HIDDEN_MENU=\"true\"" "$grub_path" || ! grep -q "GRUB_HIDDEN_TIMEOUT=\"0\"" "$grub_path"; then
     echo '
@@ -51,7 +51,7 @@ GRUB_HIDDEN_TIMEOUT="0"
 
 setup_touchpad() {
   if laptop-detect >/dev/null 2>&1; then
-    log_pretty_message "Laptop detected, setting up the touchpad"
+    log_progress "Laptop detected, setting up the touchpad"
     printf 'Section "InputClass"
         Identifier "libinput touchpad catchall"
         MatchIsTouchpad "on"
@@ -61,12 +61,12 @@ setup_touchpad() {
   Option "NaturalScrolling" "true"
 EndSection' | sudo tee /etc/X11/xorg.conf.d/40-libinput.conf
   else
-    log_pretty_message "No laptop detected, skipping the touchpad settings"
+    log_progress "No laptop detected, skipping the touchpad settings"
   fi
 }
 
 setup_bluetooth() {
-  log_pretty_message "Setting up the bluetooth"
+  log_progress "Setting up the bluetooth"
   sudo sed -i 's/^#AutoEnable=true/AutoEnable=true/g' /etc/bluetooth/main.conf
   sudo systemctl enable bluetooth.service --now
 }
