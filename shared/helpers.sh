@@ -36,7 +36,7 @@ log_progress() {
 
 log_status() {
   message="$1"
-  emoji="${2:-ℹ️}"
+  emoji="${2:-✅}"
 
   BOLD=$(tput bold)
   BLUE=$(tput setaf 4)
