@@ -1,6 +1,5 @@
 # NOTE: xorg settings
 . "$PWD/arch/setup/packages/settings/xorg.sh"
-. ./xorg.sh
 
 # NOTE: all other packages settings
 . "$PWD/arch/setup/packages/settings/misc.sh"
