@@ -67,7 +67,7 @@ EndSection' | sudo tee /etc/X11/xorg.conf.d/40-libinput.conf
 
 setup_bluetooth() {
   log_progress "Setting up the bluetooth"
-  sudo sed -i 's/^#AutoEnable=true/AutoEnable=true/g' /etc/bluetooth/main.conf
+  # sudo sed -i 's/^#AutoEnable=true/AutoEnable=true/g' /etc/bluetooth/main.conf
   sudo systemctl enable bluetooth.service --now
 }
 
