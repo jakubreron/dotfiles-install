@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
-declare -xr OS="$(uname -s)"
-declare -xr BASEDIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+declare -x OS
+OS="$(uname -s)"
+
+declare -x BASEDIR
+BASEDIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 case "$OS" in
   Linux)
     # TODO: preinstall keepassxc addon (and maybe more essential addons) to the firefox
-    # TODO: install xorg drivers
     # TODO: enable multilib in pacman
     # TODO: setup email
 
@@ -24,8 +26,10 @@ case "$OS" in
     . "$BASEDIR/arch/index.sh"
     ;;
   Darwin)
+    # TODO: brew install koekeishiya/formulae/skhd; brew services start skhd
+    # TODO: save it somewhere https://www.chrisatmachine.com/posts/01-macos-developer-setup
+    # TODO: execute this command after installing packages: xattr -d com.apple.quarantine /Applications/Chromium.app
     export DI_USER="jakubreron"
-
     export DI_PKG_TYPE="work"
     export DI_PKG_MANAGER_HELPER="brew"
 

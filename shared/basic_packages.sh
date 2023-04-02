@@ -1,29 +1,31 @@
 #!/usr/bin/env bash
 
-case "$(uname -s)" in
-  Linux*)
-    if ! command -v "$DI_PKG_MANAGER_HELPER" >/dev/null 2>&1; then
-      log_progress "Installing AUR helper: $DI_PKG_MANAGER_HELPER"
+install_pkg_helper() {
+  case "$OS" in
+    Linux)
+      if ! command -v "$DI_PKG_MANAGER_HELPER" >/dev/null 2>&1; then
+        log_progress "Installing AUR helper: $DI_PKG_MANAGER_HELPER"
 
-      path="$DI_GIT_CLONE_PATH/$DI_PKG_MANAGER_HELPER"
-      clone_git_repo "https://aur.archlinux.org/$DI_PKG_MANAGER_HELPER.git" "$path"
+        path="$DI_GIT_CLONE_PATH/$DI_PKG_MANAGER_HELPER"
+        clone_git_repo "https://aur.archlinux.org/$DI_PKG_MANAGER_HELPER.git" "$path"
 
-      makepkg -si -p "$path"
-      rm -rf "$path"
-    else
-      log_status "AUR helper $DI_PKG_MANAGER_HELPER is already installed"️
-    fi
+        makepkg -si -p "$path"
+        rm -rf "$path"
+      else
+        log_status "AUR helper $DI_PKG_MANAGER_HELPER is already installed"️
+      fi
 
-    ;;
-  Darwin)
-    if ! command -v brew >/dev/null 2>&1; then
-      log_progress "Installing brew"
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    else
-      log_status "Brew is already installed"️
-    fi
-    ;;
-esac
+      ;;
+    Darwin)
+      if ! command -v brew >/dev/null 2>&1; then
+        log_progress "Installing brew"
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      else
+        log_status "Brew is already installed"️
+      fi
+      ;;
+  esac
+}
 
 set_zsh_shell() {
   if ! command -v zsh >/dev/null 2>&1; then
@@ -36,8 +38,8 @@ set_zsh_shell() {
   if ! [[  "$SHELL" =~ .*'zsh' ]]; then
     log_progress "Changing default shell to ZSH"
 
-    case "$(uname -s)" in
-      Linux*)
+    case "$OS" in
+      Linux)
         chsh -s /usr/bin/zsh "$DI_USER"
         ;;
       Darwin)
@@ -88,6 +90,7 @@ install_node_packages() {
 }
 
 
+install_pkg_helper
 set_zsh_shell
 install_zap
 install_lvim

@@ -3,20 +3,18 @@
 create_dirs() {
   log_progress "Creating common folders in $HOME"
   mkdir "$HOME"/{Documents,Downloads,Music,Pictures,Videos,Cloud}
-
   mkdir "$HOME"/Documents/Projects/{personal,work}
 
   mkdir -p "$HOME"/.local/{bin,share,src}
   mkdir -p "$HOME"/.local/bin/{dmenu,entr,git,layouts,music,qemu,rofi,statusbar,tmux,update,volume}
 
-  case "$(uname -s)" in
-    Linux*)
+  case "$OS" in
+    Linux)
         mkdir -p "$HOME"/Documents/Torrents "$HOME"/Videos/Recordings "$HOME"/Pictures/Screenshots
-      ;;
-    Darwin)
       ;;
   esac
 
+  mkdir -p "$DI_GIT_CLONE_PATH"
   mkdir -p "$DI_DOTFILES_DIR"
 }
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# TODO: setup intel/dptf or thermald on laptop
+# TODO: setup thermald on laptop
 
 install_auto_cpufreq() {
   if laptop-detect > /dev/null; then

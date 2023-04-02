@@ -5,17 +5,17 @@ remove_db_lock() {
 }
 
 install_pkg() {
-  case "$(uname -s)" in
-    Linux*)
+  case "$OS" in
+    Linux)
       remove_db_lock
 
       if command -v "$DI_PKG_MANAGER_HELPER" >/dev/null 2>&1; then
-        pkg_manager="$DI_PKG_MANAGER_HELPER"
+        PKG_MANAGER="$DI_PKG_MANAGER_HELPER"
       else
-        pkg_manager=pacman
+        PKG_MANAGER="pacman"
       fi
 
-      sudo $pkg_manager --noconfirm --noprovides --needed -S "$1"
+      sudo "$PKG_MANAGER" --noconfirm --noprovides --needed -S "$1"
       ;;
     Darwin)
       brew install "$1"

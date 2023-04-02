@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-enable_cache_management() {
+setup_cache_management() {
   log_progress "Setting up the cache management"
   sudo journalctl --vacuum-time=4weeks 
 
@@ -31,7 +31,7 @@ Exec = /usr/bin/paccache -r' | sudo tee /usr/share/libalpm/hooks/paccache.hook
   fi
 }
 
-make_userjs(){
+setup_userjs(){
   if ! command -v "$DI_BROWSER" >/dev/null 2>&1; then
     log_progress "Installing $DI_BROWSER"
     install_pkg "$DI_BROWSER"
@@ -78,7 +78,7 @@ Exec=/usr/local/lib/arkenfox-auto-update" | sudo tee /etc/pacman.d/hooks/arkenfo
   fi
 }
 
-setup_mpd_settings() {
+setup_mpd() {
   if ! command -v mpd >/dev/null 2>&1; then
     log_progress "Installing mpd"
     install_pkg mpd
@@ -126,7 +126,9 @@ setup_cloud() {
   systemctl --user enable --now grive@$(systemd-escape Cloud).service
 }
 
-enable_cache_management
-make_userjs
-setup_mpd_settings
+setup_cache_management
+setup_userjs
+setup_mpd
+setup_darkman
+setup_redshift
 setup_cloud
