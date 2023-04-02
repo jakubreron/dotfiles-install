@@ -1,5 +1,29 @@
 #!/usr/bin/env bash
 
+set_zsh_shell() {
+  if ! command -v zsh >/dev/null 2>&1; then
+    log_progress "Installing ZSH"
+    install_pkg zsh zsh-completions
+  fi
+
+  mkdir -p "$HOME/.cache/zsh/"
+
+  if ! [[  "$SHELL" =~ .*'zsh' ]]; then
+    log_progress "Changing default shell to ZSH"
+
+    case "$OS" in
+      Linux)
+        chsh -s /usr/bin/zsh "$DI_USER"
+        ;;
+      Darwin)
+        chsh -s /bin/zsh "$DI_USER"
+        ;;
+    esac
+  else
+    log_status "ZSH is already a default shell"️
+  fi
+}
+
 install_pkg_helper() {
   case "$OS" in
     Linux)
@@ -25,30 +49,6 @@ install_pkg_helper() {
       fi
       ;;
   esac
-}
-
-set_zsh_shell() {
-  if ! command -v zsh >/dev/null 2>&1; then
-    log_progress "Installing ZSH"
-    install_pkg zsh zsh-completions
-  fi
-
-  mkdir -p "$HOME/.cache/zsh/"
-
-  if ! [[  "$SHELL" =~ .*'zsh' ]]; then
-    log_progress "Changing default shell to ZSH"
-
-    case "$OS" in
-      Linux)
-        chsh -s /usr/bin/zsh "$DI_USER"
-        ;;
-      Darwin)
-        chsh -s /bin/zsh "$DI_USER"
-        ;;
-    esac
-  else
-    log_status "ZSH is already a default shell"️
-  fi
 }
 
 install_zap() {
@@ -90,8 +90,8 @@ install_node_packages() {
 }
 
 
-install_pkg_helper
 set_zsh_shell
+install_pkg_helper
 install_zap
 install_lvim
 install_node_packages
