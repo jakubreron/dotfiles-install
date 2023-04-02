@@ -10,9 +10,9 @@ get_fastest_mirrors() {
 }
 
 install_pkglists() {
-  if command -v "$di_pkg_manager_helper" >/dev/null 2>&1; then
+  if command -v "$DI_PKG_MANAGER_HELPER" >/dev/null 2>&1; then
     log_progress "Installing dotfiles packages"
-    install_pkg - < "$pkglists_dir/$di_pkg_type/pacman.txt";
+    install_pkg - < "$DI_PKGLISTS_DIR/$DI_PKG_TYPE/pacman.txt";
   fi
 }
 

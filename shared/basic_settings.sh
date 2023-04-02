@@ -17,7 +17,7 @@ create_dirs() {
       ;;
   esac
 
-  mkdir -p "$dotfiles_dir"
+  mkdir -p "$DI_DOTFILES_DIR"
 }
 
 clone_dotfiles_repos() {
@@ -26,15 +26,15 @@ clone_dotfiles_repos() {
     install_pkg git
   fi
 
-  clone_git_repo "$voidrice_repo" "$voidrice_dir"
-  clone_git_repo "$pkglists_repo" "$pkglists_dir"
+  clone_git_repo "$DI_VOIDRICE_REPO" "$DI_VOIDRICE_DIR"
+  clone_git_repo "$DI_PKGLISTS_REPO" "$DI_PKGLISTS_DIR"
 
-  log_progress "[Background] Pulling latest changes in $voidrice_dir, $pkglists_dir"
-  git -C "$voidrice_dir" pull &
-  git -C "$pkglists_dir" pull &
+  log_progress "[Background] Pulling latest changes in $DI_VOIDRICE_DIR, $DI_PKGLISTS_DIR"
+  git -C "$DI_VOIDRICE_DIR" pull &
+  git -C "$DI_PKGLISTS_DIR" pull &
 
-  log_progress "[Background] Initializing submodules in $voidrice_dir"
-  git -C "$voidrice_dir" submodule update --init --remote --recursive &
+  log_progress "[Background] Initializing submodules in $DI_VOIDRICE_DIR"
+  git -C "$DI_VOIDRICE_DIR" submodule update --init --remote --recursive &
 }
 
 replace_stow() {
@@ -44,7 +44,7 @@ replace_stow() {
   fi
 
   log_progress "Stowing voidrice dotfiles"
-  stow --adopt --target="$HOME" --dir="$dotfiles_dir" voidrice
+  stow --adopt --target="$HOME" --dir="$DI_DOTFILES_DIR" voidrice
 }
 
 create_dirs

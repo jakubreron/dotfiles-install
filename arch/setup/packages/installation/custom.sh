@@ -6,7 +6,7 @@ install_auto_cpufreq() {
   if laptop-detect > /dev/null; then
     if ! command -v auto-cpufreq >/dev/null 2>&1; then
       log_progress "Laptop detected, installing auto_cpufreq"
-      path="$git_clone_path/auto-cpufreq"
+      path="$DI_GIT_CLONE_PATH/auto-cpufreq"
       git clone https://github.com/AdnanHodzic/auto-cpufreq.git "$path"
       cd "$path" && sudo ./auto-cpufreq-installer
       sudo auto-cpufreq --install
@@ -27,8 +27,8 @@ install_auto_cpufreq() {
 install_keyd() {
   if ! command -v keyd >/dev/null 2>&1; then
     log_progress "Installing and setting up keyd"
-    sudo usermod -aG keyd "$di_user"
-    path="$git_clone_path/keyd"
+    sudo usermod -aG keyd "$DI_USER"
+    path="$DI_GIT_CLONE_PATH/keyd"
     git clone https://github.com/rvaiya/keyd "$path"
     cd "$path" || exit
     make && sudo make install

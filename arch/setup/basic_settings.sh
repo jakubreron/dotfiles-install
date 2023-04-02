@@ -4,7 +4,7 @@
 
 prepare_user() {
   log_progress "Preparing the user permissions"
-  sudo usermod -a -G wheel "$di_user" && mkdir -p "/home/$user" && sudo chown "$di_user":wheel /home/"$di_user"
+  sudo usermod -a -G wheel "$DI_USER" && mkdir -p "/home/$user" && sudo chown "$DI_USER":wheel /home/"$DI_USER"
 }
 
 update_system() {

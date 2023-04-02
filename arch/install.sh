@@ -5,10 +5,10 @@
 # TODO: enable multilib in pacman
 # TODO: setup email
 
-export di_user="jakub" 
-export di_pkg_type="secondary"
-export di_pkg_manager_helper="paru"
-export di_browser="firefox-developer-edition"
+declare -x DI_USER="${DI_USER:-"jakub"}" 
+declare -x DI_PKG_TYPE="${DI_PKG_TYPE:-"secondary"}"
+declare -x DI_PKG_MANAGER_HELPER="${DI_PKG_MANAGER_HELPER:-"paru"}"
+declare -xr DI_BROWSER="firefox-developer-edition"
 
 . "$PWD/shared/index.sh"
 

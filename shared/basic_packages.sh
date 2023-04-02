@@ -2,16 +2,16 @@
 
 case "$(uname -s)" in
   Linux*)
-    if ! command -v "$di_pkg_manager_helper" >/dev/null 2>&1; then
-      log_progress "Installing AUR helper: $di_pkg_manager_helper"
+    if ! command -v "$DI_PKG_MANAGER_HELPER" >/dev/null 2>&1; then
+      log_progress "Installing AUR helper: $DI_PKG_MANAGER_HELPER"
 
-      path="$git_clone_path/$di_pkg_manager_helper"
-      clone_git_repo "https://aur.archlinux.org/$di_pkg_manager_helper.git" "$path"
+      path="$DI_GIT_CLONE_PATH/$DI_PKG_MANAGER_HELPER"
+      clone_git_repo "https://aur.archlinux.org/$DI_PKG_MANAGER_HELPER.git" "$path"
 
       makepkg -si -p "$path"
       rm -rf "$path"
     else
-      log_status "AUR helper $di_pkg_manager_helper is already installed"️
+      log_status "AUR helper $DI_PKG_MANAGER_HELPER is already installed"️
     fi
 
     ;;
@@ -38,10 +38,10 @@ set_zsh_shell() {
 
     case "$(uname -s)" in
       Linux*)
-        chsh -s /usr/bin/zsh "$di_user"
+        chsh -s /usr/bin/zsh "$DI_USER"
         ;;
       Darwin)
-        chsh -s /bin/zsh "$di_user"
+        chsh -s /bin/zsh "$DI_USER"
         ;;
     esac
   else
@@ -73,17 +73,17 @@ install_lvim() {
 }
 
 install_node_packages() {
-  if ! command -v "$npm_helper" >/dev/null 2>&1; then 
-    log_progress "Installing $npm_helper"
-    install_pkg node fnm "$npm_helper"
+  if ! command -v "$DI_NPM_HELPER" >/dev/null 2>&1; then 
+    log_progress "Installing $DI_NPM_HELPER"
+    install_pkg node fnm "$DI_NPM_HELPER"
   fi
 
-  log_progress "Installing node packages via $npm_helper"
-  packages="$pkglists_dir/$di_pkg_type/yarn.txt"
-  if [ "$npm_helper" = 'yarn' ]; then
-    $npm_helper global add < "$packages"
+  log_progress "Installing node packages via $DI_NPM_HELPER"
+  packages="$DI_PKGLISTS_DIR/$DI_PKG_TYPE/yarn.txt"
+  if [ "$DI_NPM_HELPER" = 'yarn' ]; then
+    $DI_NPM_HELPER global add < "$packages"
   else
-    $npm_helper install --global < "$packages"
+    $DI_NPM_HELPER install --global < "$packages"
   fi
 }
 

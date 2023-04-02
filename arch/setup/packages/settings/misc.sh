@@ -32,13 +32,13 @@ Exec = /usr/bin/paccache -r' | sudo tee /usr/share/libalpm/hooks/paccache.hook
 }
 
 make_userjs(){
-  if ! command -v "$di_browser" >/dev/null 2>&1; then
-    log_progress "Installing $di_browser"
-    install_pkg "$di_browser"
+  if ! command -v "$DI_BROWSER" >/dev/null 2>&1; then
+    log_progress "Installing $DI_BROWSER"
+    install_pkg "$DI_BROWSER"
   fi
 
-  log_progress "Launching headless $di_browser for profile generation"
-  sudo -u "$di_user" "$di_browser" --headless >/dev/null 2>&1 &
+  log_progress "Launching headless $DI_BROWSER for profile generation"
+  sudo -u "$DI_USER" "$DI_BROWSER" --headless >/dev/null 2>&1 &
   sleep 1
 
   browser_dir="$HOME/.mozilla/firefox"
@@ -74,7 +74,7 @@ When=PostTransaction
 Depends=arkenfox-user.js
 Exec=/usr/local/lib/arkenfox-auto-update" | sudo tee /etc/pacman.d/hooks/arkenfox.hook
 
-    sudo pkill -u "$di_user" "$di_browser"
+    sudo pkill -u "$DI_USER" "$DI_BROWSER"
   fi
 }
 

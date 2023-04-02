@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-export npm_helper="yarn"
+declare -x DI_NPM_HELPER="${DI_NPM_HELPER:-"yarn"}"
 
-export dotfiles_dir="$HOME/.config/dotfiles"
-export voidrice_dir="$dotfiles_dir/voidrice"
-export pkglists_dir="$dotfiles_dir/pkglists"
+declare -xr DI_DOTFILES_DIR="$HOME/.config/dotfiles"
+declare -xr DI_VOIDRICE_DIR="$DI_DOTFILES_DIR/voidrice"
+declare -xr DI_PKGLISTS_DIR="$DI_DOTFILES_DIR/pkglists"
 
-export voidrice_repo="https://github.com/jakubreron/voidrice.git"
-export pkglists_repo="https://github.com/jakubreron/pkglists.git"
+declare -xr DI_VOIDRICE_REPO="https://github.com/jakubreron/voidrice.git"
+declare -xr DI_PKGLISTS_REPO="https://github.com/jakubreron/pkglists.git"
 
-export git_clone_path="$HOME/Downloads/git-clone"
-mkdir -p "$git_clone_path"
+export DI_GIT_CLONE_PATH="$HOME/Downloads/git-clone"
+mkdir -p "$DI_GIT_CLONE_PATH"
