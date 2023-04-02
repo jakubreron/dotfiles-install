@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 create_dirs() {
   log_progress "Creating common folders in $HOME"

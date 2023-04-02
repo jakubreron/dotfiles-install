@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # NOTE: installation variables
 . "$PWD/shared/env_variables.sh"
 

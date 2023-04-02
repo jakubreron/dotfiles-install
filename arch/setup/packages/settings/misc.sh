@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 enable_cache_management() {
   log_progress "Setting up the cache management"

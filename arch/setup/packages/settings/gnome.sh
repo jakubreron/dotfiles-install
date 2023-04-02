@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # TODO: google out recommended gnome settings and update it
 
 if command -v gsettings >/dev/null 2>&1; then

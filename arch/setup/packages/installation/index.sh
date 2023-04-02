@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # NOTE: packages installable with aur helper
 . "$PWD/arch/setup/packages/installation/pkg-manager.sh"
 

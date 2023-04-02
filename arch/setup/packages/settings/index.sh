@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # NOTE: xorg settings
 . "$PWD/arch/setup/packages/settings/xorg.sh"
 

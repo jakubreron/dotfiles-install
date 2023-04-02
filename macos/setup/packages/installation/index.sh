@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 install_pkglists() {
   if command -v "$di_pkg_manager_helper" >/dev/null 2>&1; then
     log_progress "Installing dotfiles packages"

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 get_fastest_mirrors() {
   if ! command -v reflector >/dev/null 2>&1; then

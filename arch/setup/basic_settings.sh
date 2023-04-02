@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # TODO: setup SDDM/autologin https://youtu.be/wNL6eIoksd8?t=482
 

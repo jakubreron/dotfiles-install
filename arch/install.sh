@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # TODO: preinstall keepassxc addon (and maybe more essential addons) to the firefox
 # TODO: install xorg drivers

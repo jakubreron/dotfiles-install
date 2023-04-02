@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 compile_from_git_path "dwm"
 compile_from_git_path "dwmblocks"

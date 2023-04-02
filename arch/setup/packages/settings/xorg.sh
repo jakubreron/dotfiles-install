@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 if command -v Xorg >/dev/null 2>&1; then
   log_progress "Xorg detected, setting up"
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 remove_db_lock() {
   [ -f /var/lib/pacman/db.lck ] && sudo rm /var/lib/pacman/db.lck

@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # NOTE: basic settings that do not require any previous setup
 . "$PWD/arch/setup/basic_settings.sh"
 
