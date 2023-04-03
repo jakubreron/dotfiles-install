@@ -10,7 +10,6 @@ BASEDIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 case "$OS" in
   Linux)
     # TODO: preinstall keepassxc addon (and maybe more essential addons) to the firefox
-    # TODO: enable multilib in pacman
     # TODO: setup email
 
     declare -x DI_USER="${DI_USER:-"jakub"}" 
