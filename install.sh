@@ -7,6 +7,8 @@ OS="$(uname -s)"
 declare -x BASEDIR
 BASEDIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
+source "$BASEDIR/shared/index.sh"
+
 case "$OS" in
   Linux)
     # TODO: preinstall keepassxc addon (and maybe more essential addons) to the firefox
@@ -14,10 +16,8 @@ case "$OS" in
 
     declare -x DI_USER="${DI_USER:-"jakub"}" 
     declare -x DI_PKG_TYPE="${DI_PKG_TYPE:-"secondary"}"
-    declare -x DI_PKG_MANAGER_HELPER="${DI_PKG_MANAGER_HELPER:-"paru"}"
     declare -xr DI_BROWSER="firefox-developer-edition"
 
-    source "$BASEDIR/shared/index.sh"
     source "$BASEDIR/arch/index.sh"
     ;;
   Darwin)
@@ -26,10 +26,8 @@ case "$OS" in
     # TODO: execute this command after installing packages: xattr -d com.apple.quarantine /Applications/Chromium.app
     declare -x DI_USER="${DI_USER:-"jakubreron"}"
     declare -x DI_PKG_TYPE="${DI_PKG_TYPE:-"work"}"
-    declare -xr DI_PKG_MANAGER_HELPER="brew"
     declare -xr DI_BROWSER="firefox"
 
-    source "$BASEDIR/shared/index.sh"
     source "$BASEDIR/macos/index.sh"
     ;;
   *)
