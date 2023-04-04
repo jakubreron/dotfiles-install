@@ -27,7 +27,7 @@ case "$OS" in
     declare -x DI_PKG_TYPE="${DI_PKG_TYPE:-"work"}"
     declare -xr DI_BROWSER="firefox"
 
-    source "$BASEDIR/macos/index.sh"
+    # source "$BASEDIR/macos/index.sh"
     ;;
   *)
     echo "OS $OS is not currently supported."
