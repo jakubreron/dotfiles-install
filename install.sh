@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -eo pipefail
 
 declare -x OS
 OS="$(uname -s)"
