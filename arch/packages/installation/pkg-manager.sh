@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+update_system() {
+  log_progress "Updating the system via pacman"
+  remove_db_lock
+  sudo pacman --noconfirm -Syu
+}
+
+install_core_packages() {
+  for package in curl ca-certificates base-devel ntp laptop-detect reflector rsync; do
+    install_pkg "$package"
+  done
+}
+
 get_fastest_mirrors() {
   if ! command -v reflector >/dev/null 2>&1; then
     log_progress "Installing reflector"
@@ -16,5 +28,7 @@ install_pkglists() {
   fi
 }
 
+update_system
+install_core_packages
 get_fastest_mirrors
 install_pkglists

@@ -19,23 +19,18 @@ case "$OS" in
     declare -xr DI_BROWSER="firefox-developer-edition"
 
     source "$BASEDIR/shared/index.sh"
-
-    for package in curl ca-certificates base-devel ntp laptop-detect reflector rsync; do
-      install_pkg "$package"
-    done
-
-    . "$BASEDIR/arch/index.sh"
+    source "$BASEDIR/arch/index.sh"
     ;;
   Darwin)
     # TODO: brew install koekeishiya/formulae/skhd; brew services start skhd
     # TODO: save it somewhere https://www.chrisatmachine.com/posts/01-macos-developer-setup
     # TODO: execute this command after installing packages: xattr -d com.apple.quarantine /Applications/Chromium.app
-    export DI_USER="jakubreron"
-    export DI_PKG_TYPE="work"
-    export DI_PKG_MANAGER_HELPER="brew"
+    declare -x DI_USER="${DI_USER:-"jakubreron"}"
+    declare -x DI_PKG_TYPE="${DI_PKG_TYPE:-"work"}"
+    declare -xr DI_PKG_MANAGER_HELPER="brew"
+    declare -xr DI_BROWSER="firefox"
 
     source "$BASEDIR/shared/index.sh"
-
     source "$BASEDIR/macos/index.sh"
     ;;
   *)
@@ -43,4 +38,3 @@ case "$OS" in
     exit 1
     ;;
 esac
-
