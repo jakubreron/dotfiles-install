@@ -2,15 +2,9 @@
 
 # TODO: setup SDDM/autologin https://youtu.be/wNL6eIoksd8?t=482
 
-prepare_user() {
+setup_user() {
   log_progress "Preparing the user permissions"
   sudo usermod -a -G wheel "$DI_USER" && mkdir -p "/home/$user" && sudo chown "$DI_USER":wheel /home/"$DI_USER"
-}
-
-update_system() {
-  log_progress "Updating the system via pacman"
-  remove_db_lock
-  sudo pacman --noconfirm -Syu
 }
 
 setup_core_settings() {
@@ -71,8 +65,7 @@ setup_bluetooth() {
   sudo systemctl enable bluetooth.service --now
 }
 
-prepare_user
-update_system
+setup_user
 setup_core_settings
 setup_grub
 setup_touchpad

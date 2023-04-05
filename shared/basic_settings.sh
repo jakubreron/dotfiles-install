@@ -2,7 +2,7 @@
 
 create_dirs() {
   log_progress "Creating common folders in $HOME"
-  mkdir "$HOME"/{Documents,Downloads,Music,Pictures,Videos,Cloud}
+  mkdir "$HOME"/{Documents,Downloads,Music,Pictures}
   mkdir "$HOME"/Documents/Projects/{personal,work}
 
   mkdir -p "$HOME"/.local/{bin,share,src}
@@ -10,7 +10,8 @@ create_dirs() {
 
   case "$OS" in
     Linux)
-        mkdir -p "$HOME"/Documents/Torrents "$HOME"/Videos/Recordings "$HOME"/Pictures/Screenshots
+      mkdir "$HOME"/{Videos,Cloud}
+      mkdir -p "$HOME"/Documents/Torrents "$HOME"/Videos/Recordings "$HOME"/Pictures/Screenshots
       ;;
   esac
 
