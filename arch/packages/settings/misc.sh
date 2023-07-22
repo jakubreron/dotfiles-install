@@ -30,6 +30,7 @@ When = PostTransaction
 Exec = /usr/bin/paccache -r' | sudo tee /usr/share/libalpm/hooks/paccache.hook
   fi
 }
+setup_cache_management
 
 setup_userjs(){
   if ! command -v "$DI_BROWSER" >/dev/null 2>&1; then
@@ -77,6 +78,7 @@ Exec=/usr/local/lib/arkenfox-auto-update" | sudo tee /etc/pacman.d/hooks/arkenfo
     sudo pkill -u "$DI_USER" "$DI_BROWSER"
   fi
 }
+setup_userjs
 
 setup_mpd() {
   if ! command -v mpd >/dev/null 2>&1; then
@@ -93,6 +95,7 @@ setup_mpd() {
 
   systemctl --user enable --now mpd.service
 }
+setup_mpd
 
 setup_darkman() {
   if ! command -v darkman >/dev/null 2>&1; then
@@ -105,6 +108,7 @@ setup_darkman() {
   sudo systemctl restart geoclue.service
   systemctl --user enable --now darkman.service
 }
+setup_darkman
 
 setup_redshift() {
   if ! command -v redshift >/dev/null 2>&1; then
@@ -115,6 +119,7 @@ setup_redshift() {
   log_progress "Setting up redshift"
   systemctl --user enable redshift.service
 }
+setup_redshift
 
 # TODO: add more integration steps
 setup_cloud() {
@@ -126,10 +131,4 @@ setup_cloud() {
   log_progress "Setting up Google Drive integration"
   systemctl --user enable --now grive@$(systemd-escape Cloud).service
 }
-
-setup_cache_management
-setup_userjs
-setup_mpd
-setup_darkman
-setup_redshift
 setup_cloud

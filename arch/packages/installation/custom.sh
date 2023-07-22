@@ -1,82 +1,87 @@
 #!/usr/bin/env bash
 
-# TODO: setup thermald on laptop
+# if laptop-detect > /dev/null; then
+#   if ! command -v auto-cpufreq >/dev/null 2>&1; then
+#     log_progress "Laptop detected, installing auto_cpufreq"
+#     path="$DI_GIT_CLONE_PATH/auto-cpufreq"
+#     git clone https://github.com/AdnanHodzic/auto-cpufreq.git "$path"
+#     cd "$path" && sudo ./auto-cpufreq-installer
+#     sudo auto-cpufreq --install
+#     sudo systemctl enable --now auto-cpufreq.service
+#     sudo systemctl mask power-profiles-daemon.service
+#     curl -sL "https://raw.githubusercontent.com/AdnanHodzic/auto-cpufreq/master/auto-cpufreq.conf-example" | sudo tee /etc/auto-cpufreq.conf
+#     sudo sed -i '/^\[battery\]/,/^\[/s/^# scaling_min_freq = 800000/scaling_min_freq = 1600000/' /etc/auto-cpufreq.conf
+#     sudo systemctl restart auto-cpufreq.service
+#     rm -rf "$path"
+#   else
+#     log_status "auto-cpufreq is already installed"️
+#   fi
+# else
+#   log_status "No laptop detected, skipping auto_cpufreq installation"️
+# fi
 
-install_auto_cpufreq() {
-  if laptop-detect > /dev/null; then
-    if ! command -v auto-cpufreq >/dev/null 2>&1; then
-      log_progress "Laptop detected, installing auto_cpufreq"
-      path="$DI_GIT_CLONE_PATH/auto-cpufreq"
-      git clone https://github.com/AdnanHodzic/auto-cpufreq.git "$path"
-      cd "$path" && sudo ./auto-cpufreq-installer
-      sudo auto-cpufreq --install
-      sudo systemctl enable --now auto-cpufreq.service
-      sudo systemctl mask power-profiles-daemon.service
-      curl -sL "https://raw.githubusercontent.com/AdnanHodzic/auto-cpufreq/master/auto-cpufreq.conf-example" | sudo tee /etc/auto-cpufreq.conf
-      sudo sed -i '/^\[battery\]/,/^\[/s/^# scaling_min_freq = 800000/scaling_min_freq = 1600000/' /etc/auto-cpufreq.conf
-      sudo systemctl restart auto-cpufreq.service
-      rm -rf "$path"
-    else
-      log_status "auto-cpufreq is already installed"️
-    fi
-  else
-    log_status "No laptop detected, skipping auto_cpufreq installation"️
+
+if laptop-detect > /dev/null; then
+  if ! command -v thermald >/dev/null 2>&1; then
+    log_progress "Laptop detected, installing thermald"
+    install_pkg thermald 
+    sudo systemctl enable thermald --now
   fi
-}
+fi
 
-install_keyd() {
-  if ! command -v keyd >/dev/null 2>&1; then
-    log_progress "Installing and setting up keyd"
-    sudo usermod -aG keyd "$DI_USER"
-    path="$DI_GIT_CLONE_PATH/keyd"
-    git clone https://github.com/rvaiya/keyd "$path"
-    cd "$path" || exit
-    make && sudo make install
-    sudo systemctl enable keyd && sudo systemctl start keyd
-    cd ..
-    rm -rf "$path"
-    global_config_path="/etc/keyd/defaulf.conf"
-    echo "[ids]
-*
 
-[main]
-control = layer(emacs_control)
-leftalt = layer(mac_meta)
-leftmeta = layer(mac_option)
-compose = layer(mac_option)
+if ! command -v keyd >/dev/null 2>&1; then
+  log_progress "Installing and setting up keyd"
+  sudo usermod -aG keyd "$DI_USER"
+  path="$DI_GIT_CLONE_PATH/keyd"
+  git clone https://github.com/rvaiya/keyd "$path"
+  cd "$path" || exit
+  make && sudo make install
+  sudo systemctl enable keyd && sudo systemctl start keyd
+  cd ..
+  rm -rf "$path"
+  global_config_path="/etc/keyd/defaulf.conf"
+  echo "[ids]
+  *
 
-capslock = overload(meta, esc)
-esc = capslock
+  [main]
+  control = layer(emacs_control)
+  leftalt = layer(mac_meta)
+  leftmeta = layer(mac_option)
+  compose = layer(mac_option)
 
-[emacs_control:C]
-b = left
-f = right 
-p = up
-n = down
-h = backspace
-a = home
-e = end
-m = enter
-w = C-backspace
-d = delete
-S-m = S-enter
+  capslock = overload(meta, esc)
+  esc = capslock
 
-[mac_option:A]
+  [emacs_control:C]
+  b = left
+  f = right 
+  p = up
+  n = down
+  h = backspace
+  a = home
+  e = end
+  m = enter
+  w = C-backspace
+  d = delete
+  S-m = S-enter
 
-b = C-left
-f = C-right
+  [mac_option:A]
 
-[mac_meta:C]
-# Switch directly to an open tab (e.g. Firefox, VS code)
-1 = A-1
-2 = A-2
-3 = A-3
-4 = A-4
-5 = A-5
-6 = A-6
-7 = A-7
-8 = A-8
-9 = A-9
+  b = C-left
+  f = C-right
+
+  [mac_meta:C]
+  # Switch directly to an open tab (e.g. Firefox, VS code)
+  1 = A-1
+  2 = A-2
+  3 = A-3
+  4 = A-4
+  5 = A-5
+  6 = A-6
+  7 = A-7
+  8 = A-8
+  9 = A-9
 
 # Copy
 # c = C-insert
@@ -89,10 +94,6 @@ f = C-right
 left = home
 # Move cursor to end of Line
 right = end" | sudo tee "$global_config_path"
-  else
-    log_status "keyd is already installed"️
-  fi
-}
-
-install_auto_cpufreq
-install_keyd
+else
+  log_status "keyd is already installed"️
+fi
