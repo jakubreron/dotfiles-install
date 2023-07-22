@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# TODO: setup thermald on laptop
-
 install_auto_cpufreq() {
   if laptop-detect > /dev/null; then
     if ! command -v auto-cpufreq >/dev/null 2>&1; then
