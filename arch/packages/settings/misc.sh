@@ -138,6 +138,18 @@ setup_cloud() {
   systemctl --user enable --now grive@$(systemd-escape Cloud).service
 }
 
+setup_playerctl() {
+  if ! command -v playerctl >/dev/null 2>&1; then
+    log_progress "Installing playerctl"
+    install_pkg playerctl
+  fi
+
+  log_progress "Setting up playerctl"
+
+  systemctl --user daemon-reload
+  systemctl --user enable --now playerctld.service
+}
+
 setup_cache_management
 setup_userjs
 setup_mpd
@@ -145,3 +157,4 @@ setup_darkman
 setup_redshift
 setup_display_brightness_util
 setup_cloud
+setup_playerctl
