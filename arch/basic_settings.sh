@@ -43,30 +43,27 @@ GRUB_HIDDEN_TIMEOUT="0"
   sudo grub-mkconfig -o /boot/grub/grub.cfg
 }
 
-setup_touchpad() {
-  if laptop-detect >/dev/null 2>&1; then
-    log_progress "Laptop detected, setting up the touchpad"
-    printf 'Section "InputClass"
-        Identifier "libinput touchpad catchall"
-        MatchIsTouchpad "on"
-        MatchDevicePath "/dev/input/event*"
-        Driver "libinput"
-	Option "Tapping" "on"
-  Option "NaturalScrolling" "true"
-EndSection' | sudo tee /etc/X11/xorg.conf.d/40-libinput.conf
-  else
-    log_progress "No laptop detected, skipping the touchpad settings"
-  fi
-}
-
 setup_bluetooth() {
   log_progress "Setting up the bluetooth"
-  # sudo sed -i 's/^#AutoEnable=true/AutoEnable=true/g' /etc/bluetooth/main.conf
+  sudo sed -i 's/^#AutoEnable=true/AutoEnable=true/g' /etc/bluetooth/main.conf
   sudo systemctl enable bluetooth.service --now
+}
+
+setup_sddm() {
+  if ! command -v sddm >/dev/null 2>&1; then
+    log_progress "Installing sddm"
+    install_pkg sddm-git
+  fi
+
+  sudo mkdir /etc/sddm.conf.d/
+  printf '[Autologin]
+User=jakub
+Session=hyprland
+  ' | sudo tee /etc/sddm.conf.d/autologin.conf
 }
 
 setup_user
 setup_core_settings
 setup_grub
-setup_touchpad
 setup_bluetooth
+setup_sddm

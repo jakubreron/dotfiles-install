@@ -106,14 +106,14 @@ setup_darkman() {
   systemctl --user enable --now darkman.service
 }
 
-setup_redshift() {
-  if ! command -v redshift >/dev/null 2>&1; then
-    log_progress "Installing redshift"
-    install_pkg redshift
+setup_nightlight() {
+  if ! command -v gammastep >/dev/null 2>&1; then
+    log_progress "Installing nightlight"
+    install_pkg gammastep
   fi
 
-  log_progress "Setting up redshift"
-  systemctl --user enable redshift.service
+  log_progress "Setting up nightlight"
+  systemctl --user enable gammastep.service --now
 }
 
 setup_display_brightness_util() {
@@ -154,7 +154,7 @@ setup_cache_management
 setup_userjs
 setup_mpd
 setup_darkman
-setup_redshift
+setup_nightlight
 setup_display_brightness_util
 setup_cloud
 setup_mpris_proxy

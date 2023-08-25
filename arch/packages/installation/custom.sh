@@ -30,7 +30,7 @@ install_keyd() {
     git clone https://github.com/rvaiya/keyd "$path"
     cd "$path" || exit
     make && sudo make install
-    sudo systemctl enable keyd && sudo systemctl start keyd
+    sudo systemctl enable keyd --now
     cd ..
     rm -rf "$path"
     global_config_path="/etc/keyd/defaulf.conf"
