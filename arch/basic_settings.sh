@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# TODO: setup SDDM/autologin https://youtu.be/wNL6eIoksd8?t=482
-
 setup_user() {
   log_progress "Preparing the user permissions"
   sudo usermod -a -G wheel "$DI_USER" && mkdir -p "/home/$user" && sudo chown "$DI_USER":wheel /home/"$DI_USER"
@@ -55,6 +53,7 @@ setup_sddm() {
     install_pkg sddm-git
   fi
 
+  sudo groupadd autologin
   sudo mkdir /etc/sddm.conf.d/
   printf '[Autologin]
 User=jakub
