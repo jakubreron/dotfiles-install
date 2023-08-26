@@ -53,10 +53,7 @@ setup_sddm() {
     install_pkg sddm-git
   fi
 
-  if [[ ! -d /usr/share/sddm/themes/catppuccin ]]; then
-    log_progress "Installing catppuccin sddm theme"
-    install_pkg sddm-catppuccin-git
-  fi
+  sudo cp -r /home/jakub/.config/dotfiles/voidrice/.local/share/sddm/themes/catppuccin/src/* /usr/share/sddm/themes
 
   sudo groupadd autologin
   sudo mkdir /etc/sddm.conf.d/
@@ -65,7 +62,7 @@ User=jakub
 Session=hyprland
 
 [Theme]
-Current=/usr/share/sddm/themes/catppuccin
+Current=/usr/share/sddm/themes/catppuccin-mocha
   ' | sudo tee /etc/sddm.conf.d/autologin.conf
 }
 
