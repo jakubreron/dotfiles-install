@@ -53,11 +53,19 @@ setup_sddm() {
     install_pkg sddm-git
   fi
 
+  if [[ ! -d /usr/share/sddm/themes/catppuccin ]]; then
+    log_progress "Installing catppuccin sddm theme"
+    install_pkg sddm-catppuccin-git
+  fi
+
   sudo groupadd autologin
   sudo mkdir /etc/sddm.conf.d/
   printf '[Autologin]
 User=jakub
 Session=hyprland
+
+[Theme]
+Current=/usr/share/sddm/themes/catppuccin
   ' | sudo tee /etc/sddm.conf.d/autologin.conf
 }
 
