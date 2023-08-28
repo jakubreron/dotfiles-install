@@ -6,7 +6,6 @@ create_dirs() {
   mkdir "$HOME"/Documents/Projects/{personal,work}
 
   mkdir -p "$HOME"/.local/{bin,share,src}
-  mkdir -p "$HOME"/.local/bin/{dmenu,entr,git,layouts,music,qemu,rofi,statusbar,tmux,update,volume}
 
   case "$OS" in
     Linux)
@@ -42,7 +41,13 @@ replace_stow() {
     install_pkg stow
   fi
 
-  log_progress "Stowing voidrice dotfiles"
+  log_progress "Creating dirs in $HOME/.local/bin to ensure correct stow"
+  for dir in "$HOME"/.config/dotfiles/voidrice/.local/bin/*/; do
+    dir_name=$(basename "$dir")
+    mkdir -p "$HOME"/.local/bin/"$dir_name"
+  done
+
+  log_progress "Stowing the dotfiles"
   stow --adopt --target="$HOME" --dir="$DI_DOTFILES_DIR" voidrice
 }
 
