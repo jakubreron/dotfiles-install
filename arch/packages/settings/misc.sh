@@ -150,6 +150,11 @@ setup_mpris_proxy() {
   systemctl --user enable --now mpris-proxy.service
 }
 
+# TODO: do more steps
+setup_mail() {
+  mw -t 5
+}
+
 setup_cache_management
 setup_userjs
 setup_mpd
@@ -158,3 +163,4 @@ setup_nightlight
 setup_display_brightness_util
 setup_cloud
 setup_mpris_proxy
+setup_mail
