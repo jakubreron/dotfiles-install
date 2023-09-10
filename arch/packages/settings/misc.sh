@@ -138,6 +138,18 @@ setup_cloud() {
   systemctl --user enable --now grive@$(systemd-escape Cloud).service
 }
 
+setup_mpris_proxy() {
+  if ! command -v playerctl >/dev/null 2>&1; then
+    log_progress "Installing playerctl (to enable mpris_proxy)"
+    install_pkg playerctl
+  fi
+
+  log_progress "Setting up mpris-proxy"
+
+  systemctl --user daemon-reload
+  systemctl --user enable --now mpris-proxy.service
+}
+
 # TODO: do more steps
 setup_mail() {
   mw -t 5
