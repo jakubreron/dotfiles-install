@@ -13,8 +13,12 @@ case "$OS" in
     # TODO: preinstall keepassxc addon (and maybe more essential addons) to the firefox
     # TODO: setup email
 
-    declare -x DI_USER="${DI_USER:-jakub}" 
-    declare -x DI_PKG_TYPE="${DI_PKG_TYPE:-secondary}"
+    declare -x DI_USER
+    DI_USER="jakub"
+
+    declare -x DI_PKG_TYPE
+    DI_PKG_TYPE="secondary"
+
     declare -xr DI_BROWSER="firefox-developer-edition"
 
     source "$BASEDIR/arch/index.sh"
@@ -23,8 +27,12 @@ case "$OS" in
     # TODO: brew install koekeishiya/formulae/skhd; brew services start skhd
     # TODO: save it somewhere https://www.chrisatmachine.com/posts/01-macos-developer-setup
     # TODO: execute this command after installing packages: xattr -d com.apple.quarantine /Applications/Chromium.app
-    declare -x DI_USER="${DI_USER:-jakubreron}"
-    declare -x DI_PKG_TYPE="${DI_PKG_TYPE:-work}"
+    declare -x DI_USER
+    DI_USER="jakubreron"
+
+    declare -x DI_PKG_TYPE
+    DI_PKG_TYPE="work"
+
     declare -xr DI_BROWSER="firefox"
 
     # source "$BASEDIR/macos/index.sh"
