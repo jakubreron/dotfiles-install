@@ -10,7 +10,7 @@ install_pkg() {
       remove_db_lock
 
       if command -v "$DI_AUR_HELPER" >/dev/null 2>&1; then
-        PKG_MANAGER="$DI_AUR_HELPER"
+        PKG_MANAGER="$DI_AUR_HELPER --noprovides"
       else
         PKG_MANAGER="pacman"
       fi
