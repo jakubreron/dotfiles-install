@@ -11,7 +11,7 @@ install_auto_cpufreq() {
       sudo systemctl enable --now auto-cpufreq.service
       sudo systemctl mask power-profiles-daemon.service
       curl -sL "https://raw.githubusercontent.com/AdnanHodzic/auto-cpufreq/master/auto-cpufreq.conf-example" | sudo tee /etc/auto-cpufreq.conf
-      sudo sed -i '/^\[battery\]/,/^\[/s/^# scaling_min_freq = 800000/scaling_min_freq = 1600000/' /etc/auto-cpufreq.conf
+      sudo sed -i '/^\[battery\]/,/^\[/s/^# scaling_min_freq = 800000/scaling_min_freq = 1200000/' /etc/auto-cpufreq.conf
       sudo systemctl restart auto-cpufreq.service
       rm -rf "$path"
     else
