@@ -6,8 +6,6 @@ OS="$(uname -s)"
 declare -x BASEDIR
 BASEDIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
-source "$BASEDIR/shared/index.sh"
-
 case "$OS" in
   Linux)
     # TODO: preinstall keepassxc addon (and maybe more essential addons) to the firefox
@@ -21,6 +19,7 @@ case "$OS" in
 
     declare -xr DI_BROWSER="firefox-developer-edition"
 
+    source "$BASEDIR/shared/index.sh"
     source "$BASEDIR/arch/index.sh"
     ;;
   Darwin)
@@ -35,6 +34,7 @@ case "$OS" in
 
     declare -xr DI_BROWSER="firefox"
 
+    source "$BASEDIR/shared/index.sh"
     # source "$BASEDIR/macos/index.sh"
     ;;
   *)
