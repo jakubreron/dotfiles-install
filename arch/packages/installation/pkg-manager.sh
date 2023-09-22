@@ -18,8 +18,14 @@ get_fastest_mirrors() {
   fi
 
   if command -v reflector >/dev/null 2>&1; then
-    log_progress "Getting the fastest mirrors before installing the dotfiles packages"
-    sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/mirrorlist
+    reflector_state_file="$HOME/.cache/reflector_updated"
+
+    if [ ! -f "$reflector_state_file" ] >/dev/null 2>&1; then
+      log_progress "Getting the fastest mirrors before installing the dotfiles packages"
+      sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/mirrorlist
+
+      echo "Reflector has already ran" > "$reflector_state_file"
+    fi
   fi
 }
 
