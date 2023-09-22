@@ -17,7 +17,7 @@ create_dirs() {
 
   case "$OS" in
     Linux)
-      mkdir -P "$HOME"/{Videos,Cloud}
+      mkdir -p "$HOME"/{Videos,Cloud}
       mkdir -p "$HOME"/Documents/Torrents "$HOME"/Videos/Recordings "$HOME"/Pictures/Screenshots
       ;;
   esac
