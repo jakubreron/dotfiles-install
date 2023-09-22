@@ -15,7 +15,7 @@ install_pkg() {
         PKG_MANAGER="pacman"
       fi
 
-      sudo "$PKG_MANAGER" --noconfirm --needed -S "$1"
+      "$PKG_MANAGER" --noconfirm --needed -S "$1"
       ;;
     Darwin)
       brew install "$1"
