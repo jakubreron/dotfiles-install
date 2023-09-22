@@ -92,17 +92,17 @@ right = end" | sudo tee "$global_config_path"
   fi
 }
 
-# function install_hyprload() {
-#   path="$HOME/.local/share/hyprload/hyprload.sh"
+function install_hyprload() {
+  path="$HOME/.local/share/hyprload/hyprload.sh"
 
-#   if [[ ! -f "$path" ]] >/dev/null 2>&1; then
-#     log_progress "Installing Hyprload, Hyprland plugin manager"
-#     curl -sSL https://raw.githubusercontent.com/Duckonaut/hyprload/main/install.sh | bash
-#   else
-#     log_status "Skipping Hyprload installation, $path already exists"️
-#   fi
-# }
+  if [[ ! -f "$path" ]] >/dev/null 2>&1; then
+    log_progress "Installing Hyprload, Hyprland plugin manager"
+    curl -sSL https://raw.githubusercontent.com/Duckonaut/hyprload/main/install.sh | bash
+  else
+    log_status "Skipping Hyprload installation, $path already exists"️
+  fi
+}
 
-install_auto_cpufreq
+# install_auto_cpufreq
 install_keyd
 # install_hyprload
