@@ -103,7 +103,11 @@ setup_darkman() {
   log_progress "Setting up darkman"
   sudo systemctl enable --now avahi-daemon.service
   sudo systemctl restart geoclue.service
-  systemctl --user enable --now darkman.service
+
+  # NOTE: on hyprland, it's launched via the config file
+  if ! command -v Hyprland >/dev/null 2>&1; then
+    systemctl --user enable --now darkman.service
+  fi
 }
 
 setup_nightlight() {
@@ -112,8 +116,10 @@ setup_nightlight() {
     install_pkg gammastep
   fi
 
-  log_progress "Setting up nightlight"
-  systemctl --user enable gammastep.service --now
+  if ! command -v Hyprland >/dev/null 2>&1; then
+    log_progress "Setting up nightlight"
+    systemctl --user enable gammastep.service --now
+  fi
 }
 
 setup_display_brightness_util() {
@@ -151,9 +157,9 @@ setup_mpris_proxy() {
 }
 
 # TODO: do more steps
-setup_mail() {
-  mw -t 5
-}
+# setup_mail() {
+#   mw -t 5
+# }
 
 setup_cache_management
 setup_userjs
@@ -163,4 +169,4 @@ setup_nightlight
 setup_display_brightness_util
 setup_cloud
 setup_mpris_proxy
-setup_mail
+# setup_mail

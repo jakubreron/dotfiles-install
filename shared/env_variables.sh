@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-declare -x DI_NPM_HELPER="${DI_NPM_HELPER:-"yarn"}"
+declare -x DI_NPM_HELPER="${DI_NPM_HELPER:-"npm"}"
 declare -x DI_AUR_HELPER="${DI_AUR_HELPER:-"paru"}"
 
 declare -xr DI_DOTFILES_DIR="$HOME/.config/dotfiles"
