@@ -56,6 +56,7 @@ setup_sddm() {
     sudo cp -r /home/jakub/.config/dotfiles/voidrice/.local/share/sddm/themes/catppuccin/src/* /usr/share/sddm/themes
 
     sudo groupadd autologin
+    sudo usermod -aG autologin "$DI_USER"
     sudo mkdir /etc/sddm.conf.d/
     echo "[Autologin]
   User=$DI_USER
