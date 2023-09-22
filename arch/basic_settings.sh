@@ -36,7 +36,7 @@ GRUB_HIDDEN_TIMEOUT="0"
   ' | sudo tee -a "$grub_path" >/dev/null
   fi
 
-  sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"$/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3"/' "$grub_path"
+  sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"$/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 iomem=relaxed"/' "$grub_path"
 
   sudo grub-mkconfig -o /boot/grub/grub.cfg
 }
