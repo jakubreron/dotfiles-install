@@ -46,29 +46,30 @@ setup_bluetooth() {
   fi
 }
 
-setup_sddm() {
-  if ! command -v sddm >/dev/null 2>&1; then
-    log_progress "Installing sddm"
-    install_pkg sddm-git
-  fi
+# TODO: fix
+# setup_sddm() {
+#   if ! command -v sddm >/dev/null 2>&1; then
+#     log_progress "Installing sddm"
+#     install_pkg sddm-git
+#   fi
 
-  if command -v sddm >/dev/null 2>&1; then
-    sudo cp -r /home/jakub/.config/dotfiles/voidrice/.local/share/sddm/themes/catppuccin/src/* /usr/share/sddm/themes
+#   if command -v sddm >/dev/null 2>&1; then
+#     sudo cp -r /home/jakub/.config/dotfiles/voidrice/.local/share/sddm/themes/catppuccin/src/* /usr/share/sddm/themes
 
-    sudo groupadd autologin
-    sudo usermod -aG autologin "$DI_USER"
-    sudo mkdir /etc/sddm.conf.d/
-    echo "[Autologin]
-  User=$DI_USER
-  Session=hyprland
+#     sudo groupadd autologin
+#     sudo usermod -aG autologin "$DI_USER"
+#     sudo mkdir /etc/sddm.conf.d/
+#     echo "[Autologin]
+#   User=$DI_USER
+#   Session=hyprland
 
-  [Theme]
-  Current=/usr/share/sddm/themes/catppuccin-mocha
-    " | sudo tee /etc/sddm.conf.d/autologin.conf
-  fi
-}
+#   [Theme]
+#   Current=/usr/share/sddm/themes/catppuccin-mocha
+#     " | sudo tee /etc/sddm.conf.d/autologin.conf
+#   fi
+# }
 
 setup_core_settings
 setup_grub
 setup_bluetooth
-setup_sddm
+# setup_sddm
