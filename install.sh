@@ -15,6 +15,8 @@ case "$OS" in
     declare -x DI_PKG_TYPE="${DI_PKG_TYPE:-secondary}"
     declare -xr DI_BROWSER="firefox-developer-edition"
 
+    declare -xr HOME="/home/$DI_USER" # needed if you run script as root
+
     source "$BASEDIR/shared/index.sh"
     source "$BASEDIR/arch/index.sh"
     ;;
