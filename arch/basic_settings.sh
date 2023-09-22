@@ -37,9 +37,13 @@ GRUB_HIDDEN_TIMEOUT="0"
 }
 
 setup_bluetooth() {
-  log_progress "Setting up the bluetooth"
-  sudo sed -i 's/^#AutoEnable=true/AutoEnable=true/g' /etc/bluetooth/main.conf
-  sudo systemctl enable bluetooth.service --now
+  if command -v bluetoothctl >/dev/null 2>&1; then
+    log_progress "Setting up the bluetooth"
+    sudo sed -i 's/^#AutoEnable=true/AutoEnable=true/g' /etc/bluetooth/main.conf
+    sudo systemctl enable bluetooth.service --now
+  else
+    log_error "Skipping the bluetooth setup"
+  fi
 }
 
 setup_sddm() {

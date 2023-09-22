@@ -23,7 +23,7 @@ install_pkg() {
   esac
 }
 
-log_progress() {
+log_message() {
   message="$1"
   emoji="${2:-⏳}"
 
@@ -34,15 +34,25 @@ log_progress() {
   printf "%s${BLUE}${BOLD}$emoji $message...${RESET}\n"
 }
 
+log_progress() {
+  message="$1"
+  emoji="${2:-⏳}"
+
+  log_message "$message" "$emoji"
+}
+
 log_status() {
   message="$1"
   emoji="${2:-✅}"
 
-  BOLD=$(tput bold)
-  BLUE=$(tput setaf 4)
-  RESET=$(tput sgr0)
+  log_message "$message" "$emoji"
+}
 
-  printf "%s${BLUE}${BOLD}$emoji $message${RESET}\n"
+log_error() {
+  message="$1"
+  emoji="${2:-❌}"
+
+  log_message "$message" "$emoji"
 }
 
 clone_git_repo() {

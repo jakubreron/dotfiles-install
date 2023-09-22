@@ -39,7 +39,7 @@ install_pkglists() {
     log_progress "Installing dotfiles packages"
     install_pkg - < "$DI_PKGLISTS_DIR/$DI_PKG_TYPE/pacman.txt";
   else
-    log_status "AUR Helper not detected, quitting" ❌
+    log_error "AUR Helper not detected, quitting"
     exit
   fi
 }
