@@ -15,7 +15,7 @@ install_pkg() {
         PKG_MANAGER="pacman"
       fi
 
-      sudo "$PKG_MANAGER" --noconfirm --noprovides --needed -S "$1"
+      sudo "$PKG_MANAGER" --noconfirm --needed -S "$1"
       ;;
     Darwin)
       brew install "$1"
@@ -49,7 +49,7 @@ clone_git_repo() {
   repo="$1"
   destination="$2"
 
-  if [ -f "$destination" ] >/dev/null 2>&1; then
+  if [ ! -f "$destination" ] >/dev/null 2>&1; then
     log_progress "$destination does not exist, cloning via git"
     git clone "$repo" "$destination"
   else

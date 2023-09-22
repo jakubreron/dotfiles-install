@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-setup_user() {
-  log_progress "Preparing the user permissions"
-  sudo usermod -a -G wheel "$DI_USER" && mkdir -p "/home/$user" && sudo chown "$DI_USER":wheel /home/"$DI_USER"
-}
-
 setup_core_settings() {
   log_progress "Setting up core settings"
   # Make pacman colorful, concurrent downloads and Pacman eye-candy.
@@ -53,20 +48,21 @@ setup_sddm() {
     install_pkg sddm-git
   fi
 
-  sudo cp -r /home/jakub/.config/dotfiles/voidrice/.local/share/sddm/themes/catppuccin/src/* /usr/share/sddm/themes
+  if command -v sddm >/dev/null 2>&1; then
+    sudo cp -r /home/jakub/.config/dotfiles/voidrice/.local/share/sddm/themes/catppuccin/src/* /usr/share/sddm/themes
 
-  sudo groupadd autologin
-  sudo mkdir /etc/sddm.conf.d/
-  printf '[Autologin]
-User=jakub
-Session=hyprland
+    sudo groupadd autologin
+    sudo mkdir /etc/sddm.conf.d/
+    echo "[Autologin]
+  User=$DI_USER
+  Session=hyprland
 
-[Theme]
-Current=/usr/share/sddm/themes/catppuccin-mocha
-  ' | sudo tee /etc/sddm.conf.d/autologin.conf
+  [Theme]
+  Current=/usr/share/sddm/themes/catppuccin-mocha
+    " | sudo tee /etc/sddm.conf.d/autologin.conf
+  fi
 }
 
-setup_user
 setup_core_settings
 setup_grub
 setup_bluetooth

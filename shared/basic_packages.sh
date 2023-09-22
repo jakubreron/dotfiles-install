@@ -6,21 +6,23 @@ set_zsh_shell() {
     install_pkg zsh zsh-completions
   fi
 
-  mkdir -p "$HOME/.cache/zsh/"
+  if command -v zsh >/dev/null 2>&1; then
+    mkdir -p "$HOME/.cache/zsh/"
 
-  if ! [[  "$SHELL" =~ .*'zsh' ]]; then
-    log_progress "Changing default shell to ZSH"
+    if ! [[  "$SHELL" =~ .*'zsh' ]]; then
+      log_progress "Changing default shell to ZSH"
 
-    case "$OS" in
-      Linux)
-        chsh -s /usr/bin/zsh "$DI_USER"
-        ;;
-      Darwin)
-        chsh -s /bin/zsh "$DI_USER"
-        ;;
-    esac
-  else
-    log_status "ZSH is already a default shell"️
+      case "$OS" in
+        Linux)
+          chsh -s /usr/bin/zsh "$DI_USER"
+          ;;
+        Darwin)
+          chsh -s /bin/zsh "$DI_USER"
+          ;;
+      esac
+    else
+      log_status "ZSH is already a default shell"️
+    fi
   fi
 }
 
@@ -33,7 +35,9 @@ install_pkg_helper() {
         path="$DI_GIT_CLONE_PATH/$DI_AUR_HELPER"
         clone_git_repo "https://aur.archlinux.org/$DI_AUR_HELPER.git" "$path"
 
-        makepkg -si -p "$path"
+        cd "$path"
+        makepkg -si "$path"
+        cd -
         rm -rf "$path"
       else
         log_status "AUR helper '$DI_AUR_HELPER' is already installed"️
@@ -80,12 +84,14 @@ install_node_packages() {
     install_pkg node fnm "$DI_NPM_HELPER"
   fi
 
-  log_progress "Installing node packages via $DI_NPM_HELPER"
-  packages="$DI_PKGLISTS_DIR/$DI_PKG_TYPE/yarn.txt"
-  if [ "$DI_NPM_HELPER" = 'yarn' ]; then
-    $DI_NPM_HELPER global add --silent < "$packages"
-  else
-    $DI_NPM_HELPER install --global < "$packages"
+  if command -v "$DI_NPM_HELPER" >/dev/null 2>&1; then 
+    log_progress "Installing node packages via $DI_NPM_HELPER"
+    packages="$DI_PKGLISTS_DIR/$DI_PKG_TYPE/yarn.txt"
+    if [ "$DI_NPM_HELPER" = 'yarn' ]; then
+      $DI_NPM_HELPER global add --silent < "$packages"
+    else
+      $DI_NPM_HELPER install --global < "$packages"
+    fi
   fi
 }
 
