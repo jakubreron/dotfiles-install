@@ -4,7 +4,10 @@ setup_user() {
   case "$OS" in
     Linux)
       log_progress "Preparing the user permissions"
-      sudo usermod -a -G wheel "$DI_USER" && mkdir -p "/home/$DI_USER" && sudo chown "$DI_USER":wheel /home/"$DI_USER"
+
+      mkdir -p "$HOME"
+      sudo usermod -aG wheel "$DI_USER"
+      sudo chown "$DI_USER":wheel "$HOME"
       ;;
   esac
 }
