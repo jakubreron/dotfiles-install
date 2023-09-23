@@ -82,7 +82,7 @@ install_lvim() {
 install_node_packages() {
   if ! command -v "$DI_NPM_HELPER" >/dev/null 2>&1; then 
     log_progress "Installing $DI_NPM_HELPER"
-    install_pkg node fnm "$DI_NPM_HELPER"
+    install_pkg nodejs fnm "$DI_NPM_HELPER"
   fi
 
   if command -v "$DI_NPM_HELPER" >/dev/null 2>&1; then 
