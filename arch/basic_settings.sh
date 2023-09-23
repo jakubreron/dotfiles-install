@@ -16,6 +16,7 @@ setup_core_settings() {
   echo "%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/shutdown,/usr/bin/reboot,/usr/bin/systemctl suspend,/usr/bin/wifi-menu,/usr/bin/mount,/usr/bin/umount,/usr/bin/pacman -Syu,/usr/bin/pacman -Syyu,/usr/bin/pacman -Syyu --noconfirm,/usr/bin/loadkeys,/usr/bin/pacman -Syyuw --noconfirm,/usr/bin/pacman -S -u -y --config /etc/pacman.conf --,/usr/bin/pacman -S -y -u --config /etc/pacman.conf --" | sudo tee /etc/sudoers.d/01-cmds-without-password
   echo "Defaults editor=/usr/bin/nvim" | sudo tee /etc/sudoers.d/02-visudo-editor
   echo "Defaults timestamp_timeout=1440" | sudo tee /etc/sudoers.d/03-sudo-timeout
+
   sudo mkdir -p /etc/sysctl.d
   echo "kernel.dmesg_restrict = 0" | sudo tee /etc/sysctl.d/dmesg.conf
 
@@ -68,6 +69,7 @@ setup_sddm() {
 
     sudo mkdir /etc/sddm.conf.d/
 
+    # NOTE: create autologin
     # ----------------------
     echo "[Autologin]
 User=$DI_USER
@@ -78,11 +80,13 @@ Current=/usr/share/sddm/themes/catppuccin-mocha" | sudo tee /etc/sddm.conf.d/aut
   fi
     # ----------------------
 
+    # NOTE: add permissions for login without password
     # ----------------------
     echo "auth        sufficient  pam_succeed_if.so user ingroup nopasswdlogin
 auth        include     system-login" | sudo tee /etc/pam.d/sddm
     # ----------------------
 
+    # NOTE: make sure everything is wayland compatible
     # ----------------------
     echo "[General]
 DisplayServer=wayland" | sudo tee /etc/sddm.conf.d/10-wayland.conf

@@ -2,6 +2,7 @@
 
 update_system() {
   log_progress "Updating the system via pacman"
+
   remove_db_lock
   sudo pacman --noconfirm -Syu
 }
@@ -24,7 +25,7 @@ get_fastest_mirrors() {
       log_progress "Getting the fastest mirrors before installing the dotfiles packages"
       sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/mirrorlist
 
-      echo "Reflector has already ran" > "$reflector_state_file"
+      echo "Reflector was already updated" > "$reflector_state_file"
     fi
   fi
 }
