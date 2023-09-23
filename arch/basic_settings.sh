@@ -2,6 +2,7 @@
 
 setup_core_settings() {
   log_progress "Setting up core settings"
+
   # Make pacman colorful, concurrent downloads and Pacman eye-candy.
   grep -q "ILoveCandy" /etc/pacman.conf || sudo sed -i "/#VerbosePkgLists/a ILoveCandy" /etc/pacman.conf
   sudo sed -Ei "s/^#(ParallelDownloads).*/\1 = 15/;/^#Color$/s/#//" /etc/pacman.conf
@@ -50,7 +51,6 @@ setup_bluetooth() {
   fi
 }
 
-# TODO: fix
 setup_sddm() {
   if ! command -v sddm >/dev/null 2>&1; then
     log_progress "Installing sddm"
@@ -64,13 +64,13 @@ setup_sddm() {
     sudo usermod -aG autologin "$DI_USER"
 
     sudo mkdir /etc/sddm.conf.d/
-    echo "[Autologin]
-  User=$DI_USER
-  Session=hyprland
 
-  [Theme]
-  Current=/usr/share/sddm/themes/catppuccin-mocha
-    " | sudo tee /etc/sddm.conf.d/autologin.conf
+    echo "[Autologin]
+User=$DI_USER
+Session=hyprland
+
+[Theme]
+Current=/usr/share/sddm/themes/catppuccin-mocha" | sudo tee /etc/sddm.conf.d/autologin.conf
   fi
 }
 
