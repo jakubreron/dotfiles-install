@@ -65,7 +65,7 @@ install_zap() {
 }
 
 install_lvim() {
-  if ! command -v lvim >/dev/null 2>&1; then
+  if ! command -v lvim >/dev/null 2>&1 || [[ ! -d "$HOME/.config/lvim" ]] || [[ ! -d "$HOME/.local/share/lunarvim" ]]; then
     log_progress "Installing LunarVim"
     bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
 
