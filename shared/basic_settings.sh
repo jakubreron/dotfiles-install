@@ -35,14 +35,13 @@ clone_dotfiles_repos() {
     install_pkg git
   fi
 
-
   if command -v git >/dev/null 2>&1; then
     clone_git_repo "$DI_VOIDRICE_REPO" "$DI_VOIDRICE_DIR"
     clone_git_repo "$DI_PKGLISTS_REPO" "$DI_PKGLISTS_DIR"
 
-    log_progress "[Background] Pulling latest changes in $DI_VOIDRICE_DIR, $DI_PKGLISTS_DIR"
-    git -C "$DI_VOIDRICE_DIR" pull &
-    git -C "$DI_PKGLISTS_DIR" pull &
+    log_progress "Pulling latest changes in $DI_VOIDRICE_DIR, $DI_PKGLISTS_DIR"
+    git -C "$DI_VOIDRICE_DIR" pull
+    git -C "$DI_PKGLISTS_DIR" pull
 
     log_progress "[Background] Initializing submodules in $DI_VOIDRICE_DIR"
     git -C "$DI_VOIDRICE_DIR" submodule update --init --remote --recursive &
@@ -57,6 +56,7 @@ replace_stow() {
 
   if command -v stow >/dev/null 2>&1; then
     log_progress "Creating dirs in $HOME/.local/bin to ensure correct stow"
+
     for dir in "$HOME"/.config/dotfiles/voidrice/.local/bin/*/; do
       dir_name=$(basename "$dir")
       mkdir -p "$HOME"/.local/bin/"$dir_name"

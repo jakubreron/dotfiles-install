@@ -57,7 +57,7 @@ install_pkg_helper() {
 }
 
 install_zap() {
-  if ! [ -d "$HOME/.local/share/zap" ]; then 
+  if ! command -v zap >/dev/null 2>&1 ||  [ ! -d "$HOME/.local/share/zap" ]; then 
     log_progress "Setting up Zap"
     zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh)
   else
