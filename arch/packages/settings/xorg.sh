@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
 if command -v Xorg >/dev/null 2>&1; then
-  log_progress "Xorg detected, setting up"
+  log_progress "Xorg (or Xwayland) detected, setting up"
 
   setup_touchpad() {
     if laptop-detect >/dev/null 2>&1; then
       log_progress "Laptop detected, setting up the touchpad"
+
       printf 'Section "InputClass"
       Identifier "libinput touchpad catchall"
       MatchIsTouchpad "on"
@@ -22,6 +23,7 @@ if command -v Xorg >/dev/null 2>&1; then
   setup_intel_hd_xorg() {
     if laptop-detect >/dev/null 2>&1; then
       log_progress "Laptop detected, setting up Intel HD Graphics on Xorg"
+
       printf 'Section "Device"
       Identifier "Intel Graphics"
       Driver "intel"

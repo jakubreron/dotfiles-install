@@ -56,11 +56,13 @@ setup_userjs(){
       [ ! -f "$arkenfox" ] && curl -sL "https://raw.githubusercontent.com/arkenfox/user.js/master/user.js" > "$arkenfox"
       cat "$arkenfox" "$overrides" > "$userjs"
       sudo chown "$user:wheel" "$arkenfox" "$userjs"
+
       # Install the updating script.
       sudo mkdir -p /usr/local/lib /etc/pacman.d/hooks
       sudo cp "$HOME/.local/bin/arkenfox-auto-update" /usr/local/lib/
       sudo chown root:root /usr/local/lib/arkenfox-auto-update
       sudo chmod 755 /usr/local/lib/arkenfox-auto-update
+
       # Trigger the update when needed via a pacman hook.
       echo "[Trigger]
   Operation = Upgrade
@@ -90,9 +92,8 @@ setup_mpd() {
     log_progress "Setting up mpd"
 
     config_path="$HOME/.config/mpd" 
-    [ -d "$config_path" ] && mkdir -p "$config_path"
-    touch "$config_path"/{database,mpdstate}
     mkdir -p "$config_path/playlists"
+    touch "$config_path"/{database,mpdstate}
 
     systemctl --user enable --now mpd.service
   fi
@@ -122,11 +123,10 @@ setup_nightlight() {
     install_pkg gammastep
   fi
 
-  if  command -v gammastep >/dev/null 2>&1; then
-    if ! command -v Hyprland >/dev/null 2>&1; then
-      log_progress "Setting up nightlight"
-      systemctl --user enable gammastep.service --now
-    fi
+  # NOTE: on hyprland, it's launched via the config file
+  if command -v gammastep >/dev/null 2>&1 && ! command -v Hyprland >/dev/null 2>&1; then
+    log_progress "Setting up nightlight"
+    systemctl --user enable gammastep.service --now
   fi
 }
 
@@ -137,22 +137,23 @@ setup_display_brightness_util() {
   fi
 
   log_progress "Setting up display brightness management util (ddcutil)"
+
   sudo gpasswd --add "$DI_USER" i2c
   echo 'i2c_dev' | sudo tee /etc/modules-load.d/i2c_dev.conf
 }
 
 # TODO: add more integration steps
-setup_cloud() {
-  if ! command -v grive >/dev/null 2>&1; then
-    log_progress "Installing grive"
-    install_pkg grive
-  fi
+# setup_cloud() {
+#   if ! command -v grive >/dev/null 2>&1; then
+#     log_progress "Installing grive"
+#     install_pkg grive
+#   fi
 
-  if command -v grive >/dev/null 2>&1; then
-    log_progress "Setting up Google Drive integration"
-    systemctl --user enable --now grive@$(systemd-escape Cloud).service
-  fi
-}
+#   if command -v grive >/dev/null 2>&1; then
+#     log_progress "Setting up Google Drive integration"
+#     systemctl --user enable --now grive@$(systemd-escape Cloud).service
+#   fi
+# }
 
 setup_mpris_proxy() {
   if ! command -v playerctl >/dev/null 2>&1; then
@@ -179,6 +180,6 @@ setup_mpd
 setup_darkman
 setup_nightlight
 setup_display_brightness_util
-setup_cloud
+# setup_cloud
 setup_mpris_proxy
 # setup_mail
