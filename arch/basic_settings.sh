@@ -63,8 +63,12 @@ setup_sddm() {
     sudo groupadd autologin
     sudo usermod -aG autologin "$DI_USER"
 
+    sudo groupadd -r nopasswdlogin
+    sudo gpasswd -a "$DI_USER" nopasswdlogin
+
     sudo mkdir /etc/sddm.conf.d/
 
+    # ----------------------
     echo "[Autologin]
 User=$DI_USER
 Session=hyprland
@@ -72,6 +76,17 @@ Session=hyprland
 [Theme]
 Current=/usr/share/sddm/themes/catppuccin-mocha" | sudo tee /etc/sddm.conf.d/autologin.conf
   fi
+    # ----------------------
+
+    # ----------------------
+    echo "auth        sufficient  pam_succeed_if.so user ingroup nopasswdlogin
+auth        include     system-login" | sudo tee /etc/pam.d/sddm
+    # ----------------------
+
+    # ----------------------
+    echo "[General]
+DisplayServer=wayland" | sudo tee /etc/sddm.conf.d/10-wayland.conf
+    # ----------------------
 }
 
 setup_core_settings
