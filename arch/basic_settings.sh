@@ -23,6 +23,7 @@ setup_core_settings() {
 
 setup_grub() {
   log_progress "Setting up grub"
+
   grub_path="/etc/default/grub"
   if ! grep -q "GRUB_FORCE_HIDDEN_MENU=\"true\"" "$grub_path" || ! grep -q "GRUB_HIDDEN_TIMEOUT=\"0\"" "$grub_path"; then
     echo '
@@ -32,17 +33,20 @@ GRUB_HIDDEN_TIMEOUT="0"
   fi
 
   sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"$/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 iomem=relaxed"/' "$grub_path"
-
   sudo grub-mkconfig -o /boot/grub/grub.cfg
 }
 
 setup_bluetooth() {
+  if ! command -v bluetoothctl >/dev/null 2>&1; then
+    log_progress "Installing bluez-utils"
+    install_pkg bluez-utils
+  fi
+
   if command -v bluetoothctl >/dev/null 2>&1; then
     log_progress "Setting up the bluetooth"
+
     sudo sed -i 's/^#AutoEnable=true/AutoEnable=true/g' /etc/bluetooth/main.conf
     sudo systemctl enable bluetooth.service --now
-  else
-    log_error "Skipping the bluetooth setup"
   fi
 }
 
