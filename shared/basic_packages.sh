@@ -8,6 +8,9 @@ set_zsh_shell() {
 
   if command -v zsh >/dev/null 2>&1; then
     mkdir -p "$HOME/.cache/zsh/"
+    mkdir -p "$HOME/.config/zsh/"
+
+    touch "$HOME/.config/zsh/.zsh_history"
 
     if ! [[  "$SHELL" =~ .*'zsh' ]]; then
       log_progress "Changing default shell to ZSH"
@@ -35,9 +38,7 @@ install_pkg_helper() {
         path="$DI_GIT_CLONE_PATH/$DI_AUR_HELPER"
         clone_git_repo "https://aur.archlinux.org/$DI_AUR_HELPER.git" "$path"
 
-        cd "$path"
-        makepkg -si "$path"
-        cd -
+        (cd "$path" && makepkg -si "$path")
         rm -rf "$path"
       else
         log_status "AUR helper '$DI_AUR_HELPER' is already installed"️
