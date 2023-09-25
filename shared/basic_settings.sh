@@ -6,8 +6,11 @@ setup_user() {
       log_progress "Preparing the user permissions"
 
       mkdir -p "$HOME"
-      sudo usermod -aG wheel "$DI_USER"
-      sudo chown "$DI_USER":wheel "$HOME"
+
+      sudo usermod -aG wheel "$DI_USER" # sudo
+      sudo usermod -aG video "$DI_USER" # backlight
+
+      sudo chown "$DI_USER":wheel "$HOME" # chown /home/jakub just in case $HOME is created under root user
       ;;
   esac
 }
