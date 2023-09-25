@@ -3,9 +3,12 @@
 setup_core_settings() {
   log_progress "Setting up core settings"
 
-  # Make pacman colorful, concurrent downloads and Pacman eye-candy.
+  # Make pacman colorful, 
   grep -q "ILoveCandy" /etc/pacman.conf || sudo sed -i "/#VerbosePkgLists/a ILoveCandy" /etc/pacman.conf
   sudo sed -Ei "s/^#(ParallelDownloads).*/\1 = 15/;/^#Color$/s/#//" /etc/pacman.conf
+
+  # Enable multilib
+  sudo sed -i '/^# \[multilib\]$/,/^# Include = \/etc\/pacman\.d\/mirrorlist$/s/^# //' ./test 
 
   # Use all cores for compilation.
   sudo sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
