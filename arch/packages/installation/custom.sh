@@ -37,7 +37,7 @@ install_keyd() {
     sudo usermod -aG keyd "$DI_USER"
     sudo systemctl enable keyd --now
 
-    global_config_path="/etc/keyd/defaulf.conf"
+    global_config_path="/etc/keyd/default.conf"
     echo "[ids]
 *
 
