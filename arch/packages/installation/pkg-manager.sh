@@ -30,16 +30,16 @@ get_fastest_mirrors() {
   fi
 }
 
-if laptop-detect > /dev/null; then
-  if ! command -v thermald >/dev/null 2>&1; then
-    log_progress "Laptop detected, installing thermald"
-    install_pkg thermald 
-  fi
+# if laptop-detect > /dev/null; then
+#   if ! command -v thermald >/dev/null 2>&1; then
+#     log_progress "Laptop detected, installing thermald"
+#     install_pkg thermald 
+#   fi
 
-  if command -v thermald >/dev/null 2>&1; then
-    sudo systemctl enable thermald --now
-  fi
-fi
+#   if command -v thermald >/dev/null 2>&1; then
+#     sudo systemctl enable thermald --now
+#   fi
+# fi
 
 install_pkglists() {
   if command -v "$DI_AUR_HELPER" >/dev/null 2>&1; then

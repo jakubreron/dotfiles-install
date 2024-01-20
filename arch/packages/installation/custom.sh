@@ -1,29 +1,29 @@
 #!/usr/bin/env bash
 
-# install_auto_cpufreq() {
-#   if laptop-detect > /dev/null; then
-#     if ! command -v auto-cpufreq >/dev/null 2>&1; then
-#       log_progress "Laptop detected, installing auto_cpufreq"
-#       path="$DI_GIT_CLONE_PATH/auto-cpufreq"
-#       git clone https://github.com/AdnanHodzic/auto-cpufreq.git "$path"
-#       cd "$path" && sudo ./auto-cpufreq-installer
-#       sudo auto-cpufreq --install
-#       rm -rf "$path"
-#     fi
+install_auto_cpufreq() {
+  if laptop-detect > /dev/null; then
+    if ! command -v auto-cpufreq >/dev/null 2>&1; then
+      log_progress "Laptop detected, installing auto_cpufreq"
+      path="$DI_GIT_CLONE_PATH/auto-cpufreq"
+      git clone https://github.com/AdnanHodzic/auto-cpufreq.git "$path"
+      cd "$path" && sudo ./auto-cpufreq-installer
+      sudo auto-cpufreq --install
+      rm -rf "$path"
+    fi
 
-#     if command -v auto-cpufreq >/dev/null 2>&1; then
-#       log_status "auto-cpufreq is already installed, performing the setup"️
+    if command -v auto-cpufreq >/dev/null 2>&1; then
+      log_status "auto-cpufreq is already installed, performing the setup"️
 
-#       sudo systemctl enable --now auto-cpufreq.service
-#       sudo systemctl mask power-profiles-daemon.service
-#       curl -sL "https://raw.githubusercontent.com/AdnanHodzic/auto-cpufreq/master/auto-cpufreq.conf-example" | sudo tee /etc/auto-cpufreq.conf
-#       sudo sed -i '/^\[battery\]/,/^\[/s/^# scaling_min_freq = 800000/scaling_min_freq = 1200000/' /etc/auto-cpufreq.conf
-#       sudo systemctl restart auto-cpufreq.service
-#     fi
-#   else
-#     log_status "No laptop detected, skipping auto_cpufreq installation"️
-#   fi
-# }
+      sudo systemctl enable --now auto-cpufreq.service
+      sudo systemctl mask power-profiles-daemon.service
+      curl -sL "https://raw.githubusercontent.com/AdnanHodzic/auto-cpufreq/master/auto-cpufreq.conf-example" | sudo tee /etc/auto-cpufreq.conf
+      sudo sed -i '/^\[battery\]/,/^\[/s/^# scaling_min_freq = 800000/scaling_min_freq = 1200000/' /etc/auto-cpufreq.conf
+      sudo systemctl restart auto-cpufreq.service
+    fi
+  else
+    log_status "No laptop detected, skipping auto_cpufreq installation"️
+  fi
+}
 
 install_keyd() {
   if ! command -v keyd >/dev/null 2>&1; then
