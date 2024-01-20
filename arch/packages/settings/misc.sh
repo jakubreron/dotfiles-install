@@ -130,18 +130,6 @@ setup_nightlight() {
   fi
 }
 
-setup_display_brightness_util() {
-  if ! command -v ddcutil >/dev/null 2>&1; then
-    log_progress "Installing display brightness management util (ddcutil)"
-    install_pkg ddcutil
-  fi
-
-  log_progress "Setting up display brightness management util (ddcutil)"
-
-  sudo gpasswd --add "$DI_USER" i2c
-  echo 'i2c_dev' | sudo tee /etc/modules-load.d/i2c_dev.conf
-}
-
 # TODO: add more integration steps
 # setup_cloud() {
 #   if ! command -v grive >/dev/null 2>&1; then
@@ -179,7 +167,6 @@ setup_userjs
 setup_mpd
 setup_darkman
 setup_nightlight
-setup_display_brightness_util
 # setup_cloud
 setup_mpris_proxy
 # setup_mail
