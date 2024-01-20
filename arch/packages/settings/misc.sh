@@ -161,6 +161,40 @@ setup_mpris_proxy() {
 # setup_mail() {
 #   mw -t 5
 # }
+#
+
+setup_thinkpad_thermal_management_fixes() {
+  if [[ "$(cat /sys/devices/virtual/dmi/id/chassis_vendor)" = 'LENOVO' ]]; then
+    printf '#!/bin/bash
+# Disable BD PROCHOT signal on ThinkPads to prevent throttling the CPU to min. freq.
+modprobe msr
+reg="$(rdmsr -d 0x1FC)"         # commands rdmsr and wrmsr provided by msr-tools on Arch
+if [ $((reg%2)) -eq 1 ]; then   # basically reg & 0xFFFE
+	wrmsr 0x1FC $((reg-1))
+fi' | sudo tee /usr/local/bin/throttlestop
+    sudo chmod +x /usr/local/bin/throttlestop
+
+    printf '[Unit]
+Description=Stop throttling on x1 carbon
+#After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/throttlestop
+ExecStop=/usr/local/bin/throttlestop
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target'
+
+    if [ -f /usr/lib/systemd/system/thermald.service ] >/dev/null 2>&1; then
+      sudo sed --in-place --follow-symlinks "0,/ExecStart.*/s//ExecStart=\/usr\/bin\/thermald --systemd --dbus-enable --adaptive --ignore-cpuid-check/" /usr/lib/systemd/system/thermald.service
+    fi
+
+    systemctl daemon-reload
+    systemctl enable throttlestop.service --now
+  fi
+}
 
 setup_cache_management
 setup_userjs
@@ -170,3 +204,4 @@ setup_nightlight
 # setup_cloud
 setup_mpris_proxy
 # setup_mail
+setup_thinkpad_thermal_management_fixes   
