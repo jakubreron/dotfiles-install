@@ -99,7 +99,21 @@ DisplayServer=wayland" | sudo tee /etc/sddm.conf.d/10-wayland.conf
     # ----------------------
 }
 
+setup_systemd() {
+echo "
+[Service]
+ExecStart=/bin/bash /home/jakub/.local/bin/entr/entr-overwrite-to-performance
+
+[Install]
+WantedBy=multi-user.target
+" | sudo tee /etc/systemd/system/entr-overwrite-to-performance.service
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now entr-overwrite-to-performance.service
+}
+
 setup_core_settings
 setup_grub
 setup_bluetooth
 setup_sddm
+setup_systemd
