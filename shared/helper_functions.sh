@@ -64,25 +64,3 @@ clone_git_repo() {
     log_status "Skipping $destination, the repository already exists"️
   fi
 }
-
-compile() {
-  path="$1"
-  log_progress "Compiling $path"
-  [ -d "$path" ] && sudo make -C "$path" && sudo make install -C "$path"
-}
-
-compile_from_git_path() {
-  repo="https://github.com/jakubreron/$1"
-  path="$HOME/.local/src/$1"
-
-  [ ! -d "$path" ] && git clone "$repo" "$path"
-
-  if laptop-detect >/dev/null 2>&1; then
-    git -C "$path" fetch origin laptop:laptop 2>/dev/null
-    if git -C "$path" fetch origin laptop:laptop 2>/dev/null; then
-      git -C "$path" checkout laptop
-    fi
-  fi
-
-  compile "$path"
-}

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set_zsh_shell() {
+install_and_setup_zsh() {
   if ! command -v zsh >/dev/null 2>&1; then
     log_progress "Installing ZSH"
     install_pkg zsh zsh-completions
@@ -65,20 +65,6 @@ install_zap() {
   fi
 }
 
-install_lvim() {
-  if ! command -v lvim >/dev/null 2>&1 || [[ ! -d "$HOME/.config/lvim" ]] || [[ ! -d "$HOME/.local/share/lunarvim" ]]; then
-    log_progress "Installing LunarVim"
-    bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
-
-    log_progress "Replacing default LunarVim config with dotfiles config"
-    config_dir="$HOME/.config/lvim"
-    rm -rf "$config_dir"
-    git clone https://github.com/jakubreron/lvim "$config_dir"
-  else
-    log_status "LunarVim is already installed"️
-  fi
-}
-
 install_node_packages() {
   if ! command -v "$DI_NPM_HELPER" >/dev/null 2>&1; then 
     log_progress "Installing $DI_NPM_HELPER"
@@ -98,8 +84,7 @@ install_node_packages() {
 }
 
 
-set_zsh_shell
+install_and_setup_zsh
 install_pkg_helper
 install_zap
-install_lvim
 install_node_packages

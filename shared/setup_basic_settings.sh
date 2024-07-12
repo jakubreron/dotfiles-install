@@ -17,6 +17,7 @@ setup_user() {
 
 create_dirs() {
   log_progress "Creating common folders in $HOME"
+
   mkdir -p "$HOME"/{Documents,Downloads,Music,Pictures}
   mkdir -p "$HOME"/Documents/Projects/{personal,work}
   mkdir -p "$HOME"/.local/{bin,share,src}

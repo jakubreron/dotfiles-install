@@ -32,14 +32,14 @@ Exec = /usr/bin/paccache -r' | sudo tee /usr/share/libalpm/hooks/paccache.hook
 }
 
 setup_userjs(){
-  if ! command -v "$DI_BROWSER" >/dev/null 2>&1; then
-    log_progress "Installing $DI_BROWSER"
-    install_pkg "$DI_BROWSER"
+  if ! command -v "$DI_FIREFOX_BROWSER" >/dev/null 2>&1; then
+    log_progress "Installing $DI_FIREFOX_BROWSER"
+    install_pkg "$DI_FIREFOX_BROWSER"
   fi
 
-  if command -v "$DI_BROWSER" >/dev/null 2>&1; then
-    log_progress "Launching headless $DI_BROWSER for profile generation"
-    sudo -u "$DI_USER" "$DI_BROWSER" --headless >/dev/null 2>&1 &
+  if command -v "$DI_FIREFOX_BROWSER" >/dev/null 2>&1; then
+    log_progress "Launching headless $DI_FIREFOX_BROWSER for profile generation"
+    sudo -u "$DI_USER" "$DI_FIREFOX_BROWSER" --headless >/dev/null 2>&1 &
     sleep 1
 
     browser_dir="$HOME/.mozilla/firefox"
@@ -77,7 +77,7 @@ setup_userjs(){
   Depends=arkenfox-user.js
   Exec=/usr/local/lib/arkenfox-auto-update" | sudo tee /etc/pacman.d/hooks/arkenfox.hook
 
-      sudo pkill -u "$DI_USER" "$DI_BROWSER"
+      sudo pkill -u "$DI_USER" "$DI_FIREFOX_BROWSER"
     fi
   fi
 }
@@ -131,17 +131,17 @@ setup_nightlight() {
 }
 
 # TODO: add more integration steps
-# setup_cloud() {
-#   if ! command -v grive >/dev/null 2>&1; then
-#     log_progress "Installing grive"
-#     install_pkg grive
-#   fi
+setup_cloud() {
+  if ! command -v grive >/dev/null 2>&1; then
+    log_progress "Installing grive"
+    install_pkg grive
+  fi
 
-#   if command -v grive >/dev/null 2>&1; then
-#     log_progress "Setting up Google Drive integration"
-#     systemctl --user enable --now grive@$(systemd-escape Cloud).service
-#   fi
-# }
+  if command -v grive >/dev/null 2>&1; then
+    log_progress "Setting up Google Drive integration"
+    systemctl --user enable --now grive@$(systemd-escape Cloud).service
+  fi
+}
 
 setup_mpris_proxy() {
   if ! command -v playerctl >/dev/null 2>&1; then
@@ -156,12 +156,6 @@ setup_mpris_proxy() {
     systemctl --user enable --now mpris-proxy.service
   fi
 }
-
-# TODO: do more steps
-# setup_mail() {
-#   mw -t 5
-# }
-#
 
 setup_thinkpad_thermal_management_fixes() {
   if [[ "$(cat /sys/devices/virtual/dmi/id/chassis_vendor)" = 'LENOVO' ]]; then
@@ -203,5 +197,4 @@ setup_darkman
 setup_nightlight
 # setup_cloud
 setup_mpris_proxy
-# setup_mail
 setup_thinkpad_thermal_management_fixes   
