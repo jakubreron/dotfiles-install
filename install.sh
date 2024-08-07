@@ -8,9 +8,6 @@ BASEDIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 case "$OS" in
   Linux)
-    # TODO: preinstall keepassxc addon (and maybe more essential addons) to the firefox
-    # TODO: setup email
-
     declare -x DI_USER="${DI_USER:-jakub}" 
     declare -x DI_PKG_TYPE="${DI_PKG_TYPE:-secondary}"
     declare -xr DI_FIREFOX_BROWSER="firefox-developer-edition"

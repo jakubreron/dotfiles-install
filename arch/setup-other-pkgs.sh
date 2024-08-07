@@ -31,57 +31,6 @@ Exec = /usr/bin/paccache -r' | sudo tee /usr/share/libalpm/hooks/paccache.hook
   fi
 }
 
-setup_userjs(){
-  if ! command -v "$DI_FIREFOX_BROWSER" >/dev/null 2>&1; then
-    log_progress "Installing $DI_FIREFOX_BROWSER"
-    install_pkg "$DI_FIREFOX_BROWSER"
-  fi
-
-  if command -v "$DI_FIREFOX_BROWSER" >/dev/null 2>&1; then
-    log_progress "Launching headless $DI_FIREFOX_BROWSER for profile generation"
-    sudo -u "$DI_USER" "$DI_FIREFOX_BROWSER" --headless >/dev/null 2>&1 &
-    sleep 1
-
-    browser_dir="$HOME/.mozilla/firefox"
-    browser_profiles_ini_dir="$browser_dir/profiles.ini"
-    profile="$(sed -n "/Default=.*.dev-edition-default/ s/.*=//p" "$browser_profiles_ini_dir")"
-    browser_profile_dir="$browser_dir/$profile"
-
-    if [ -d "$browser_profile_dir" ]; then
-      log_progress "Creating and deploying user.js file for firefox"
-      arkenfox="$browser_profile_dir/arkenfox.js"
-      overrides="$browser_profile_dir/user-overrides.js"
-      userjs="$browser_profile_dir/user.js"
-      ln -fs "$HOME/.config/firefox/larbs.js" "$overrides"
-      [ ! -f "$arkenfox" ] && curl -sL "https://raw.githubusercontent.com/arkenfox/user.js/master/user.js" > "$arkenfox"
-      cat "$arkenfox" "$overrides" > "$userjs"
-      sudo chown "$user:wheel" "$arkenfox" "$userjs"
-
-      # Install the updating script.
-      sudo mkdir -p /usr/local/lib /etc/pacman.d/hooks
-      sudo cp "$HOME/.local/bin/arkenfox-auto-update" /usr/local/lib/
-      sudo chown root:root /usr/local/lib/arkenfox-auto-update
-      sudo chmod 755 /usr/local/lib/arkenfox-auto-update
-
-      # Trigger the update when needed via a pacman hook.
-      echo "[Trigger]
-  Operation = Upgrade
-  Type = Package
-  Target = firefox
-  Target = firefox-developer-edition
-  Target = librewolf
-  Target = librewolf-bin
-  [Action]
-  Description=Update Arkenfox user.js
-  When=PostTransaction
-  Depends=arkenfox-user.js
-  Exec=/usr/local/lib/arkenfox-auto-update" | sudo tee /etc/pacman.d/hooks/arkenfox.hook
-
-      sudo pkill -u "$DI_USER" "$DI_FIREFOX_BROWSER"
-    fi
-  fi
-}
-
 setup_mpd() {
   if ! command -v mpd >/dev/null 2>&1; then
     log_progress "Installing mpd"
@@ -191,7 +140,6 @@ WantedBy=multi-user.target'
 }
 
 setup_cache_management
-setup_userjs
 setup_mpd
 setup_darkman
 setup_nightlight
