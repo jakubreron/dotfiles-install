@@ -31,7 +31,7 @@ install_keyd() {
   if command -v keyd >/dev/null 2>&1; then
     log_status "keyd is already installed, performing the setup"️
 
-    sudo usermod -aG keyd "$DI_USER"
+    sudo usermod -aG keyd "$USER"
     sudo systemctl enable keyd --now
 
     global_config_path="/etc/keyd/default.conf"

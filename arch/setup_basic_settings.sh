@@ -68,17 +68,17 @@ setup_sddm() {
     sudo cp -r /home/jakub/.config/dotfiles/voidrice/.local/share/sddm/themes/catppuccin/src/* /usr/share/sddm/themes
 
     sudo groupadd autologin
-    sudo usermod -aG autologin "$DI_USER"
+    sudo usermod -aG autologin "$USER"
 
     sudo groupadd -r nopasswdlogin
-    sudo gpasswd -a "$DI_USER" nopasswdlogin
+    sudo gpasswd -a "$USER" nopasswdlogin
 
     sudo mkdir /etc/sddm.conf.d/
 
     # NOTE: create autologin
     # ----------------------
     echo "[Autologin]
-User=$DI_USER
+User=$USER
 Session=hyprland
 
 [Theme]
