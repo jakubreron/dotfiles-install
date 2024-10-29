@@ -87,4 +87,4 @@ install_node_packages() {
 install_and_setup_zsh
 install_pkg_helper
 install_zap
-install_node_packages
+# install_node_packages

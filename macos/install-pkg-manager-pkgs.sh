@@ -6,11 +6,11 @@ update_system() {
 }
 
 install_pkglists() {
-  if command -v "$DI_AUR_HELPER" >/dev/null 2>&1; then
+  if command -v "brew" >/dev/null 2>&1; then
     log_progress "Installing dotfiles packages"
 
-    cat "$DI_PKGLISTS_DIR/$DI_PKG_TYPE/brew.txt" | xargs install_pkg
-    cat "$DI_PKGLISTS_DIR/$DI_PKG_TYPE/brew-casks.txt" | xargs install_pkg -- --cask
+    cat "$DI_PKGLISTS_DIR/$DI_PKG_TYPE/brew.txt" | xargs brew install
+    cat "$DI_PKGLISTS_DIR/$DI_PKG_TYPE/brew-casks.txt" | xargs brew install -- --cask
   fi
 }
 

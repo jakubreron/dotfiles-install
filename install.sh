@@ -26,7 +26,7 @@ case "$OS" in
     declare -xr DI_FIREFOX_BROWSER="firefox"
 
     source "$BASEDIR/shared/install.sh"
-    # source "$BASEDIR/macos/install.sh"
+    source "$BASEDIR/macos/install.sh"
     ;;
   *)
     echo "OS $OS is not currently supported."
