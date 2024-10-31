@@ -19,11 +19,11 @@ declare -xr DI_MACOS_REPO="https://github.com/jakubreron/macos.git"
 
 declare -xr DI_GIT_CLONE_PATH="$HOME/Downloads/git-clone"
 
+# TODO: @Jakub add check to prevent using this script as a root user
 case "$OS" in
   Linux)
     declare -x DI_PKG_TYPE="${DI_PKG_TYPE:-primary}"
     declare -xr DI_FIREFOX_BROWSER="firefox-developer-edition"
-    declare -xr HOME="/home/$USER" # needed if you run script as root
     ;;
   Darwin)
     declare -xr DI_PKG_TYPE="work"

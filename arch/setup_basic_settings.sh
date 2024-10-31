@@ -3,6 +3,9 @@
 setup_core_settings() {
   log_progress "Setting up core settings"
 
+  sudo usermod -aG wheel "$USER" # sudo
+  sudo usermod -aG video "$USER" # backlight
+
   # Make pacman colorful, 
   grep -q "ILoveCandy" /etc/pacman.conf || sudo sed -i "/#VerbosePkgLists/a ILoveCandy" /etc/pacman.conf
   sudo sed -Ei "s/^#(ParallelDownloads).*/\1 = 15/;/^#Color$/s/#//" /etc/pacman.conf

@@ -9,5 +9,13 @@ if command -v "$DI_NPM_HELPER" >/dev/null 2>&1; then
   log_progress "Installing node packages via $DI_NPM_HELPER"
 
   packages="$DI_PKGLISTS_DIR/$DI_PKG_TYPE/$DI_NPM_HELPER.txt"
-  cat "$packages" | xargs $DI_NPM_HELPER install --global
+
+  if ! command -v xargs >/dev/null 2>&1; then
+    log_progress "xargs not detected, installing"
+    install_pkg xargs 
+  fi
+
+  if command -v xargs >/dev/null 2>&1; then
+    cat "$packages" | xargs $DI_NPM_HELPER install --global
+  fi
 fi

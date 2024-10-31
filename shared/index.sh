@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-source "$BASEDIR/shared/user.sh"
 source "$BASEDIR/shared/dirs.sh"
 source "$BASEDIR/shared/repos.sh"
 source "$BASEDIR/shared/stow.sh"
