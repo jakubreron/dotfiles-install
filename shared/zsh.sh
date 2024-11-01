@@ -11,7 +11,7 @@ if command -v zsh >/dev/null 2>&1; then
 
   touch "$HOME/.cache/zsh/.zsh_history"
 
-  if ! [[  "$SHELL" =~ .*'zsh' ]]; then
+  if ! [[ "$SHELL" =~ .*'zsh' ]]; then
     log_progress "Changing default shell to ZSH"
 
     case "$OS" in

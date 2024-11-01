@@ -19,3 +19,5 @@ case "$OS" in
     exit 1
     ;;
 esac
+
+source "$BASEDIR/cleanup.sh"

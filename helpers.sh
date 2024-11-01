@@ -43,7 +43,6 @@ log_status() {
   message="$1"
   emoji="${2:-✅}"
 
-
   log_message "$message" "$emoji"
 }
 
@@ -62,6 +61,12 @@ clone_git_repo() {
     log_progress "$destination does not exist, cloning via git"
     git clone "$repo" "$destination"
   else
-    log_status "Skipping $destination, the repository already exists"️
+    log_status "Pulling latest changes in  $destination, the repository already existed"️
+    git -C "$destination" pull
+  fi
+
+  if [[ -f "$destination/.gitmodules" ]]; then
+    log_progress "[Background] Initializing submodules in $destination"
+    git -C "$destination" submodule update --init --remote --recursive &
   fi
 }
