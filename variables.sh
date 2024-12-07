@@ -5,6 +5,7 @@ OS="$(uname -s)"
 
 declare -xr DI_AUR_HELPER="paru"
 declare -xr DI_NPM_HELPER="npm"
+declare -xr DI_FIREFOX_BROWSER="firefox"
 
 declare -xr DI_DOTFILES_DIR="$HOME/.config/dotfiles"
 declare -xr DI_NVIM_DIR="$HOME/.config/nvim"
@@ -23,11 +24,9 @@ declare -xr DI_GIT_CLONE_PATH="$HOME/Downloads/git-clone"
 case "$OS" in
   Linux)
     declare -x DI_PKG_TYPE="${DI_PKG_TYPE:-primary}"
-    declare -xr DI_FIREFOX_BROWSER="firefox-developer-edition"
     ;;
   Darwin)
     declare -xr DI_PKG_TYPE="work"
-    declare -xr DI_FIREFOX_BROWSER="firefox"
     ;;
 esac
 
