@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-source "$BASEDIR/macos/install-pkg-manager-pkgs.sh"
+source "$BASEDIR/macos/install_pkg_manager_pkgs.sh"
 source "$BASEDIR/macos/setup_basic_settings.sh"
