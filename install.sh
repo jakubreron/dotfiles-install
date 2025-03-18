@@ -5,7 +5,7 @@ BASEDIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 source "$BASEDIR/variables.sh"
 source "$BASEDIR/helpers.sh"
-source "$BASEDIR/shared/index.sh"
+source "$BASEDIR/shared.sh"
 
 case "$OS" in
   Linux)
@@ -20,4 +20,5 @@ case "$OS" in
     ;;
 esac
 
-source "$BASEDIR/cleanup.sh"
+# cleanup
+rm -rf "$DI_GIT_CLONE_PATH"
