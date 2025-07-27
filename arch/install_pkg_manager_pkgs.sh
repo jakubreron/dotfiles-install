@@ -8,9 +8,7 @@ update_system() {
 }
 
 install_core_packages() {
-  for package in curl ca-certificates base-devel ntp laptop-detect reflector rsync; do
-    install_pkg "$package"
-  done
+  install_pkg curl ca-certificates base-devel ntp laptop-detect reflector rsync
 }
 
 get_fastest_mirrors() {
