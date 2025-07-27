@@ -35,9 +35,10 @@ fi
 if command -v stow >/dev/null 2>&1; then
   log_progress "Creating dirs in $HOME/.local/bin to ensure correct stow"
 
+  # TODO: Fix
   for dir in "$DI_DOTFILES_DIR"/.local/bin/*/; do
     dir_name=$(basename "$dir")
-    mkdir -p "$HOME"/.local/bin/"$dir_name"
+    mkdir -p "$HOME/.local/bin/$dir_name"
   done
 
   log_progress "Stowing the dotfiles"

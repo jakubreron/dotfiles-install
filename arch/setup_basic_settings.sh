@@ -11,7 +11,7 @@ setup_core_settings() {
   sudo sed -Ei "s/^#(ParallelDownloads).*/\1 = 15/;/^#Color$/s/#//" /etc/pacman.conf
 
   # Enable multilib
-  sudo sed -i '/^# \[multilib\]$/,/^# Include = \/etc\/pacman\.d\/mirrorlist$/s/^# //' ./etc/pacman.conf 
+  sudo sed -i '/^# \[multilib\]$/,/^# Include = \/etc\/pacman\.d\/mirrorlist$/s/^# //' /etc/pacman.conf 
 
   # Use all cores for compilation.
   sudo sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
@@ -116,7 +116,8 @@ sudo systemctl enable --now entr-overwrite-to-performance.service
 }
 
 setup_core_settings
-setup_grub
+# TODO: setup only if it's used
+# setup_grub
 setup_bluetooth
 setup_sddm
 setup_systemd
