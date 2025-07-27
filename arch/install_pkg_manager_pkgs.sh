@@ -8,9 +8,7 @@ update_system() {
 }
 
 install_core_packages() {
-  for package in curl ca-certificates base-devel ntp laptop-detect reflector rsync; do
-    install_pkg "$package"
-  done
+  install_pkg curl cacertificates base-devel ntp laptop-detect reflector rsync
 }
 
 get_fastest_mirrors() {
@@ -25,7 +23,7 @@ get_fastest_mirrors() {
       log_progress "Getting the fastest mirrors before installing the dotfiles packages"
       sudo reflector -f 30 -l 30 -c Japan --number 10 --verbose --save /etc/pacman.d/mirrorlist
 
-      echo "Reflector was already updated" > "$reflector_state_file"
+      echo "Reflector was already updated" >"$reflector_state_file"
     fi
   fi
 }
@@ -33,7 +31,7 @@ get_fastest_mirrors() {
 install_pkglists() {
   if command -v "$DI_AUR_HELPER" >/dev/null 2>&1; then
     log_progress "Installing dotfiles packages"
-    install_pkg - < "$DI_PKGLISTS_DIR/$DI_PKG_TYPE/pacman.txt";
+    install_pkg - <"$DI_PKGLISTS_DIR/$DI_PKG_TYPE/pacman.txt"
   else
     log_error "AUR Helper not detected, quitting"
     exit

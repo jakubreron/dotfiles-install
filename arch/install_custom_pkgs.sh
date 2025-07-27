@@ -4,11 +4,8 @@ install_auto_cpufreq() {
   if laptop-detect > /dev/null; then
     if ! command -v auto-cpufreq >/dev/null 2>&1; then
       log_progress "Laptop detected, installing auto_cpufreq"
-      path="$DI_GIT_CLONE_PATH/auto-cpufreq"
-      git clone https://github.com/AdnanHodzic/auto-cpufreq.git "$path"
-      cd "$path" && sudo ./auto-cpufreq-installer
+      install_pkg auto-cpufreq
       sudo auto-cpufreq --install
-      rm -rf "$path"
     fi
 
     sudo systemctl enable --now auto-cpufreq.service
