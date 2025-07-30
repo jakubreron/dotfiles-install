@@ -3,6 +3,8 @@
 declare -x BASEDIR
 BASEDIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
+# TODO: add check to prevent using this script as a root user
+
 source "$BASEDIR/variables.sh"
 source "$BASEDIR/helpers.sh"
 source "$BASEDIR/shared.sh"
