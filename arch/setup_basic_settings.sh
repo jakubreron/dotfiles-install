@@ -6,12 +6,12 @@ setup_core_settings() {
   sudo usermod -aG wheel "$USER" # sudo
   sudo usermod -aG video "$USER" # backlight
 
-  # Make pacman colorful, 
+  # Make pacman colorful,
   grep -q "ILoveCandy" /etc/pacman.conf || sudo sed -i "/#VerbosePkgLists/a ILoveCandy" /etc/pacman.conf
   sudo sed -Ei "s/^#(ParallelDownloads).*/\1 = 15/;/^#Color$/s/#//" /etc/pacman.conf
 
   # Enable multilib
-  sudo sed -i '/^# \[multilib\]$/,/^# Include = \/etc\/pacman\.d\/mirrorlist$/s/^# //' /etc/pacman.conf 
+  sudo sed -i '/^# \[multilib\]$/,/^# Include = \/etc\/pacman\.d\/mirrorlist$/s/^# //' /etc/pacman.conf
 
   # Use all cores for compilation.
   sudo sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
@@ -88,17 +88,17 @@ Session=hyprland
 Current=/usr/share/sddm/themes/catppuccin-mocha" | sudo tee /etc/sddm.conf.d/autologin.conf
   fi
 
-    # NOTE: add permissions for login without password
-    echo "auth        sufficient  pam_succeed_if.so user ingroup nopasswdlogin
+  # NOTE: add permissions for login without password
+  echo "auth        sufficient  pam_succeed_if.so user ingroup nopasswdlogin
 auth        include     system-login" | sudo tee /etc/pam.d/sddm
 
-    # NOTE: make sure everything is wayland compatible
-    echo "[General]
+  # NOTE: make sure everything is wayland compatible
+  echo "[General]
 DisplayServer=wayland" | sudo tee /etc/sddm.conf.d/10-wayland.conf
 }
 
 setup_systemd() {
-echo "
+  echo "
 [Service]
 ExecStart=/bin/bash /home/jakub/.local/bin/entr/entr-overwrite-to-performance
 
@@ -106,8 +106,8 @@ ExecStart=/bin/bash /home/jakub/.local/bin/entr/entr-overwrite-to-performance
 WantedBy=multi-user.target
 " | sudo tee /etc/systemd/system/entr-overwrite-to-performance.service
 
-sudo systemctl daemon-reload
-sudo systemctl enable --now entr-overwrite-to-performance.service
+  sudo systemctl daemon-reload
+  sudo systemctl enable --now entr-overwrite-to-performance.service
 }
 
 setup_core_settings

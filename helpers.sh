@@ -6,18 +6,18 @@ remove_db_lock() {
 
 install_pkg() {
   case "$OS" in
-    Linux)
-      remove_db_lock
+  Linux)
+    remove_db_lock
 
-      if command -v "$DI_AUR_HELPER" >/dev/null 2>&1; then
-        "$DI_AUR_HELPER" --needed -S "$@"
-      else
-        sudo pacman --needed -S "$@"
-      fi
-      ;;
-    Darwin)
-      brew install "$@"
-      ;;
+    if command -v "$DI_AUR_HELPER" >/dev/null 2>&1; then
+      "$DI_AUR_HELPER" --needed -S "$@"
+    else
+      sudo pacman --needed -S "$@"
+    fi
+    ;;
+  Darwin)
+    brew install "$@"
+    ;;
   esac
 }
 

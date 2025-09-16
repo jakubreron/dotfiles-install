@@ -2,10 +2,10 @@
 
 setup_cache_management() {
   log_progress "Setting up the cache management"
-  sudo journalctl --vacuum-time=4weeks 
+  sudo journalctl --vacuum-time=4weeks
 
   if ! [ -f /etc/systemd/system/paccache.timer ] >/dev/null 2>&1; then
-  echo '[Unit]
+    echo '[Unit]
 Description=Clean-up old pacman pkg
 
 [Timer]
@@ -17,7 +17,7 @@ WantedBy=multi-user.target' | sudo tee /etc/systemd/system/paccache.timer
   fi
 
   if ! [ -f /usr/share/libalpm/hooks/paccache.hook ] >/dev/null 2>&1; then
-  echo '[Trigger]
+    echo '[Trigger]
 Operation = Upgrade
 Operation = Install
 Operation = Remove
@@ -40,7 +40,7 @@ setup_mpd() {
   if command -v mpd >/dev/null 2>&1; then
     log_progress "Setting up mpd"
 
-    config_path="$HOME/.config/mpd" 
+    config_path="$HOME/.config/mpd"
     mkdir -p "$config_path/playlists"
     touch "$config_path"/{database,mpdstate}
 
@@ -74,7 +74,6 @@ setup_mpris_proxy() {
     systemctl --user enable --now mpris-proxy.service
   fi
 }
-
 
 setup_cache_management
 setup_mpd

@@ -18,11 +18,10 @@ declare -xr DI_PKGLISTS_REPO="https://github.com/jakubreron/pkglists.git"
 declare -xr DI_GIT_CLONE_PATH="$HOME/Downloads/git-clone"
 
 case "$OS" in
-  Linux)
-    declare -x DI_PKG_TYPE="${DI_PKG_TYPE:-primary}"
-    ;;
-  Darwin)
-    declare -xr DI_PKG_TYPE="work"
-    ;;
+Linux)
+  declare -x DI_PKG_TYPE="${DI_PKG_TYPE:-primary}"
+  ;;
+Darwin)
+  declare -xr DI_PKG_TYPE="work"
+  ;;
 esac
-

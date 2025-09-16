@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 install_auto_cpufreq() {
-  if laptop-detect > /dev/null; then
+  if laptop-detect >/dev/null; then
     if ! command -v auto-cpufreq >/dev/null 2>&1; then
       log_progress "Laptop detected, installing auto_cpufreq"
       install_pkg auto-cpufreq
