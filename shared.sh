@@ -8,8 +8,7 @@ mkdir -p "$HOME"/.local/{bin,share,src}
 
 case "$OS" in
 Linux)
-  mkdir -p "$HOME"/{Videos,Cloud}
-  mkdir -p "$HOME"/Documents/Torrents "$HOME"/Videos/Recordings "$HOME"/Pictures/Screenshots
+  mkdir -p "$HOME"/{Videos} "$HOME"/Documents/Torrents "$HOME"/Videos/Recordings "$HOME"/Pictures/Screenshots
   ;;
 esac
 
