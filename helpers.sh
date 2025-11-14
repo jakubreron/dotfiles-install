@@ -57,7 +57,7 @@ clone_git_repo() {
   repo="$1"
   destination="$2"
 
-  if [ ! -d "$destination" ] >/dev/null 2>&1; then
+  if [[ ! -d "$destination" ]] >/dev/null 2>&1; then
     log_progress "$destination does not exist, cloning via git"
     git clone "$repo" "$destination"
   else

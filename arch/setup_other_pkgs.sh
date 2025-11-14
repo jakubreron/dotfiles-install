@@ -42,7 +42,7 @@ setup_mpd() {
 
     config_path="$HOME/.config/mpd"
     mkdir -p "$config_path/playlists"
-    touch "$config_path"/{database,mpdstate}
+    touch $config_path/{database,mpdstate}
 
     systemctl --user enable --now mpd.service
   fi

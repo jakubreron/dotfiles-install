@@ -2,13 +2,13 @@
 
 log_progress "Creating common folders"
 
-mkdir -p "$HOME"/{Documents,Downloads,Music,Pictures}
-mkdir -p "$HOME"/Documents/Projects/{personal,work}
-mkdir -p "$HOME"/.local/{bin,share,src}
+mkdir -p $HOME/{Documents,Downloads,Music,Pictures}
+mkdir -p $HOME/Documents/Projects/{personal,work}
+mkdir -p $HOME/.local/{bin,share,src}
 
 case "$OS" in
 Linux)
-  mkdir -p "$HOME"/{Videos} "$HOME"/Documents/Torrents "$HOME"/Videos/Recordings "$HOME"/Pictures/Screenshots
+  mkdir -p $HOME/{Videos} $HOME/Documents/Torrents $HOME/Videos/Recordings $HOME/Pictures/Screenshots
   ;;
 esac
 
@@ -23,6 +23,7 @@ fi
 if command -v git >/dev/null 2>&1; then
   clone_git_repo "$DI_VOIDRICE_REPO" "$DI_VOIDRICE_DIR"
   clone_git_repo "$DI_PKGLISTS_REPO" "$DI_PKGLISTS_DIR"
+  clone_git_repo "$DI_MACOS_REPO" "$DI_MACOS_DIR"
   clone_git_repo "$DI_NVIM_REPO" "$DI_NVIM_DIR"
 fi
 
@@ -34,8 +35,8 @@ fi
 if command -v stow >/dev/null 2>&1; then
   log_progress "Creating dirs in $HOME/.local/bin to ensure correct stow"
 
-  # TODO: Fix
-  for dir in "$DI_DOTFILES_DIR"/.local/bin/*/; do
+  # TODO: Check if it's fixed
+  for dir in $DI_DOTFILES_DIR/.local/bin//; do
     dir_name=$(basename "$dir")
     mkdir -p "$HOME/.local/bin/$dir_name"
   done
@@ -44,9 +45,13 @@ if command -v stow >/dev/null 2>&1; then
   stow --adopt --target="$HOME" --dir="$DI_DOTFILES_DIR" voidrice
 fi
 
-if [ -d "$HOME/.ssh" ]; then
-  chmod 400 "$HOME"/.ssh/{id_rsa_personal,id_rsa_work} &&
-    eval "$(ssh-agent -s)" && ssh-add "$HOME"/.ssh/{id_rsa_personal,id_rsa_work}
+if [[ -d "$HOME/.ssh" ]]; then
+  cd ~/.config/dotfiles && stow --adopt --target=$HOME universal
+  chmod 400 ~/.ssh/{id_rsa_personal,id_rsa_work} # 400 for owner read-only, I don't want to modify these files, other users cannot access any file
+  chmod 644 ~/.ssh/{id_rsa_personal.pub,id_rsa_work.pub} # 644 for .pub (public) keys, I can read-write, other users can read
+  chmod 600 ~/.ssh/config # 600 for ~/.ssh/config, it's a normal file, needs read/write, but no execute
+  chmod 700 ~/.ssh # 700 for ~/.ssh, read/write/execute to make sure ssh works correctly, no access to other users
+  eval "$(ssh-agent -s)" && ssh-add ~/.ssh/{id_rsa_personal,id_rsa_work}
 fi
 
 if ! command -v zsh >/dev/null 2>&1; then
@@ -123,8 +128,16 @@ if command -v "$DI_NPM_HELPER" >/dev/null 2>&1; then
   fi
 fi
 
-if [[ -f "$HOME"/.local/bin/shortcuts ]]; then
-  log_progress "Sourcing shortcuts from $HOME/.local/bin/shortcuts"
+bin_shortcuts="$HOME/.local/bin/shortcuts"
+dotfiles_shortcuts="$HOME/.config/dotfiles/voidrice/.local/bin/shortcuts"
 
-  "$HOME"/.local/bin/shortcuts
+if [[ -f "$bin_shortcuts" ]]; then
+  log_progress "Sourcing shortcuts from $bin_shortcuts"
+  $bin_shortcuts
+elif [[ -f "$dotfiles_shortcuts" ]]; then
+  log_status "not found on $bin_shortcuts"
+  log_progress "Sourcing shortcuts from $dotfiles_shortcuts"
+  $dotfiles_shortcuts
+else
+  log_status "No shortcuts script detected, skipping shortcuts sourcing"️
 fi
