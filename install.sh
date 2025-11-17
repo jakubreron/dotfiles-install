@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# NOTE: run this file after cloning universal repo and putting it into correct location
+
 declare -x BASEDIR
 BASEDIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
@@ -7,7 +9,7 @@ BASEDIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 source "$BASEDIR/variables.sh"
 source "$BASEDIR/helpers.sh"
-source "$BASEDIR/shared.sh"
+source "$BASEDIR/before_install.sh"
 
 case "$OS" in
 Linux)
@@ -22,5 +24,4 @@ Darwin)
   ;;
 esac
 
-# cleanup
-rm -rf "$DI_GIT_CLONE_PATH"
+source "$BASEDIR/after_install.sh""

@@ -21,12 +21,19 @@ remove_quarantine() {
   xattr -d com.apple.quarantine /Applications/{Chromium.app,Alacritty.app}
 }
 
-run_macos_scripts () {
+run_macos_scripts() {
   if [ -f "$DI_SCRIPT_STATE_DIR/.macos-script-completed" ]; then
     log_status "macos.sh already ran, skipping..."
   else
     [ -f "$DI_MACOS_DIR/macos.sh" ] && $DI_MACOS_DIR/macos.sh
+    mkdir -p $DI_SCRIPT_STATE_DIR
+    touch $DI_SCRIPT_STATE_DIR/.macos-script-completed
   fi
+}
+
+run_apps() {
+  open -a "Scroll Reverser"
+  open -a "karabiner-Elements"
 }
 
 setup_tiling_manager 
