@@ -40,18 +40,30 @@ if command -v stow >/dev/null 2>&1; then
     mkdir -p $HOME/.local/bin/$dir_name
   done
 
-  log_progress "Stowing the dotfiles"
-  stow --adopt --target="$HOME" --dir="$DI_DOTFILES_DIR" voidrice
+  log_progress "Stowing the dotfiles (voidrice, macos)"
+  stow --adopt --target="$HOME" --dir="$DI_DOTFILES_DIR" voidrice macos
+
+  if [[ -d "$DI_DOTFILES_DIR/universal" ]]; then
+    log_progress "Stowing the dotfiles (universal)"
+    stow --adopt --target="$HOME" --dir="$DI_DOTFILES_DIR" universal
+  fi
 fi
 
-if [[ -d "$HOME/.ssh" ]]; then
-  cd ~/.config/dotfiles && stow --adopt --target=$HOME universal
-  chmod 400 ~/.ssh/{id_rsa_personal,id_rsa_work} # 400 for owner read-only, I don't want to modify these files, other users cannot access any file
-  chmod 644 ~/.ssh/{id_rsa_personal.pub,id_rsa_work.pub} # 644 for .pub (public) keys, I can read-write, other users can read
-  chmod 600 ~/.ssh/config # 600 for ~/.ssh/config, it's a normal file, needs read/write, but no execute
-  chmod 700 ~/.ssh # 700 for ~/.ssh, read/write/execute to make sure ssh works correctly, no access to other users
-  eval "$(ssh-agent -s)" && ssh-add ~/.ssh/{id_rsa_personal,id_rsa_work}
-fi
+evaluate_ssh_agents() {
+  if [[ -d "$HOME/.ssh" ]]; then
+    chmod 400 ~/.ssh/{id_rsa_personal,id_rsa_work} # 400 for owner read-only, I don't want to modify these files, other users cannot access any file
+    chmod 644 ~/.ssh/{id_rsa_personal.pub,id_rsa_work.pub} # 644 for .pub (public) keys, I can read-write, other users can read
+    chmod 600 ~/.ssh/config # 600 for ~/.ssh/config, it's a normal file, needs read/write, but no execute
+    chmod 700 ~/.ssh # 700 for ~/.ssh, read/write/execute to make sure ssh works correctly, no access to other users
+    eval "$(ssh-agent -s)" && ssh-add ~/.ssh/{id_rsa_personal,id_rsa_work}
+  fi
+}
+evaluate_ssh_agents
+
+clone_git_repo git@github.com:jakubreron/universal.git "$DI_UNIVERSAL_DIR/universal_temp"
+rm -rf $DI_UNIVERSAL_DIR/universal && mv universal_temp universal
+# re-evaluate since the repo was overriden from zip package to a normal repo, no need to re-stow
+evaluate_ssh_agents 
 
 if ! command -v zsh >/dev/null 2>&1; then
   log_progress "Installing ZSH"
@@ -68,9 +80,9 @@ if command -v zsh >/dev/null 2>&1; then
     log_progress "Changing default shell to ZSH"
 
     case "$OS" in
-    Linux)
-      chsh -s /usr/bin/zsh "$USER"
-      ;;
+      Linux)
+        chsh -s /usr/bin/zsh "$USER"
+        ;;
     Darwin)
       chsh -s /bin/zsh "$USER"
       ;;

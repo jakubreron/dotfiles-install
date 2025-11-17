@@ -13,6 +13,7 @@ declare -xr DI_NVIM_DIR="$HOME/.config/nvim"
 declare -xr DI_VOIDRICE_DIR="$DI_DOTFILES_DIR/voidrice"
 declare -xr DI_MACOS_DIR="$DI_DOTFILES_DIR/macos"
 declare -xr DI_PKGLISTS_DIR="$DI_DOTFILES_DIR/pkglists"
+declare -xr DI_UNIVERSAL_DIR="$DI_DOTFILES_DIR/universal"
 
 declare -xr DI_NVIM_REPO="https://github.com/jakubreron/kickstart.nvim.git"
 declare -xr DI_VOIDRICE_REPO="https://github.com/jakubreron/voidrice.git"
