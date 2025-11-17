@@ -20,50 +20,49 @@ if ! command -v git >/dev/null 2>&1; then
   install_pkg git
 fi
 
-if command -v git >/dev/null 2>&1; then
-  clone_git_repo "$DI_VOIDRICE_REPO" "$DI_VOIDRICE_DIR"
-  clone_git_repo "$DI_PKGLISTS_REPO" "$DI_PKGLISTS_DIR"
-  clone_git_repo "$DI_MACOS_REPO" "$DI_MACOS_DIR"
-  clone_git_repo "$DI_NVIM_REPO" "$DI_NVIM_DIR"
-fi
-
 if ! command -v stow >/dev/null 2>&1; then
   log_progress "Installing stow"
   install_pkg stow
 fi
 
-if command -v stow >/dev/null 2>&1; then
-  log_progress "Creating dirs in $HOME/.local/bin to ensure correct stow"
+if [[ -d "$DI_UNIVERSAL_DIR" ]]; then
+  log_progress "Stowing the dotfiles (universal)"
+  stow --adopt --target="$HOME" --dir="$DI_DOTFILES_DIR" universal
 
-  for dir in $DI_DOTFILES_DIR/.local/bin/*/; do
+  evaluate_ssh_agents() {
+    chmod 400 ~/.ssh/{id_rsa_personal,id_rsa_work} # 400 for owner read-only, I don't want to modify these files, other users cannot access any file
+    chmod 644 ~/.ssh/{id_rsa_personal.pub,id_rsa_work.pub} # 644 for .pub (public) keys, I can read-write, other users can read
+    chmod 600 ~/.ssh/config # 600 for ~/.ssh/config, it's a normal file, needs read/write, but no execute
+    chmod 700 ~/.ssh # 700 for ~/.ssh, read/write/execute to make sure ssh works correctly, no access to other users
+    eval "$(ssh-agent -s)" && ssh-add ~/.ssh/{id_rsa_personal,id_rsa_work}
+  }
+  evaluate_ssh_agents
+
+  if [[ ! -d "$DI_UNIVERSAL_DIR/.git" ]]; then
+    clone_git_repo $DI_UNVIERSAL_REPO "$DI_DOTFILES_DIR/universal_temp"
+    rm -rf $DI_UNIVERSAL_DIR && mv "$DI_DOTFILES_DIR/universal_temp" "$DI_DOTFILES_DIR/universal"
+    # re-evaluate since the repo was overriden from zip package to a normal repo, no need to re-stow
+    evaluate_ssh_agents 
+  fi
+fi
+
+if command -v git >/dev/null 2>&1; then
+  log_progress "Cloning dotfiles (with SSH)"
+
+  clone_git_repo "$DI_VOIDRICE_REPO" "$DI_VOIDRICE_DIR"
+  clone_git_repo "$DI_PKGLISTS_REPO" "$DI_PKGLISTS_DIR"
+  clone_git_repo "$DI_MACOS_REPO" "$DI_MACOS_DIR"
+  clone_git_repo "$DI_NVIM_REPO" "$DI_NVIM_DIR"
+
+  log_progress "Creating dirs in $HOME/.local/bin to ensure correct stow"
+  for dir in $DI_VOIDRICE_DIR/.local/bin/*/; do
     dir_name=$(basename "$dir")
     mkdir -p $HOME/.local/bin/$dir_name
   done
 
   log_progress "Stowing the dotfiles (voidrice, macos)"
   stow --adopt --target="$HOME" --dir="$DI_DOTFILES_DIR" voidrice macos
-
-  if [[ -d "$DI_DOTFILES_DIR/universal" ]]; then
-    log_progress "Stowing the dotfiles (universal)"
-    stow --adopt --target="$HOME" --dir="$DI_DOTFILES_DIR" universal
-  fi
 fi
-
-evaluate_ssh_agents() {
-  if [[ -d "$HOME/.ssh" ]]; then
-    chmod 400 ~/.ssh/{id_rsa_personal,id_rsa_work} # 400 for owner read-only, I don't want to modify these files, other users cannot access any file
-    chmod 644 ~/.ssh/{id_rsa_personal.pub,id_rsa_work.pub} # 644 for .pub (public) keys, I can read-write, other users can read
-    chmod 600 ~/.ssh/config # 600 for ~/.ssh/config, it's a normal file, needs read/write, but no execute
-    chmod 700 ~/.ssh # 700 for ~/.ssh, read/write/execute to make sure ssh works correctly, no access to other users
-    eval "$(ssh-agent -s)" && ssh-add ~/.ssh/{id_rsa_personal,id_rsa_work}
-  fi
-}
-evaluate_ssh_agents
-
-clone_git_repo git@github.com:jakubreron/universal.git "$DI_UNIVERSAL_DIR/universal_temp"
-rm -rf $DI_UNIVERSAL_DIR/universal && mv universal_temp universal
-# re-evaluate since the repo was overriden from zip package to a normal repo, no need to re-stow
-evaluate_ssh_agents 
 
 if ! command -v zsh >/dev/null 2>&1; then
   log_progress "Installing ZSH"

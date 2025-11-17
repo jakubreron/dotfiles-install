@@ -40,3 +40,4 @@ setup_tiling_manager
 setup_borders
 remove_quarantine
 run_macos_scripts
+run_apps

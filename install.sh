@@ -24,4 +24,4 @@ Darwin)
   ;;
 esac
 
-source "$BASEDIR/after_install.sh""
+source "$BASEDIR/after_install.sh"
