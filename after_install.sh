@@ -10,5 +10,10 @@ git -C "$DI_NVIM_DIR" reset --hard
 log_progress "Stowing again to ensure no unwanted overrides"
 stow --adopt --target="$HOME" --dir="$DI_DOTFILES_DIR" voidrice universal macos
 
+log_progress "Building bat cache"
+if command -v bat >/dev/null 2>&1; then
+  bat cache --build
+fi
+
 log_progress "Cleaning up"
 rm -rf "$DI_GIT_CLONE_PATH"

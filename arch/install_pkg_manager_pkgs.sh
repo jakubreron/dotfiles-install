@@ -8,6 +8,7 @@ update_system() {
 }
 
 install_core_packages() {
+  log_progress "Installing core packages"
   install_pkg curl ca-certificates base-devel ntp laptop-detect reflector rsync
 }
 
@@ -35,12 +36,6 @@ install_pkglists() {
   else
     log_error "AUR Helper not detected, quitting"
     exit
-  fi
-}
-
-setup_postinstall_config() {
-  if command -v bat >/dev/null 2>&1; then
-    bat cache --build
   fi
 }
 

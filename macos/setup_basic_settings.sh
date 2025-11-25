@@ -1,43 +1,28 @@
-setup_tiling_manager() {
-  if ! command -v yabai >/dev/null 2>&1; then
-    log_progress "Installing tiling manager (yabai)"
-    install_pkg koekeishiya/formulae/yabai
-  fi
+if ! command -v yabai >/dev/null 2>&1; then
+  log_progress "Installing tiling manager (yabai)"
+  install_pkg koekeishiya/formulae/yabai
+fi
+log_progress "Starting yabai brew service"
+yabai --install-service
+yabai --start-service
 
-  yabai --install-service
-  yabai --start-service
-}
+if ! command -v yabai >/dev/null 2>&1; then
+  log_progress "Installing borders"
+  install_pkg felixkratz/formulae/borders
+fi
+log_progress "Starting borders brew service"
+brew services start borders
 
-setup_borders() {
-  if ! command -v yabai >/dev/null 2>&1; then
-    log_progress "Installing borders"
-    install_pkg felixkratz/formulae/borders
-  fi
+log_status "Removing quarantine for common apps"
+xattr -d com.apple.quarantine /Applications/{Chromium.app,Alacritty.app}
 
-  brew services start borders
-}
+if [ -f "$DI_SCRIPT_STATE_DIR/.macos-script-completed" ]; then
+  log_status "macos.sh already ran, skipping..."
+else
+  log_status "running macos.sh"
+  [ -f "$DI_MACOS_DIR/macos.sh" ] && $DI_MACOS_DIR/macos.sh
+fi
 
-remove_quarantine() {
-  xattr -d com.apple.quarantine /Applications/{Chromium.app,Alacritty.app}
-}
-
-run_macos_scripts() {
-  if [ -f "$DI_SCRIPT_STATE_DIR/.macos-script-completed" ]; then
-    log_status "macos.sh already ran, skipping..."
-  else
-    [ -f "$DI_MACOS_DIR/macos.sh" ] && $DI_MACOS_DIR/macos.sh
-    mkdir -p $DI_SCRIPT_STATE_DIR
-    touch $DI_SCRIPT_STATE_DIR/.macos-script-completed
-  fi
-}
-
-run_apps() {
-  open -a "Scroll Reverser"
-  open -a "karabiner-Elements"
-}
-
-setup_tiling_manager 
-setup_borders
-remove_quarantine
-run_macos_scripts
-run_apps
+log_status "Opening apps that require setup"
+open -a "Scroll Reverser"
+open -a "karabiner-Elements"
