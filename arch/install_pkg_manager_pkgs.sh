@@ -35,7 +35,7 @@ install_pkglists() {
     install_pkg - <"$DI_PKGLISTS_DIR/$DI_PKG_TYPE/pacman.txt"
   else
     log_error "AUR Helper not detected, quitting"
-    exit
+    exit 1
   fi
 }
 

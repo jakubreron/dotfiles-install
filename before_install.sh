@@ -11,11 +11,11 @@ Linux)
   if ! command -v "$DI_AUR_HELPER" >/dev/null 2>&1; then
     log_progress "Installing AUR helper: $DI_AUR_HELPER"
 
-    path="$DI_GIT_CLONE_PATH/$DI_AUR_HELPER"
-    clone_git_repo "https://aur.archlinux.org/$DI_AUR_HELPER.git" "$path"
+    local aur_helper_path="$DI_GIT_CLONE_PATH/$DI_AUR_HELPER"
+    clone_git_repo "https://aur.archlinux.org/$DI_AUR_HELPER.git" "$aur_helper_path"
 
-    (cd "$path" && makepkg -si "$path")
-    rm -rf "$path"
+    (cd "$aur_helper_path" && makepkg -si --noconfirm "$aur_helper_path")
+    rm -rf "$aur_helper_path"
   else
     log_status "AUR helper '$DI_AUR_HELPER' is already installed"️
   fi
@@ -23,17 +23,29 @@ Linux)
   ;;
 Darwin)
   if ! command -v brew >/dev/null 2>&1; then
+    if ! xcode-select -p >/dev/null 2>&1; then # More robust check for Xcode tools
+      log_progress "Installing XCode Command Line Tools (required for Git & Homebrew)"
+      xcode-select --install
+    fi
+
     log_progress "Installing brew"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+    # Add Homebrew to PATH immediately for this script to use it
+    # This is often added to .bashrc/.zshrc, but for current session:
+    eval "$(/opt/homebrew/bin/brew shellenv)" || eval "$(brew shellenv)"
+    log_status "Homebrew installed. PATH updated for current session."
   else
     log_status "Brew is already installed"️
+    # Ensure brew is in PATH even if already installed (e.g., new terminal)
+    eval "$(/opt/homebrew/bin/brew shellenv)" || eval "$(brew shellenv)"
   fi
   ;;
 esac
 
 case "$OS" in
 Linux)
-  mkdir -p $HOME/{Videos} $HOME/Documents/Torrents $HOME/Videos/Recordings $HOME/Pictures/Screenshots
+  mkdir -p "$HOME/Videos" "$HOME/Documents/Torrents" "$HOME/Videos/Recordings" "$HOME/Pictures/Screenshots"
   ;;
 esac
 
@@ -64,15 +76,23 @@ if [[ -d "$DI_UNIVERSAL_DIR" ]]; then
   evaluate_ssh_agents
 
   if [[ ! -d "$DI_UNIVERSAL_DIR/.git" ]]; then
-    clone_git_repo $DI_UNVIERSAL_REPO "$DI_DOTFILES_DIR/universal_temp"
-    rm -rf $DI_UNIVERSAL_DIR && mv "$DI_DOTFILES_DIR/universal_temp" "$DI_DOTFILES_DIR/universal"
+    log_progress "Re-adding universal repo with SSH"
+    clone_git_repo $DI_UNVIERSAL_REPO $DI_DOTFILES_DIR/universal_temp
+
+    if [[ -d "$DI_DOTFILES_DIR/universal_temp" ]]; then
+      rm -rf $DI_UNIVERSAL_DIR && mv $DI_DOTFILES_DIR/universal_temp $DI_UNIVERSAL_DIR 
+    fi
+
     # re-evaluate since the repo was overriden from zip package to a normal repo, no need to re-stow
     evaluate_ssh_agents 
   fi
+else
+  log_error "$DI_UNIVERSAL_DIR not found. Exiting."
+  exit 1
 fi
 
 if command -v git >/dev/null 2>&1; then
-  log_progress "Cloning dotfiles (with SSH)"
+  log_progress "Cloning dotfiles"
 
   clone_git_repo "$DI_VOIDRICE_REPO" "$DI_VOIDRICE_DIR"
   clone_git_repo "$DI_PKGLISTS_REPO" "$DI_PKGLISTS_DIR"
@@ -115,7 +135,7 @@ if command -v zsh >/dev/null 2>&1; then
     log_status "ZSH is already a default shell"️
   fi
 
-  rm "$HOME/.config/zsh/.zcompdump"
+  rm -f "$HOME/.config/zsh/.zcompdump"
 fi
 
 if ! command -v "$DI_NPM_HELPER" >/dev/null 2>&1; then

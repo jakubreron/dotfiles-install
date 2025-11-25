@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 remove_db_lock() {
-  [ -f /var/lib/pacman/db.lck ] && sudo rm /var/lib/pacman/db.lck
+  log_status "Pacman DB lock file detected. Attempting to remove..."
+  sudo rm -f /var/lib/pacman/db.lck || log_error "Failed to remove Pacman DB lock. Please resolve manually."
 }
 
 install_pkg() {
@@ -16,7 +17,12 @@ install_pkg() {
     fi
     ;;
   Darwin)
-    brew install "$@"
+    if command -v brew >/dev/null 2>&1; then
+      brew install "$@"
+    else 
+      log_error "Brew not detected, restart the terminal"
+      exit 1
+    fi
     ;;
   esac
 }
@@ -57,7 +63,7 @@ clone_git_repo() {
   repo="$1"
   destination="$2"
 
-  if [[ ! -d "$destination" ]] >/dev/null 2>&1; then
+  if [[ ! -d "$destination" ]]; then
     log_progress "$destination does not exist, cloning via git"
     git clone "$repo" "$destination"
   else

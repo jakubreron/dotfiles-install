@@ -1,15 +1,21 @@
 #!/usr/bin/env bash
 
-# NOTE: run this file after cloning universal repo and putting it into correct location
-
 declare -x BASEDIR
 BASEDIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
-# TODO: add check to prevent using this script as a root user
+if [[ "$EUID" -eq 0 ]]; then
+  log_error "This script should not be run as root. Exiting."
+  exit 1
+fi
 
 source "$BASEDIR/variables.sh"
 source "$BASEDIR/helpers.sh"
 source "$BASEDIR/before_install.sh"
+
+if [[ ! -d "$DI_UNIVERSAL_DIR" ]]; then
+  log_error "Clone universal repo into $DI_UNIVERSAL_DIR first"
+  exit 1
+fi
 
 case "$OS" in
 Linux)

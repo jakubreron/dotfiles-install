@@ -10,6 +10,12 @@ git -C "$DI_NVIM_DIR" reset --hard
 log_progress "Stowing again to ensure no unwanted overrides"
 stow --adopt --target="$HOME" --dir="$DI_DOTFILES_DIR" voidrice universal macos
 
+log_progress "Updating symlinks with global script (to ensure firefox config)"
+$HOME/.local/bin/sync/update-symlinks-all
+
+log_progress "Restarting firefox to enforce custom config"
+killall firefox
+
 log_progress "Building bat cache"
 if command -v bat >/dev/null 2>&1; then
   bat cache --build
