@@ -40,7 +40,7 @@ log_message() {
 
 log_progress() {
   message="$1"
-  emoji="${2:-⏳}"
+  emoji="${2:-🕒}"
 
   log_message "$message" "$emoji"
 }

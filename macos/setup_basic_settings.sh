@@ -26,5 +26,18 @@ else
 fi
 
 log_progress "Opening apps that require setup"
-open -a "Scroll Reverser"
-open -a "karabiner-Elements"
+open_app_if_not_running() {
+  local app_name="$1"
+  if ! pgrep -f "$app_name" >/dev/null 2>&1; then
+    if open -a "$app_name"; then
+      log_status "Opened '$app_name'."
+    else
+      log_error "Failed to open '$app_name'. It might not be installed."
+    fi
+  else
+    log_status "'$app_name' is already running, skipping."
+  fi
+}
+
+open_app_if_not_running "Scroll Reverser"
+open_app_if_not_running "Karabiner-Elements"
