@@ -81,6 +81,18 @@ if [[ -d "$DI_UNIVERSAL_DIR" ]]; then
       install_pkg git-credential-manager
     fi
 
+    case "$OS" in
+    Darwin)
+        if ! command -v defaultbrowser >/dev/null 2>&1; then
+          log_progress "Installing defaultbrowser util (macos)"
+          install_pkg defaultbrowser
+
+          log_progress "Setting firefox as default browser (macos)"
+          defaultbrowser firefox
+        fi
+      ;;
+    esac
+
     log_progress "Re-adding universal repo with git-credential-manager"
     clone_git_repo $DI_UNVIERSAL_REPO $DI_DOTFILES_DIR/universal_temp
 
