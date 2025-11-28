@@ -76,7 +76,12 @@ if [[ -d "$DI_UNIVERSAL_DIR" ]]; then
   evaluate_ssh_agents
 
   if [[ ! -d "$DI_UNIVERSAL_DIR/.git" ]]; then
-    log_progress "Re-adding universal repo with SSH"
+    if ! command -v git-credential-manager >/dev/null 2>&1; then
+      log_progress "Installing git credential manager"
+      install_pkg git-credential-manager
+    fi
+
+    log_progress "Re-adding universal repo with git-credential-manager"
     clone_git_repo $DI_UNVIERSAL_REPO $DI_DOTFILES_DIR/universal_temp
 
     if [[ -d "$DI_DOTFILES_DIR/universal_temp" ]]; then
