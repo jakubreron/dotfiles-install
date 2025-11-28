@@ -15,9 +15,6 @@ fi
 log_progress "Starting borders brew service"
 brew services start borders
 
-log_progress "Removing quarantine for common apps"
-xattr -d com.apple.quarantine /Applications/{Chromium.app,Alacritty.app}
-
 if [ -f "$DI_SCRIPT_STATE_DIR/.macos-script-completed" ]; then
   log_progress "macos.sh already ran, skipping..."
 else
