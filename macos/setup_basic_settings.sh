@@ -16,7 +16,7 @@ log_progress "Starting borders brew service"
 brew services start borders
 
 if [ -f "$DI_SCRIPT_STATE_DIR/.macos-script-completed" ]; then
-  log_progress "macos.sh already ran, skipping..."
+  log_status "macos.sh already ran, skipping..."
 else
   log_progress "running macos.sh"
   [ -f "$DI_MACOS_DIR/macos.sh" ] && $DI_MACOS_DIR/macos.sh

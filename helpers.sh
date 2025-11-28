@@ -20,8 +20,15 @@ install_pkg() {
     if command -v brew >/dev/null 2>&1; then
       brew install "$@"
     else 
-      log_error "Brew not detected, restart the terminal"
-      exit 1
+      log_warn "Brew not detected, attempting to source it first..."
+      eval "$(/opt/homebrew/bin/brew shellenv)" || eval "$(brew shellenv)"
+
+      if command -v brew >/dev/null 2>&1; then
+        brew install "$@"
+      else
+        log_error "Brew not installed, quitting..."
+        exit 1
+      fi
     fi
     ;;
   esac
@@ -48,6 +55,13 @@ log_progress() {
 log_status() {
   message="$1"
   emoji="${2:-✅}"
+
+  log_message "$message" "$emoji"
+}
+
+log_warn() {
+  message="$1"
+  emoji="${2:-🟠}"
 
   log_message "$message" "$emoji"
 }

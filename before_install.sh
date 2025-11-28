@@ -31,14 +31,13 @@ Darwin)
     log_progress "Installing brew"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-    # Add Homebrew to PATH immediately for this script to use it
-    # This is often added to .bashrc/.zshrc, but for current session:
+    # Add Homebrew to PATH immediately for this script to use it in current session
     eval "$(/opt/homebrew/bin/brew shellenv)" || eval "$(brew shellenv)"
-    log_status "Homebrew installed. PATH updated for current session."
+    log_status "PATH updated for current session"
   else
-    log_status "Brew is already installed"️
     # Ensure brew is in PATH even if already installed (e.g., new terminal)
     eval "$(/opt/homebrew/bin/brew shellenv)" || eval "$(brew shellenv)"
+    log_status "Brew is already installed, updating PATH for current session"️
   fi
   ;;
 esac
@@ -66,15 +65,6 @@ if [[ -d "$DI_UNIVERSAL_DIR" ]]; then
   log_progress "Stowing the dotfiles (universal)"
   stow --adopt --target="$HOME" --dir="$DI_DOTFILES_DIR" universal
 
-  evaluate_ssh_agents() {
-    chmod 400 ~/.ssh/{id_rsa_personal,id_rsa_work} # 400 for owner read-only, I don't want to modify these files, other users cannot access any file
-    chmod 644 ~/.ssh/{id_rsa_personal.pub,id_rsa_work.pub} # 644 for .pub (public) keys, I can read-write, other users can read
-    chmod 600 ~/.ssh/config # 600 for ~/.ssh/config, it's a normal file, needs read/write, but no execute
-    chmod 700 ~/.ssh # 700 for ~/.ssh, read/write/execute to make sure ssh works correctly, no access to other users
-    eval "$(ssh-agent -s)" && ssh-add ~/.ssh/{id_rsa_personal,id_rsa_work}
-  }
-  evaluate_ssh_agents
-
   if [[ ! -d "$DI_UNIVERSAL_DIR/.git" ]]; then
     if ! command -v git-credential-manager >/dev/null 2>&1; then
       log_progress "Installing git credential manager"
@@ -82,7 +72,7 @@ if [[ -d "$DI_UNIVERSAL_DIR" ]]; then
     fi
 
     case "$OS" in
-    Darwin)
+      Darwin)
         if ! command -v defaultbrowser >/dev/null 2>&1; then
           log_progress "Installing defaultbrowser util (macos)"
           install_pkg defaultbrowser
@@ -100,8 +90,11 @@ if [[ -d "$DI_UNIVERSAL_DIR" ]]; then
       rm -rf $DI_UNIVERSAL_DIR && mv $DI_DOTFILES_DIR/universal_temp $DI_UNIVERSAL_DIR 
     fi
 
-    # re-evaluate since the repo was overriden from zip package to a normal repo, no need to re-stow
-    evaluate_ssh_agents 
+    chmod 400 ~/.ssh/{id_rsa_personal,id_rsa_work} # 400 for owner read-only, I don't want to modify these files, other users cannot access any file
+    chmod 644 ~/.ssh/{id_rsa_personal.pub,id_rsa_work.pub} # 644 for .pub (public) keys, I can read-write, other users can read
+    chmod 600 ~/.ssh/config # 600 for ~/.ssh/config, it's a normal file, needs read/write, but no execute
+    chmod 700 ~/.ssh # 700 for ~/.ssh, read/write/execute to make sure ssh works correctly, no access to other users
+    eval "$(ssh-agent -s)" && ssh-add ~/.ssh/{id_rsa_personal,id_rsa_work}
   fi
 else
   log_error "$DI_UNIVERSAL_DIR not found. Exiting."
@@ -180,11 +173,11 @@ dotfiles_shortcuts="$HOME/.config/dotfiles/voidrice/.local/bin/shortcuts"
 
 if [[ -f "$bin_shortcuts" ]]; then
   log_progress "Sourcing shortcuts from $bin_shortcuts"
-  $bin_shortcuts
+  command $bin_shortcuts
 elif [[ -f "$dotfiles_shortcuts" ]]; then
-  log_status "not found on $bin_shortcuts"
-  log_progress "Sourcing shortcuts from $dotfiles_shortcuts"
-  $dotfiles_shortcuts
+  log_warn "Shortcuts not found in $bin_shortcuts"
+  log_progress "Attempting to source shortcuts from $dotfiles_shortcuts"
+  command $dotfiles_shortcuts
 else
-  log_status "No shortcuts script detected, skipping shortcuts sourcing"️
+  log_error "No shortcuts script detected, skipping shortcuts sourcing"️
 fi
