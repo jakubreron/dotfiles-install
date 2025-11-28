@@ -6,15 +6,13 @@ setup_core_settings() {
   sudo usermod -aG wheel "$USER" # sudo
   sudo usermod -aG video "$USER" # backlight
 
-  # Make pacman colorful,
+  # show  C o o o, instead of #### in progress
   grep -q "ILoveCandy" /etc/pacman.conf || sudo sed -i "/#VerbosePkgLists/a ILoveCandy" /etc/pacman.conf
-  sudo sed -Ei "s/^#(ParallelDownloads).*/\1 = 15/;/^#Color$/s/#//" /etc/pacman.conf
 
   # Enable multilib
   sudo sed -i '/^# \[multilib\]$/,/^# Include = \/etc\/pacman\.d\/mirrorlist$/s/^# //' /etc/pacman.conf
 
-  # Use all cores for compilation.
-  sudo sed -i "s/-j2/-j$(nproc)/;/^#MAKEFLAGS/s/^#//" /etc/makepkg.conf
+  sudo sed -Ei "s/^#(ParallelDownloads).*/\1 = 15/;/^#Color$/s/#//" /etc/pacman.conf
 
   # Allow wheel users to sudo with password and allow several system commands
   # (like `shutdown` to run without password).
@@ -25,7 +23,6 @@ setup_core_settings() {
 
   sudo mkdir -p /etc/sysctl.d
   echo "kernel.dmesg_restrict = 0" | sudo tee /etc/sysctl.d/dmesg.conf
-
   echo "export \$(dbus-launch)" | sudo tee /etc/profile.d/dbus.sh
 }
 
@@ -56,7 +53,7 @@ setup_bluetooth() {
   if command -v bluetoothctl >/dev/null 2>&1; then
     log_progress "Setting up the bluetooth"
 
-    sudo sed -i 's/^#AutoEnable=true/AutoEnable=true/g' /etc/bluetooth/main.conf
+    sudo sed -i 's/^AutoEnable=false/AutoEnable=true/g' /etc/bluetooth/main.conf
     sudo systemctl enable bluetooth.service --now
   fi
 }
