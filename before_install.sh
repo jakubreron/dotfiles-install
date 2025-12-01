@@ -168,16 +168,16 @@ if command -v "$DI_NPM_HELPER" >/dev/null 2>&1; then
   fi
 fi
 
-bin_shortcuts="$HOME/.local/bin/shortcuts"
-dotfiles_shortcuts="$HOME/.config/dotfiles/voidrice/.local/bin/shortcuts"
+bin_dotfiles_shortcuts="$HOME/.local/bin/dotfiles-shortcuts"
+repo_dotfiles_shortcuts="$HOME/.config/dotfiles/voidrice/.local/bin/dotfiles-shortcuts"
 
-if [[ -f "$bin_shortcuts" ]]; then
-  log_progress "Sourcing shortcuts from $bin_shortcuts"
-  command $bin_shortcuts
-elif [[ -f "$dotfiles_shortcuts" ]]; then
-  log_warn "Shortcuts not found in $bin_shortcuts"
-  log_progress "Attempting to source shortcuts from $dotfiles_shortcuts"
-  command $dotfiles_shortcuts
+if [[ -f "$bin_dotfiles_shortcuts" ]]; then
+  log_progress "Sourcing shortcuts from $bin_dotfiles_shortcuts"
+  command $bin_dotfiles_shortcuts
+elif [[ -f "$repo_dotfiles_shortcuts" ]]; then
+  log_warn "Shortcuts not found in $bin_dotfiles_shortcuts"
+  log_progress "Attempting to source shortcuts from $repo_dotfiles_shortcuts"
+  command $repo_dotfiles_shortcuts
 else
   log_error "No shortcuts script detected, skipping shortcuts sourcing"️
 fi
