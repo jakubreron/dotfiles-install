@@ -11,9 +11,7 @@ install_auto_cpufreq() {
     sudo systemctl enable --now auto-cpufreq.service
     sudo systemctl mask power-profiles-daemon.service
     curl -sL "https://raw.githubusercontent.com/AdnanHodzic/auto-cpufreq/master/auto-cpufreq.conf-example" | sudo tee /etc/auto-cpufreq.conf
-    sudo sed -i '/^\[battery\]/,/^\[/s/^# scaling_min_freq = 800000/scaling_min_freq = 1200000/' /etc/auto-cpufreq.conf
     sudo systemctl restart auto-cpufreq.service
-
   else
     log_status "No laptop detected, skipping auto_cpufreq installation"️
   fi
@@ -31,7 +29,6 @@ install_keyd() {
     sudo usermod -aG keyd "$USER"
     sudo systemctl enable keyd --now
 
-    global_config_path="/etc/keyd/default.conf"
     echo "[ids]
 *
 
@@ -84,7 +81,7 @@ f = C-right
 # Move cursor to beginning of line
 left = home
 # Move cursor to end of Line
-right = end" | sudo tee "$global_config_path"
+right = end" | sudo tee "/etc/keyd/default.conf"
   fi
 }
 

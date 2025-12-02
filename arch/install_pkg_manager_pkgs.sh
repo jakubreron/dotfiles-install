@@ -9,7 +9,7 @@ update_system() {
 
 install_core_packages() {
   log_progress "Installing core packages"
-  install_pkg curl ca-certificates base-devel ntp laptop-detect reflector rsync
+  install_pkg curl ca-certificates base-devel ntp laptop-detect reflector rsync git
 }
 
 get_fastest_mirrors() {
