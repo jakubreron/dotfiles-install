@@ -94,8 +94,19 @@ auth        include     system-login" | sudo tee /etc/pam.d/sddm
 DisplayServer=wayland" | sudo tee /etc/sddm.conf.d/10-wayland.conf
 }
 
+setup_fingerprint() {
+  if ! command -v fprintd-enroll  >/dev/null 2>&1; then
+    log_progress "Installing fprintd"
+    install_pkg fprintd
+  fi
+
+  sudo fprintd-enroll
+  sudo fprintd-enroll -f left-index-finger jakub
+}
+
 setup_core_settings
 # TODO: setup only if it's used
 # setup_grub
 setup_bluetooth
 setup_sddm
+setup_fingerprint 
