@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# TODO: @Jakub add https://linuxblog.io/upgrade-thinkpad-firmware-linux-fwupd/
+# updates for bios, etc... (systemctl)
+
 declare -x BASEDIR
 BASEDIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
