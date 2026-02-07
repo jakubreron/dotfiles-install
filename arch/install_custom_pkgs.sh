@@ -10,7 +10,6 @@ install_auto_cpufreq() {
 
     sudo systemctl enable --now auto-cpufreq.service
     sudo systemctl mask power-profiles-daemon.service
-    curl -sL "https://raw.githubusercontent.com/AdnanHodzic/auto-cpufreq/master/auto-cpufreq.conf-example" | sudo tee /etc/auto-cpufreq.conf
     sudo systemctl restart auto-cpufreq.service
   else
     log_status "No laptop detected, skipping auto_cpufreq installation"️
