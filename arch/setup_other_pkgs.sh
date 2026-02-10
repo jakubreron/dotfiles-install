@@ -49,6 +49,20 @@ setup_mpd() {
 }
 
 setup_darkman() {
+  log_progress "Installing geoclue"
+  install_pkg geoclue
+
+  log_progress "Enabling geoclue"
+  sudo systemctl enable --now geoclue.service
+
+  log_progress "Configuring geoclue to allow access for darkman"
+  echo "
+[darkman]
+allowed=true
+system=false
+users=" | sudo tee /etc/geoclue/geoclue.conf
+  sudo systemctl restart --now geoclue.service
+
   if ! command -v darkman >/dev/null 2>&1; then
     log_progress "Installing darkman"
     install_pkg darkman
@@ -57,7 +71,7 @@ setup_darkman() {
   if command -v darkman >/dev/null 2>&1; then
     log_progress "Setting up darkman"
     sudo systemctl enable --now avahi-daemon.service
-    sudo systemctl restart geoclue.service
+    sudo systemctl enable --now geoclue.service
   fi
 }
 
