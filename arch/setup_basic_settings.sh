@@ -27,21 +27,23 @@ setup_core_settings() {
 }
 
 setup_grub() {
-  log_progress "Setting up grub"
+  if [ -f /boot/grub/grub.cfg ]; then
+    log_progress "[GRUB DETECTED] Setting up"
 
-  grub_path="/etc/default/grub"
-  if ! grep -q "GRUB_FORCE_HIDDEN_MENU=\"true\"" "$grub_path" || ! grep -q "GRUB_HIDDEN_TIMEOUT=\"0\"" "$grub_path"; then
-    echo '
-GRUB_FORCE_HIDDEN_MENU="true"
-GRUB_HIDDEN_TIMEOUT="0"
-  ' | sudo tee -a "$grub_path" >/dev/null
+    local grub_path="/etc/default/grub"
+    if ! grep -q "GRUB_FORCE_HIDDEN_MENU=\"true\"" "$grub_path" || ! grep -q "GRUB_HIDDEN_TIMEOUT=\"0\"" "$grub_path"; then
+      echo '
+  GRUB_FORCE_HIDDEN_MENU="true"
+  GRUB_HIDDEN_TIMEOUT="0"
+    ' | sudo tee -a "$grub_path" >/dev/null
+    fi
+
+    sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"$/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 iomem=relaxed intel_pstate=disable"/' "$grub_path"
+    sudo sed -i 's/^GRUB_TIMEOUT=5$/GRUB_TIMEOUT=0/' "$grub_path"
+    sudo sed -i 's/^GRUB_TIMEOUT_STYLE=menu$/GRUB_TIMEOUT_STYLE=hidden/' "$grub_path"
+
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
   fi
-
-  sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"$/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 iomem=relaxed intel_pstate=disable"/' "$grub_path"
-  sudo sed -i 's/^GRUB_TIMEOUT=5$/GRUB_TIMEOUT=0/' "$grub_path"
-  sudo sed -i 's/^GRUB_TIMEOUT_STYLE=menu$/GRUB_TIMEOUT_STYLE=hidden/' "$grub_path"
-
-  sudo grub-mkconfig -o /boot/grub/grub.cfg
 }
 
 setup_bluetooth() {
@@ -105,8 +107,7 @@ setup_fingerprint() {
 }
 
 setup_core_settings
-# TODO: setup only if it's used
-# setup_grub
+setup_grub
 setup_bluetooth
 setup_sddm
 setup_fingerprint 

@@ -18,7 +18,7 @@ get_fastest_mirrors() {
   fi
 
   if command -v reflector >/dev/null 2>&1; then
-    reflector_state_file="$HOME/.cache/reflector_updated"
+    local reflector_state_file="$HOME/.cache/reflector_updated"
 
     if [ ! -f "$reflector_state_file" ] >/dev/null 2>&1; then
       log_progress "Getting the fastest mirrors before installing the dotfiles packages"
