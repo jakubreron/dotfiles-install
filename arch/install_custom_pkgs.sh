@@ -8,6 +8,9 @@ install_auto_cpufreq() {
       sudo auto-cpufreq --install
     fi
 
+    log_progress "Setting energy_performance_preference to default"
+    sudo sed -i '/^\[battery\]/,/^\[/ s/^\s*energy_performance_preference\s*=.*/energy_performance_preference = default/' /etc/auto-cpufreq.conf
+
     sudo systemctl enable --now auto-cpufreq.service
     sudo systemctl mask power-profiles-daemon.service
     sudo systemctl restart auto-cpufreq.service
