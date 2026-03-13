@@ -1,21 +1,33 @@
 #!/usr/bin/env bash
 
-install_auto_cpufreq() {
-  if laptop-detect >/dev/null; then
-    if ! command -v auto-cpufreq >/dev/null 2>&1; then
-      log_progress "Laptop detected, installing auto_cpufreq"
-      install_pkg auto-cpufreq
-      sudo auto-cpufreq --install
-    fi
+# install_auto_cpufreq() {
+#   if laptop-detect >/dev/null; then
+#     if ! command -v auto-cpufreq >/dev/null 2>&1; then
+#       log_progress "Laptop detected, installing auto_cpufreq"
+#       install_pkg auto-cpufreq
+#       sudo auto-cpufreq --install
+#     fi
+#
+#     log_progress "Setting energy_performance_preference to default"
+#     sudo sed -i '/^\[battery\]/,/^\[/ s/^\s*energy_performance_preference\s*=.*/energy_performance_preference = default/' /etc/auto-cpufreq.conf
+#
+#     sudo systemctl enable --now auto-cpufreq.service
+#     sudo systemctl mask power-profiles-daemon.service
+#     sudo systemctl restart auto-cpufreq.service
+#   else
+#     log_status "No laptop detected, skipping auto_cpufreq installation"️
+#   fi
+# }
 
-    log_progress "Setting energy_performance_preference to default"
-    sudo sed -i '/^\[battery\]/,/^\[/ s/^\s*energy_performance_preference\s*=.*/energy_performance_preference = default/' /etc/auto-cpufreq.conf
+install_tlp() {
+  if ! command -v tlp >/dev/null 2>&1; then
+    log_progress "Installing and setting up tlp"
+    install_pkg tlp
+  fi
 
-    sudo systemctl enable --now auto-cpufreq.service
-    sudo systemctl mask power-profiles-daemon.service
-    sudo systemctl restart auto-cpufreq.service
-  else
-    log_status "No laptop detected, skipping auto_cpufreq installation"️
+  if command -v tlp >/dev/null 2>&1; then
+    log_progress "Setting up tlp"
+    systemctl enable --now tlp
   fi
 }
 
@@ -87,5 +99,5 @@ right = end" | sudo tee "/etc/keyd/default.conf"
   fi
 }
 
-install_auto_cpufreq
+# install_auto_cpufreq
 install_keyd
