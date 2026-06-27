@@ -99,5 +99,18 @@ right = end" | sudo tee "/etc/keyd/default.conf"
   fi
 }
 
+install_powertop() {
+  if ! command -v powertop >/dev/null 2>&1; then
+    log_progress "Installing and setting up powertop"
+    install_pkg powertop
+  fi
+
+  if command -v tlp >/dev/null 2>&1; then
+    log_progress "Setting up powertop"
+    sudo powertop --auto-tune
+  fi
+}
+
 # install_auto_cpufreq
 install_keyd
+install_powertop
