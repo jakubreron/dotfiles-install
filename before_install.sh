@@ -168,8 +168,8 @@ if command -v "$DI_NPM_HELPER" >/dev/null 2>&1; then
   fi
 fi
 
-bin_dotfiles_shortcuts="$HOME/.local/bin/dotfiles-shortcuts"
-repo_dotfiles_shortcuts="$HOME/.config/dotfiles/voidrice/.local/bin/dotfiles-shortcuts"
+bin_dotfiles_shortcuts="$HOME/.local/bin/generate-shell-shortcuts"
+repo_dotfiles_shortcuts="$HOME/.config/dotfiles/voidrice/.local/bin/generate-shell-shortcuts"
 
 if [[ -f "$bin_dotfiles_shortcuts" ]]; then
   log_progress "Sourcing shortcuts from $bin_dotfiles_shortcuts"
