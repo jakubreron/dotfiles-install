@@ -16,7 +16,7 @@ command $HOME/.local/bin/sync/update-symlinks-all
 if [ -f "$DI_SCRIPT_STATE_DIR/.firefox-setup-completed" ]; then
   log_status "Firefox setup already completed, skipping..."
 else
-  if [-f "$HOME/.config/dotfiles/voidrice/.config/firefox/betterfox/user.js" ]; then
+  if [ -f "$HOME/.config/dotfiles/voidrice/.config/firefox/betterfox/user.js" ]; then
     log_progress "Restarting firefox to enforce custom config"
     killall firefox
 
@@ -40,7 +40,7 @@ else
         ;;
     esac
     for url in "${addon_urls[@]}"; do
-      firefox "$url" &
+      $open_command "$url" &
       sleep 1 # Small delay to give Firefox a moment to open each tab/window
     done
 
