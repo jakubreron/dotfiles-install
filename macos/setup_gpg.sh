@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-work_gpg_key_id="$(git config -f "$HOME/.config/git/config_work" user.signingkey)"
-work_gpg_key_file="$HOME/.config/git/work-gpg-key.asc"
 gpg_agent_conf="$HOME/.gnupg/gpg-agent.conf"
 
 if ! command -v pinentry-mac >/dev/null 2>&1; then
@@ -24,14 +22,7 @@ EOF
     gpgconf --kill gpg-agent
   fi
 
-  if [[ -n "$work_gpg_key_id" ]] && ! gpg --list-secret-keys "$work_gpg_key_id" >/dev/null 2>&1; then
-    if [[ -f "$work_gpg_key_file" ]]; then
-      log_progress "Importing work GPG key (passphrase is in Bitwarden)"
-      gpg --import "$work_gpg_key_file"
-    else
-      log_warn "Work GPG key $work_gpg_key_id not found, restore it from Bitwarden and run: gpg --import <file>"
-    fi
-  fi
+  import_work_gpg_key
 
   log_warn "On the first signed commit, tick 'Save in Keychain' in the passphrase prompt"
 fi

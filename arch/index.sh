@@ -11,5 +11,8 @@ source "$BASEDIR/arch/install_custom_pkgs.sh"
 # NOTE: all other packages settings
 source "$BASEDIR/arch/setup_other_pkgs.sh"
 
+# NOTE: gpg agent and signing key
+source "$BASEDIR/arch/setup_gpg.sh"
+
 # NOTE: gnome app settings
 source "$BASEDIR/arch/setup_gnome_pkgs.sh"
