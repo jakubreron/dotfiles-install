@@ -32,19 +32,17 @@ install_pkg() {
     fi
     ;;
   Darwin)
-    if command -v brew >/dev/null 2>&1; then
-      brew_install "$@"
-    else
+    if ! command -v brew >/dev/null 2>&1; then
       log_warn "Brew not detected, attempting to source it first..."
       eval "$(/opt/homebrew/bin/brew shellenv)" || eval "$(brew shellenv)"
-
-      if command -v brew >/dev/null 2>&1; then
-        brew_install "$@"
-      else
-        log_error "Brew not installed, quitting..."
-        exit 1
-      fi
     fi
+
+    if ! command -v brew >/dev/null 2>&1; then
+      log_error "Brew not installed, quitting..."
+      exit 1
+    fi
+
+    brew_install "$@"
     ;;
   esac
 }
