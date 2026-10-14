@@ -23,7 +23,7 @@ import_gpg_key() {
 
 import_gpg_keys() {
   import_gpg_key "$HOME/.config/git/config" "$HOME/.config/git/personal-gpg-key.asc"
-  import_gpg_key "$HOME/.config/git/config_work" "$HOME/.config/git/work-gpg-key.asc"
+  import_gpg_key "$HOME/.config/git/config_macos" "$HOME/.config/git/work-gpg-key.asc"
 }
 
 brew_install() {
