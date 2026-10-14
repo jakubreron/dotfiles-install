@@ -50,6 +50,7 @@ esac
 
 mkdir -p "$DI_GIT_CLONE_PATH"
 mkdir -p "$DI_DOTFILES_DIR"
+mkdir -p "$DI_SCRIPT_STATE_DIR"
 
 if ! command -v git >/dev/null 2>&1; then
   log_progress "Installing git"
