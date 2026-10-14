@@ -59,7 +59,7 @@ setup_darkman() {
 
   if command -v darkman >/dev/null 2>&1; then
     log_progress "Setting up darkman"
-    sudo systemctl enable --user --now geoclue-agent.service
+    systemctl --user enable --now geoclue-agent.service
   fi
 }
 
