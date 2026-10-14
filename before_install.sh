@@ -77,6 +77,9 @@ if [[ -d "$DI_UNIVERSAL_DIR" ]]; then
           log_progress "Installing defaultbrowser util (macos)"
           install_pkg defaultbrowser
 
+          log_progress "Installing firefox (macos)"
+          install_pkg firefox
+
           log_progress "Setting firefox as default browser (macos)"
           defaultbrowser firefox
         fi

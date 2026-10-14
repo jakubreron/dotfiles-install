@@ -5,6 +5,19 @@ remove_db_lock() {
   sudo rm -f /var/lib/pacman/db.lck || log_error "Failed to remove Pacman DB lock. Please resolve manually."
 }
 
+brew_install() {
+  local pkg
+  for pkg in "$@"; do
+    if brew info --formula "$pkg" >/dev/null 2>&1; then
+      brew install --formula "$pkg"
+    elif brew info --cask "$pkg" >/dev/null 2>&1; then
+      brew install --cask "$pkg"
+    else
+      brew install "$pkg"
+    fi
+  done
+}
+
 install_pkg() {
   case "$OS" in
   Linux)
@@ -18,13 +31,13 @@ install_pkg() {
     ;;
   Darwin)
     if command -v brew >/dev/null 2>&1; then
-      brew install "$@"
-    else 
+      brew_install "$@"
+    else
       log_warn "Brew not detected, attempting to source it first..."
       eval "$(/opt/homebrew/bin/brew shellenv)" || eval "$(brew shellenv)"
 
       if command -v brew >/dev/null 2>&1; then
-        brew install "$@"
+        brew_install "$@"
       else
         log_error "Brew not installed, quitting..."
         exit 1
