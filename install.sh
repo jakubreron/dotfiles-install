@@ -16,11 +16,6 @@ fi
 
 source "$BASEDIR/before_install.sh"
 
-if [[ ! -d "$DI_UNIVERSAL_DIR" ]]; then
-  log_error "Clone universal repo into $DI_UNIVERSAL_DIR first"
-  exit 1
-fi
-
 case "$OS" in
 Linux)
   source "$BASEDIR/arch/index.sh"
