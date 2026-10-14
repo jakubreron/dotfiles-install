@@ -43,4 +43,3 @@ update_system
 install_core_packages
 get_fastest_mirrors
 install_pkglists
-setup_postinstall_config
