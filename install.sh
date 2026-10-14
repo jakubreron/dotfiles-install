@@ -6,13 +6,14 @@
 declare -x BASEDIR
 BASEDIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
+source "$BASEDIR/variables.sh"
+source "$BASEDIR/helpers.sh"
+
 if [[ "$EUID" -eq 0 ]]; then
   log_error "This script should not be run as root. Exiting."
   exit 1
 fi
 
-source "$BASEDIR/variables.sh"
-source "$BASEDIR/helpers.sh"
 source "$BASEDIR/before_install.sh"
 
 if [[ ! -d "$DI_UNIVERSAL_DIR" ]]; then
