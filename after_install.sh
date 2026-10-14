@@ -24,6 +24,7 @@ else
     sleep 5
 
     log_progress "After installing Yomitan, import settings from $DI_VOIDRICE_DIR/.config/yomitan and dictionaries from your Google Drive backup"
+    log_progress "After installing uBlock Origin, restore settings from $DI_VOIDRICE_DIR/.config/ublock"
     log_progress "Opening Firefox Add-on pages for manual installation"
     declare -a addon_urls=(
       "https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/"
