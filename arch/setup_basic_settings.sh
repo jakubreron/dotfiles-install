@@ -69,13 +69,13 @@ setup_sddm() {
   if command -v sddm >/dev/null 2>&1; then
     sudo cp -r "$HOME/.config/dotfiles/voidrice/.local/share/sddm/themes/catppuccin/src/"* /usr/share/sddm/themes
 
-    sudo groupadd autologin
+    sudo groupadd -f autologin
     sudo usermod -aG autologin "$USER"
 
-    sudo groupadd -r nopasswdlogin
+    sudo groupadd -rf nopasswdlogin
     sudo gpasswd -a "$USER" nopasswdlogin
 
-    sudo mkdir /etc/sddm.conf.d/
+    sudo mkdir -p /etc/sddm.conf.d/
 
     # NOTE: create autologin
     # ----------------------
