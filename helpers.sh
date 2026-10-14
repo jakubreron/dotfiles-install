@@ -7,19 +7,23 @@ remove_db_lock() {
   fi
 }
 
-import_work_gpg_key() {
-  local work_gpg_key_id work_gpg_key_file
-  work_gpg_key_id="$(git config -f "$HOME/.config/git/config_work" user.signingkey)"
-  work_gpg_key_file="$HOME/.config/git/work-gpg-key.asc"
+import_gpg_key() {
+  local git_config_file="$1" gpg_key_file="$2" gpg_key_id
+  gpg_key_id="$(git config -f "$git_config_file" user.signingkey)"
 
-  if [[ -n "$work_gpg_key_id" ]] && ! gpg --list-secret-keys "$work_gpg_key_id" >/dev/null 2>&1; then
-    if [[ -f "$work_gpg_key_file" ]]; then
-      log_progress "Importing work GPG key (passphrase is in Bitwarden)"
-      gpg --import "$work_gpg_key_file"
+  if [[ -n "$gpg_key_id" ]] && ! gpg --list-secret-keys "$gpg_key_id" >/dev/null 2>&1; then
+    if [[ -f "$gpg_key_file" ]]; then
+      log_progress "Importing GPG key $gpg_key_id (passphrase is in Bitwarden)"
+      gpg --import "$gpg_key_file"
     else
-      log_warn "Work GPG key $work_gpg_key_id not found, restore it from Bitwarden and run: gpg --import <file>"
+      log_warn "GPG key $gpg_key_id not found, restore it from Bitwarden and run: gpg --import <file>"
     fi
   fi
+}
+
+import_gpg_keys() {
+  import_gpg_key "$HOME/.config/git/config" "$HOME/.config/git/personal-gpg-key.asc"
+  import_gpg_key "$HOME/.config/git/config_work" "$HOME/.config/git/work-gpg-key.asc"
 }
 
 brew_install() {

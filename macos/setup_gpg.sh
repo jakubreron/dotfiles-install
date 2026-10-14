@@ -22,7 +22,7 @@ EOF
     gpgconf --kill gpg-agent
   fi
 
-  import_work_gpg_key
+  import_gpg_keys
 
   log_warn "On the first signed commit, tick 'Save in Keychain' in the passphrase prompt"
 fi

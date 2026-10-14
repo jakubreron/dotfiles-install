@@ -21,5 +21,5 @@ EOF
     gpgconf --kill gpg-agent
   fi
 
-  import_work_gpg_key
+  import_gpg_keys
 fi
