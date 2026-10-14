@@ -112,11 +112,13 @@ if [[ -d "$DI_UNIVERSAL_DIR" ]]; then
       log_warn "git-credential-manager not installed, skipping universal repo re-add"
     fi
 
-    chmod 400 ~/.ssh/{id_rsa_personal,id_rsa_work} # 400 for owner read-only, I don't want to modify these files, other users cannot access any file
-    chmod 644 ~/.ssh/{id_rsa_personal.pub,id_rsa_work.pub} # 644 for .pub (public) keys, I can read-write, other users can read
+    for private_key in ~/.ssh/id_rsa_personal ~/.ssh/id_rsa_work; do
+      [[ -f "$private_key" ]] && chmod 400 "$private_key" # 400 for owner read-only, I don't want to modify these files, other users cannot access any file
+    done
+    chmod 600 ~/.ssh/{id_rsa_personal.pub,id_rsa_work.pub} # 600 for .pub (public) keys used as IdentityFile, ssh warns when other users can read them
     chmod 600 ~/.ssh/config # 600 for ~/.ssh/config, it's a normal file, needs read/write, but no execute
     chmod 700 ~/.ssh # 700 for ~/.ssh, read/write/execute to make sure ssh works correctly, no access to other users
-    eval "$(ssh-agent -s)" && ssh-add ~/.ssh/{id_rsa_personal,id_rsa_work}
+    log_warn "Private SSH keys are not in the repo, install Bitwarden and enable its SSH agent (see the universal README)"
   fi
 else
   log_error "Clone universal repo into $DI_UNIVERSAL_DIR first"
