@@ -102,8 +102,12 @@ setup_fingerprint() {
     install_pkg fprintd
   fi
 
-  sudo fprintd-enroll
-  sudo fprintd-enroll -f left-index-finger "$USER"
+  if fprintd-list "$USER" 2>/dev/null | grep -q '#[0-9]'; then
+    log_status "Fingerprint already enrolled, skipping"
+  else
+    fprintd-enroll
+    fprintd-enroll -f left-index-finger
+  fi
 }
 
 setup_core_settings
