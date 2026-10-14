@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
 remove_db_lock() {
-  log_status "Pacman DB lock file detected. Attempting to remove..."
-  sudo rm -f /var/lib/pacman/db.lck || log_error "Failed to remove Pacman DB lock. Please resolve manually."
+  if [[ -f /var/lib/pacman/db.lck ]] && ! pgrep -x pacman >/dev/null 2>&1; then
+    log_status "Pacman DB lock file detected. Attempting to remove..."
+    sudo rm -f /var/lib/pacman/db.lck || log_error "Failed to remove Pacman DB lock. Please resolve manually."
+  fi
 }
 
 brew_install() {

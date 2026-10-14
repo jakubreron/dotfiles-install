@@ -119,7 +119,7 @@ if [[ -d "$DI_UNIVERSAL_DIR" ]]; then
     eval "$(ssh-agent -s)" && ssh-add ~/.ssh/{id_rsa_personal,id_rsa_work}
   fi
 else
-  log_error "$DI_UNIVERSAL_DIR not found. Exiting."
+  log_error "Clone universal repo into $DI_UNIVERSAL_DIR first"
   exit 1
 fi
 
