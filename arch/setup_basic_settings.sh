@@ -67,7 +67,7 @@ setup_sddm() {
   fi
 
   if command -v sddm >/dev/null 2>&1; then
-    sudo cp -r /home/jakub/.config/dotfiles/voidrice/.local/share/sddm/themes/catppuccin/src/* /usr/share/sddm/themes
+    sudo cp -r "$HOME/.config/dotfiles/voidrice/.local/share/sddm/themes/catppuccin/src/"* /usr/share/sddm/themes
 
     sudo groupadd autologin
     sudo usermod -aG autologin "$USER"
@@ -103,7 +103,7 @@ setup_fingerprint() {
   fi
 
   sudo fprintd-enroll
-  sudo fprintd-enroll -f left-index-finger jakub
+  sudo fprintd-enroll -f left-index-finger "$USER"
 }
 
 setup_core_settings
