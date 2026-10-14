@@ -9,10 +9,15 @@ update_system() {
 
 install_core_packages() {
   log_progress "Installing core packages"
-  install_pkg curl ca-certificates base-devel ntp reflector rsync git
+  install_pkg curl ca-certificates base-devel ntp rsync git
 }
 
 get_fastest_mirrors() {
+  if ! command -v reflector >/dev/null 2>&1; then
+    log_progress "Installing reflector"
+    install_pkg reflector
+  fi
+
   if command -v reflector >/dev/null 2>&1; then
     local reflector_state_file="$HOME/.cache/reflector_updated"
 

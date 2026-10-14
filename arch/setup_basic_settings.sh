@@ -85,15 +85,15 @@ Session=hyprland
 
 [Theme]
 Current=/usr/share/sddm/themes/catppuccin-mocha" | sudo tee /etc/sddm.conf.d/autologin.conf
-  fi
 
-  # NOTE: add permissions for login without password
-  echo "auth        sufficient  pam_succeed_if.so user ingroup nopasswdlogin
+    # NOTE: add permissions for login without password
+    echo "auth        sufficient  pam_succeed_if.so user ingroup nopasswdlogin
 auth        include     system-login" | sudo tee /etc/pam.d/sddm
 
-  # NOTE: make sure everything is wayland compatible
-  echo "[General]
+    # NOTE: make sure everything is wayland compatible
+    echo "[General]
 DisplayServer=wayland" | sudo tee /etc/sddm.conf.d/10-wayland.conf
+  fi
 }
 
 setup_fingerprint() {
@@ -102,11 +102,13 @@ setup_fingerprint() {
     install_pkg fprintd
   fi
 
-  if fprintd-list "$USER" 2>/dev/null | grep -q '#[0-9]'; then
-    log_status "Fingerprint already enrolled, skipping"
-  else
-    fprintd-enroll
-    fprintd-enroll -f left-index-finger
+  if command -v fprintd-enroll >/dev/null 2>&1; then
+    if fprintd-list "$USER" 2>/dev/null | grep -q '#[0-9]'; then
+      log_status "Fingerprint already enrolled, skipping"
+    else
+      fprintd-enroll
+      fprintd-enroll -f left-index-finger
+    fi
   fi
 }
 

@@ -49,15 +49,17 @@ setup_mpd() {
 }
 
 setup_darkman() {
-  log_progress "Installing geoclue"
-  install_pkg geoclue
+  if ! pacman -Q geoclue >/dev/null 2>&1; then
+    log_progress "Installing geoclue"
+    install_pkg geoclue
+  fi
 
   if ! command -v darkman >/dev/null 2>&1; then
     log_progress "Installing darkman"
     install_pkg darkman
   fi
 
-  if command -v darkman >/dev/null 2>&1; then
+  if command -v darkman >/dev/null 2>&1 && pacman -Q geoclue >/dev/null 2>&1; then
     log_progress "Setting up darkman"
     systemctl --user enable --now geoclue-agent.service
   fi

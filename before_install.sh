@@ -57,9 +57,19 @@ if ! command -v git >/dev/null 2>&1; then
   install_pkg git
 fi
 
+if ! command -v git >/dev/null 2>&1; then
+  log_error "git not installed, quitting"
+  exit 1
+fi
+
 if ! command -v stow >/dev/null 2>&1; then
   log_progress "Installing stow"
   install_pkg stow
+fi
+
+if ! command -v stow >/dev/null 2>&1; then
+  log_error "stow not installed, quitting"
+  exit 1
 fi
 
 if [[ -d "$DI_UNIVERSAL_DIR" ]]; then
@@ -77,21 +87,29 @@ if [[ -d "$DI_UNIVERSAL_DIR" ]]; then
         if ! command -v defaultbrowser >/dev/null 2>&1; then
           log_progress "Installing defaultbrowser util (macos)"
           install_pkg defaultbrowser
+        fi
 
+        if [[ ! -d "/Applications/Firefox.app" ]]; then
           log_progress "Installing firefox (macos)"
           install_pkg firefox
+        fi
 
+        if command -v defaultbrowser >/dev/null 2>&1 && [[ -d "/Applications/Firefox.app" ]]; then
           log_progress "Setting firefox as default browser (macos)"
           defaultbrowser firefox
         fi
       ;;
     esac
 
-    log_progress "Re-adding universal repo with git-credential-manager"
-    clone_git_repo $DI_UNIVERSAL_REPO $DI_DOTFILES_DIR/universal_temp
+    if command -v git-credential-manager >/dev/null 2>&1; then
+      log_progress "Re-adding universal repo with git-credential-manager"
+      clone_git_repo $DI_UNIVERSAL_REPO $DI_DOTFILES_DIR/universal_temp
 
-    if [[ -d "$DI_DOTFILES_DIR/universal_temp" ]]; then
-      rm -rf $DI_UNIVERSAL_DIR && mv $DI_DOTFILES_DIR/universal_temp $DI_UNIVERSAL_DIR 
+      if [[ -d "$DI_DOTFILES_DIR/universal_temp" ]]; then
+        rm -rf $DI_UNIVERSAL_DIR && mv $DI_DOTFILES_DIR/universal_temp $DI_UNIVERSAL_DIR
+      fi
+    else
+      log_warn "git-credential-manager not installed, skipping universal repo re-add"
     fi
 
     chmod 400 ~/.ssh/{id_rsa_personal,id_rsa_work} # 400 for owner read-only, I don't want to modify these files, other users cannot access any file
