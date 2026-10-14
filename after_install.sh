@@ -23,8 +23,6 @@ else
     log_progress "Waiting for Firefox to shut down all processes"
     sleep 5
 
-    log_progress "After installing Yomitan, import settings from $DI_VOIDRICE_DIR/.config/yomitan and dictionaries from your Google Drive backup"
-    log_progress "After installing uBlock Origin, restore settings from $DI_VOIDRICE_DIR/.config/ublock"
     log_progress "Opening Firefox Add-on pages for manual installation"
     declare -a addon_urls=(
       "https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/"
@@ -60,3 +58,11 @@ fi
 
 log_progress "Cleaning up"
 rm -rf "$DI_GIT_CLONE_PATH"
+
+fetch_gpg_key_from_bitwarden
+
+log_status "Install finished, manual steps left"
+log_warn "1. Log into Bitwarden and enable its SSH agent in Settings, git over SSH needs it"
+log_warn "2. If the GPG key is still missing, restore it from Bitwarden and run: gpg --import <file>"
+log_warn "3. Import Yomitan settings from $DI_VOIDRICE_DIR/.config/yomitan and dictionaries from your Google Drive backup"
+log_warn "4. Restore uBlock Origin settings from $DI_VOIDRICE_DIR/.config/ublock"

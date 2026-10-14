@@ -7,23 +7,66 @@ remove_db_lock() {
   fi
 }
 
-import_gpg_key() {
-  local git_config_file="$1" gpg_key_file="$2" gpg_key_id
-  gpg_key_id="$(git config -f "$git_config_file" user.signingkey)"
+gpg_key_missing() {
+  local gpg_key_id
+  gpg_key_id="$(git config -f "$1" user.signingkey)"
 
-  if [[ -n "$gpg_key_id" ]] && ! gpg --list-secret-keys "$gpg_key_id" >/dev/null 2>&1; then
+  [[ -n "$gpg_key_id" ]] && ! gpg --list-secret-keys "$gpg_key_id" >/dev/null 2>&1
+}
+
+import_gpg_key() {
+  local git_config_file="$1" gpg_key_file="$2"
+
+  if gpg_key_missing "$git_config_file"; then
     if [[ -f "$gpg_key_file" ]]; then
-      log_progress "Importing GPG key $gpg_key_id (passphrase is in Bitwarden)"
+      log_progress "Importing GPG key from $gpg_key_file (passphrase is in Bitwarden)"
       gpg --import "$gpg_key_file"
     else
-      log_warn "GPG key $gpg_key_id not found, restore it from Bitwarden and run: gpg --import <file>"
+      log_warn "GPG key not found, restore it from Bitwarden and run: gpg --import <file>"
     fi
   fi
 }
 
 import_gpg_keys() {
-  import_gpg_key "$HOME/.config/git/config_linux" "$HOME/.config/git/personal-gpg-key.asc"
-  import_gpg_key "$HOME/.config/git/config_macos" "$HOME/.config/git/work-gpg-key.asc"
+  case "$OS" in
+  Darwin)
+    import_gpg_key "$HOME/.config/git/config_macos" "$HOME/.config/git/work-gpg-key.asc"
+    ;;
+  Linux)
+    import_gpg_key "$HOME/.config/git/config_linux" "$HOME/.config/git/personal-gpg-key.asc"
+    ;;
+  esac
+}
+
+fetch_gpg_key_from_bitwarden() {
+  local git_config_file bitwarden_item answer
+
+  case "$OS" in
+  Darwin)
+    git_config_file="$HOME/.config/git/config_macos"
+    bitwarden_item="work-git"
+    ;;
+  Linux)
+    git_config_file="$HOME/.config/git/config_linux"
+    bitwarden_item="personal-git"
+    ;;
+  esac
+
+  gpg_key_missing "$git_config_file" || return 0
+  command -v bw >/dev/null 2>&1 || return 0
+
+  read -r -p "GPG key is missing, fetch it from Bitwarden item '$bitwarden_item' now? [y/N] " answer || return 0
+  [[ "$answer" =~ ^[Yy]$ ]] || return 0
+
+  bw login --check >/dev/null 2>&1 || bw login
+  BW_SESSION="$(bw unlock --raw)" || return 0
+  export BW_SESSION
+
+  log_progress "Importing GPG key from Bitwarden item $bitwarden_item"
+  bw get notes "$bitwarden_item" | gpg --import
+
+  bw lock >/dev/null 2>&1
+  unset BW_SESSION
 }
 
 brew_install() {
