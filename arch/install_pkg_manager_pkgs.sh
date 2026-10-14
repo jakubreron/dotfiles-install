@@ -9,12 +9,13 @@ update_system() {
 
 install_core_packages() {
   log_progress "Installing core packages"
-  install_pkg curl ca-certificates base-devel ntp laptop-detect reflector rsync git
+  install_pkg curl ca-certificates base-devel ntp rsync git
 }
 
 get_fastest_mirrors() {
   if ! command -v reflector >/dev/null 2>&1; then
     log_progress "Installing reflector"
+    install_pkg reflector
   fi
 
   if command -v reflector >/dev/null 2>&1; then
@@ -22,9 +23,9 @@ get_fastest_mirrors() {
 
     if [ ! -f "$reflector_state_file" ] >/dev/null 2>&1; then
       log_progress "Getting the fastest mirrors before installing the dotfiles packages"
-      sudo reflector -f 30 -l 30 -c Japan --number 10 --verbose --save /etc/pacman.d/mirrorlist
-
-      echo "Reflector was already updated" >"$reflector_state_file"
+      if sudo reflector -f 30 -l 30 -c Japan --number 10 --verbose --save /etc/pacman.d/mirrorlist; then
+        echo "Reflector was already updated" >"$reflector_state_file"
+      fi
     fi
   fi
 }
@@ -43,4 +44,3 @@ update_system
 install_core_packages
 get_fastest_mirrors
 install_pkglists
-setup_postinstall_config

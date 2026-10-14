@@ -67,15 +67,15 @@ setup_sddm() {
   fi
 
   if command -v sddm >/dev/null 2>&1; then
-    sudo cp -r /home/jakub/.config/dotfiles/voidrice/.local/share/sddm/themes/catppuccin/src/* /usr/share/sddm/themes
+    sudo cp -r "$HOME/.config/dotfiles/voidrice/.local/share/sddm/themes/catppuccin/src/"* /usr/share/sddm/themes
 
-    sudo groupadd autologin
+    sudo groupadd -f autologin
     sudo usermod -aG autologin "$USER"
 
-    sudo groupadd -r nopasswdlogin
+    sudo groupadd -rf nopasswdlogin
     sudo gpasswd -a "$USER" nopasswdlogin
 
-    sudo mkdir /etc/sddm.conf.d/
+    sudo mkdir -p /etc/sddm.conf.d/
 
     # NOTE: create autologin
     # ----------------------
@@ -85,15 +85,15 @@ Session=hyprland
 
 [Theme]
 Current=/usr/share/sddm/themes/catppuccin-mocha" | sudo tee /etc/sddm.conf.d/autologin.conf
-  fi
 
-  # NOTE: add permissions for login without password
-  echo "auth        sufficient  pam_succeed_if.so user ingroup nopasswdlogin
+    # NOTE: add permissions for login without password
+    echo "auth        sufficient  pam_succeed_if.so user ingroup nopasswdlogin
 auth        include     system-login" | sudo tee /etc/pam.d/sddm
 
-  # NOTE: make sure everything is wayland compatible
-  echo "[General]
+    # NOTE: make sure everything is wayland compatible
+    echo "[General]
 DisplayServer=wayland" | sudo tee /etc/sddm.conf.d/10-wayland.conf
+  fi
 }
 
 setup_fingerprint() {
@@ -102,8 +102,14 @@ setup_fingerprint() {
     install_pkg fprintd
   fi
 
-  sudo fprintd-enroll
-  sudo fprintd-enroll -f left-index-finger jakub
+  if command -v fprintd-enroll >/dev/null 2>&1; then
+    if fprintd-list "$USER" 2>/dev/null | grep -q '#[0-9]'; then
+      log_status "Fingerprint already enrolled, skipping"
+    else
+      fprintd-enroll
+      fprintd-enroll -f left-index-finger
+    fi
+  fi
 }
 
 setup_core_settings
