@@ -13,10 +13,6 @@ install_core_packages() {
 }
 
 get_fastest_mirrors() {
-  if ! command -v reflector >/dev/null 2>&1; then
-    log_progress "Installing reflector"
-  fi
-
   if command -v reflector >/dev/null 2>&1; then
     local reflector_state_file="$HOME/.cache/reflector_updated"
 
