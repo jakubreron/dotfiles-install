@@ -30,6 +30,7 @@ else
       "https://addons.mozilla.org/en-US/firefox/addon/bitwarden-password-manager/"
       "https://addons.mozilla.org/en-US/firefox/addon/vimium-ff/"
       "https://addons.mozilla.org/en-US/firefox/addon/youtube-recommended-videos/"
+      "https://addons.mozilla.org/en-US/firefox/addon/sponsorblock/"
       "https://addons.mozilla.org/en-US/firefox/addon/yomitan/"
     )
     case "$OS" in
