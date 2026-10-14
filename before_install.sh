@@ -88,7 +88,7 @@ if [[ -d "$DI_UNIVERSAL_DIR" ]]; then
     esac
 
     log_progress "Re-adding universal repo with git-credential-manager"
-    clone_git_repo $DI_UNVIERSAL_REPO $DI_DOTFILES_DIR/universal_temp
+    clone_git_repo $DI_UNIVERSAL_REPO $DI_DOTFILES_DIR/universal_temp
 
     if [[ -d "$DI_DOTFILES_DIR/universal_temp" ]]; then
       rm -rf $DI_UNIVERSAL_DIR && mv $DI_DOTFILES_DIR/universal_temp $DI_UNIVERSAL_DIR 

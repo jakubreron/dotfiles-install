@@ -22,7 +22,7 @@ declare -xr DI_PKGLISTS_DIR="$DI_DOTFILES_DIR/pkglists"
 declare -xr DI_PKGLISTS_REPO="https://github.com/jakubreron/pkglists.git"
 
 declare -xr DI_UNIVERSAL_DIR="$DI_DOTFILES_DIR/universal"
-declare -xr DI_UNVIERSAL_REPO="https://github.com/jakubreron/universal.git"
+declare -xr DI_UNIVERSAL_REPO="https://github.com/jakubreron/universal.git"
 
 declare -xr DI_GIT_CLONE_PATH="$HOME/Downloads/git-clone"
 
