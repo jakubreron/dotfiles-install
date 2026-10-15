@@ -201,6 +201,8 @@ if command -v "$DI_NPM_HELPER" >/dev/null 2>&1; then
   fi
 fi
 
+source "$DI_VOIDRICE_DIR/.config/zsh/profile/profile.xdg"
+
 bin_dotfiles_shortcuts="$HOME/.local/bin/generate-shell-shortcuts"
 repo_dotfiles_shortcuts="$HOME/.config/dotfiles/voidrice/.local/bin/generate-shell-shortcuts"
 

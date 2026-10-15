@@ -8,6 +8,8 @@ BASEDIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 source "$BASEDIR/variables.sh"
 
+export PATH="$HOME/.local/bin:$PATH"
+
 export GIT_CONFIG_COUNT=2
 export GIT_CONFIG_KEY_0="url.https://github.com/.insteadOf"
 export GIT_CONFIG_VALUE_0="git@github.com:"
