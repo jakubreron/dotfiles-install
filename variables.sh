@@ -8,6 +8,7 @@ declare -xr DI_NPM_HELPER="npm"
 
 declare -xr DI_DOTFILES_DIR="$HOME/.config/dotfiles"
 declare -xr DI_SCRIPT_STATE_DIR="$HOME/.cache/dotfiles-scripts-state"
+declare -xr DI_LOG_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles-install"
 
 declare -xr DI_NVIM_DIR="$HOME/.config/nvim"
 declare -xr DI_NVIM_REPO="https://github.com/jakubreron/kickstart.nvim.git"

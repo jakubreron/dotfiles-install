@@ -7,6 +7,13 @@ declare -x BASEDIR
 BASEDIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 source "$BASEDIR/variables.sh"
+
+mkdir -p "$DI_LOG_DIR"
+declare -x DI_LOG_FILE
+DI_LOG_FILE="$DI_LOG_DIR/install-$(date +%F-%H%M%S).log"
+exec > >(tee -a "$DI_LOG_FILE") 2>&1
+echo "Logging to $DI_LOG_FILE"
+
 source "$BASEDIR/helpers.sh"
 
 if [[ "$EUID" -eq 0 ]]; then
