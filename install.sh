@@ -44,6 +44,26 @@ if [[ "$EUID" -eq 0 ]]; then
   exit 1
 fi
 
+log_progress "Checking sudo is available"
+if ! command -v sudo >/dev/null 2>&1; then
+  log_error "sudo is not installed, install it and add your user to the wheel group as root first"
+  exit 1
+fi
+
+log_progress "Asking for your sudo password once, it is kept alive for the whole run"
+if ! sudo -v; then
+  log_error "Could not get sudo access, check your password and that your user may use sudo"
+  exit 1
+fi
+
+sudo_keepalive_seconds=60
+(
+  while kill -0 "$$" 2>/dev/null; do
+    sudo -n true
+    sleep "$sudo_keepalive_seconds"
+  done
+) >/dev/null 2>&1 &
+
 log_progress "Running before_install.sh"
 source "$BASEDIR/before_install.sh"
 
