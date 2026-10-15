@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+if [ -z "${BASH_VERSION:-}" ]; then
+  echo "Run this script with bash, not sh" >&2
+  exit 1
+fi
+
+if [[ "${BASH_SOURCE[0]}" != "$0" ]]; then
+  echo "Run this script with: bash install.sh (sourcing it would close your terminal on exit)" >&2
+  return 1
+fi
+
 # TODO: @Jakub add https://linuxblog.io/upgrade-thinkpad-firmware-linux-fwupd/
 # updates for bios, etc... (systemctl)
 
