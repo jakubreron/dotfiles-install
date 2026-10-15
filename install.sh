@@ -44,6 +44,9 @@ if [[ "$EUID" -eq 0 ]]; then
   exit 1
 fi
 
+log_progress "Running preflight checks"
+run_preflight_checks
+
 log_progress "Checking sudo is available"
 if ! command -v sudo >/dev/null 2>&1; then
   log_error "sudo is not installed, install it and add your user to the wheel group as root first"

@@ -11,6 +11,90 @@ remove_db_lock() {
   fi
 }
 
+release_install_lock() {
+  rm -f "$DI_LOCK_DIR/pid"
+  rmdir "$DI_LOCK_DIR" 2>/dev/null
+}
+
+acquire_install_lock() {
+  local running_pid
+
+  log_progress "Checking no other install is running"
+  if ! mkdir "$DI_LOCK_DIR" 2>/dev/null; then
+    running_pid="$(cat "$DI_LOCK_DIR/pid" 2>/dev/null)"
+
+    if [[ -n "$running_pid" ]] && kill -0 "$running_pid" 2>/dev/null; then
+      log_error "Another install is already running (pid $running_pid), wait for it to finish"
+      exit 1
+    fi
+
+    log_warn "Removing a stale install lock left by a crashed run"
+    release_install_lock
+    mkdir "$DI_LOCK_DIR" || {
+      log_error "Could not create the install lock at $DI_LOCK_DIR"
+      exit 1
+    }
+  fi
+
+  echo "$$" >"$DI_LOCK_DIR/pid"
+  trap release_install_lock EXIT
+  log_status "Install lock acquired"
+}
+
+check_network() {
+  local url
+  local -a urls=("https://github.com")
+  [[ "$OS" == "Linux" ]] && urls+=("https://archlinux.org")
+
+  if ! command -v curl >/dev/null 2>&1; then
+    log_warn "curl is not installed, skipping the network check"
+    return 0
+  fi
+
+  for url in "${urls[@]}"; do
+    log_progress "Checking that $url is reachable"
+    if ! curl -fsS -I -o /dev/null --max-time "$DI_NETWORK_TIMEOUT_SECONDS" "$url"; then
+      log_error "Cannot reach $url, check your internet connection (and VPN or proxy) and run again"
+      exit 1
+    fi
+  done
+
+  log_status "Network is reachable"
+}
+
+check_disk_space() {
+  local min_gb free_gb answer
+
+  case "$OS" in
+  Linux) min_gb="$DI_MIN_FREE_GB_LINUX" ;;
+  Darwin) min_gb="$DI_MIN_FREE_GB_MACOS" ;;
+  esac
+
+  free_gb="$(($(df -Pk "$HOME" | awk 'NR==2 {print $4}') / 1024 / 1024))"
+  log_progress "Free disk space in $HOME is ${free_gb}GB, at least ${min_gb}GB is recommended"
+
+  if ((free_gb >= min_gb)); then
+    log_status "Enough free disk space"
+    return 0
+  fi
+
+  log_warn "Low disk space, the install may fail halfway"
+  if read -r -p "Continue anyway? [y/N] " answer; then
+    if [[ ! "$answer" =~ ^[Yy]$ ]]; then
+      log_error "Stopping because of low disk space"
+      exit 1
+    fi
+  else
+    log_warn "No input available, continuing despite the low disk space"
+  fi
+}
+
+run_preflight_checks() {
+  acquire_install_lock
+  check_network
+  check_disk_space
+}
+
 firefox_profile_exists() {
   local profile_dir
 

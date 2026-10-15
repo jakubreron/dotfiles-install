@@ -27,6 +27,11 @@ declare -xr DI_UNIVERSAL_REPO="https://github.com/jakubreron/universal.git"
 
 declare -xr DI_GIT_CLONE_PATH="$HOME/Downloads/git-clone"
 
+declare -xr DI_LOCK_DIR="$DI_LOG_DIR/install.lock"
+declare -xr DI_NETWORK_TIMEOUT_SECONDS=10
+declare -xr DI_MIN_FREE_GB_LINUX=10
+declare -xr DI_MIN_FREE_GB_MACOS=5
+
 case "$OS" in
 Linux)
   declare -x DI_PKG_TYPE="${DI_PKG_TYPE:-primary}"
