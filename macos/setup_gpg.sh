@@ -5,6 +5,8 @@ gpg_agent_conf="$HOME/.gnupg/gpg-agent.conf"
 if ! command -v pinentry-mac >/dev/null 2>&1; then
   log_progress "Installing pinentry-mac"
   install_pkg pinentry-mac
+else
+  log_status "pinentry-mac is already installed"
 fi
 
 if command -v pinentry-mac >/dev/null 2>&1 && command -v gpg >/dev/null 2>&1; then
@@ -19,6 +21,7 @@ pinentry-program $(command -v pinentry-mac)
 default-cache-ttl 28800
 max-cache-ttl 28800
 EOF
+    log_progress "Restarting gpg-agent"
     gpgconf --kill gpg-agent
   fi
 

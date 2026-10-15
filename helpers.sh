@@ -2,8 +2,12 @@
 
 remove_db_lock() {
   if [[ -f /var/lib/pacman/db.lck ]] && ! pgrep -x pacman >/dev/null 2>&1; then
-    log_status "Pacman DB lock file detected. Attempting to remove..."
-    sudo rm -f /var/lib/pacman/db.lck || log_error "Failed to remove Pacman DB lock. Please resolve manually."
+    log_warn "Pacman DB lock file detected, attempting to remove it"
+    if sudo rm -f /var/lib/pacman/db.lck; then
+      log_status "Pacman DB lock removed"
+    else
+      log_error "Failed to remove Pacman DB lock, please resolve manually"
+    fi
   fi
 }
 
@@ -17,6 +21,7 @@ gpg_key_missing() {
 import_gpg_key() {
   local git_config_file="$1" gpg_key_file="$2"
 
+  log_progress "Checking the GPG key configured in $git_config_file"
   if gpg_key_missing "$git_config_file"; then
     if [[ -f "$gpg_key_file" ]]; then
       log_progress "Importing GPG key from $gpg_key_file (passphrase is in Bitwarden)"
@@ -24,10 +29,14 @@ import_gpg_key() {
     else
       log_warn "GPG key not found, restore it from Bitwarden and run: gpg --import <file>"
     fi
+  else
+    log_status "GPG key is already in the keyring or not configured, skipping"
   fi
 }
 
 import_gpg_keys() {
+  log_progress "Importing GPG keys for $OS"
+
   case "$OS" in
   Darwin)
     import_gpg_key "$HOME/.config/git/config_macos" "$HOME/.config/git/work-gpg-key.asc"
@@ -52,19 +61,42 @@ fetch_gpg_key_from_bitwarden() {
     ;;
   esac
 
-  gpg_key_missing "$git_config_file" || return 0
-  command -v bw >/dev/null 2>&1 || return 0
+  log_progress "Checking whether the GPG key needs to be fetched from Bitwarden"
+  if ! gpg_key_missing "$git_config_file"; then
+    log_status "GPG key is already in the keyring or not configured, skipping the Bitwarden fetch"
+    return 0
+  fi
 
-  read -r -p "GPG key is missing, fetch it from Bitwarden item '$bitwarden_item' now? [y/N] " answer || return 0
-  [[ "$answer" =~ ^[Yy]$ ]] || return 0
+  if ! command -v bw >/dev/null 2>&1; then
+    log_warn "Bitwarden CLI (bw) is not installed, skipping the Bitwarden fetch"
+    return 0
+  fi
 
-  bw login --check >/dev/null 2>&1 || bw login
-  BW_SESSION="$(bw unlock --raw)" || return 0
+  read -r -p "GPG key is missing, fetch it from Bitwarden item '$bitwarden_item' now? [y/N] " answer || {
+    log_status "No input available, skipping the Bitwarden fetch"
+    return 0
+  }
+  if [[ ! "$answer" =~ ^[Yy]$ ]]; then
+    log_status "Skipping the Bitwarden fetch"
+    return 0
+  fi
+
+  if ! bw login --check >/dev/null 2>&1; then
+    log_progress "Logging into Bitwarden"
+    bw login
+  fi
+
+  log_progress "Unlocking the Bitwarden vault"
+  BW_SESSION="$(bw unlock --raw)" || {
+    log_error "Could not unlock the Bitwarden vault"
+    return 0
+  }
   export BW_SESSION
 
   log_progress "Importing GPG key from Bitwarden item $bitwarden_item"
   bw get notes "$bitwarden_item" | gpg --import
 
+  log_progress "Locking the Bitwarden vault"
   bw lock >/dev/null 2>&1
   unset BW_SESSION
 }
@@ -73,10 +105,13 @@ brew_install() {
   local pkg
   for pkg in "$@"; do
     if brew info --formula "$pkg" >/dev/null 2>&1; then
+      log_progress "Installing $pkg with brew (formula)"
       brew install --formula "$pkg"
     elif brew info --cask "$pkg" >/dev/null 2>&1; then
+      log_progress "Installing $pkg with brew (cask)"
       brew install --cask "$pkg"
     else
+      log_progress "Installing $pkg with brew (not found as formula or cask, trying as is)"
       brew install "$pkg"
     fi
   done
@@ -88,8 +123,10 @@ install_pkg() {
     remove_db_lock
 
     if command -v "$DI_AUR_HELPER" >/dev/null 2>&1; then
+      log_progress "Installing with $DI_AUR_HELPER: $*"
       "$DI_AUR_HELPER" --needed -S "$@"
     else
+      log_progress "Installing with pacman: $*"
       sudo pacman --needed -S "$@"
     fi
     ;;
@@ -104,6 +141,7 @@ install_pkg() {
       exit 1
     fi
 
+    log_progress "Installing with brew: $*"
     brew_install "$@"
     ;;
   esac
@@ -153,8 +191,9 @@ clone_git_repo() {
   destination="$2"
 
   if [[ ! -d "$destination" ]]; then
-    log_progress "$destination does not exist, cloning via git"
+    log_progress "$destination does not exist, cloning $repo via git"
     git clone "$repo" "$destination"
+    log_status "Cloned $repo into $destination"
   else
     log_status "Pulling latest changes in  $destination, the repository already existed"️
     git -C "$destination" pull

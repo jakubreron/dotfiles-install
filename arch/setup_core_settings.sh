@@ -3,17 +3,22 @@
 setup_core_settings() {
   log_progress "Setting up core settings"
 
+  log_progress "Adding $USER to the wheel and video groups"
   sudo usermod -aG wheel "$USER" # sudo
   sudo usermod -aG video "$USER" # backlight
 
+  log_progress "Enabling the pacman ILoveCandy progress bar"
   # show  C o o o, instead of #### in progress
   grep -q "ILoveCandy" /etc/pacman.conf || sudo sed -i "/#VerbosePkgLists/a ILoveCandy" /etc/pacman.conf
 
+  log_progress "Enabling the multilib repository"
   # Enable multilib
   sudo sed -i '/^#\[multilib\]$/,/^#Include = \/etc\/pacman\.d\/mirrorlist$/s/^#//' /etc/pacman.conf
 
+  log_progress "Enabling pacman parallel downloads and colors"
   sudo sed -Ei "s/^#(ParallelDownloads).*/\1 = 15/;/^#Color$/s/#//" /etc/pacman.conf
 
+  log_progress "Writing the sudoers rules"
   # Allow wheel users to sudo with password and allow several system commands
   # (like `shutdown` to run without password).
   echo "%wheel ALL=(ALL:ALL) ALL" | sudo tee /etc/sudoers.d/00-wheel-can-sudo
@@ -21,6 +26,7 @@ setup_core_settings() {
   echo "Defaults editor=/usr/bin/nvim" | sudo tee /etc/sudoers.d/02-visudo-editor
   echo "Defaults timestamp_timeout=1440" | sudo tee /etc/sudoers.d/03-sudo-timeout
 
+  log_progress "Writing the sysctl and dbus profile settings"
   sudo mkdir -p /etc/sysctl.d
   echo "kernel.dmesg_restrict = 0" | sudo tee /etc/sysctl.d/dmesg.conf
   echo "export \$(dbus-launch)" | sudo tee /etc/profile.d/dbus.sh

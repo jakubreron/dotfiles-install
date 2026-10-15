@@ -4,6 +4,8 @@ install_tlp() {
   if ! command -v tlp >/dev/null 2>&1; then
     log_progress "Installing and setting up tlp"
     install_pkg tlp
+  else
+    log_status "tlp is already installed"
   fi
 
   if command -v tlp >/dev/null 2>&1; then
@@ -16,14 +18,18 @@ install_keyd() {
   if ! command -v keyd >/dev/null 2>&1; then
     log_progress "Installing and setting up keyd"
     install_pkg keyd
+  else
+    log_status "keyd is already installed"
   fi
 
   if command -v keyd >/dev/null 2>&1; then
     log_status "keyd is already installed, performing the setup"️
 
+    log_progress "Adding $USER to the keyd group and enabling the keyd service"
     sudo usermod -aG keyd "$USER"
     sudo systemctl enable keyd --now
 
+    log_progress "Writing /etc/keyd/default.conf"
     echo "[ids]
 *
 
@@ -84,6 +90,8 @@ install_powertop() {
   if ! command -v powertop >/dev/null 2>&1; then
     log_progress "Installing and setting up powertop"
     install_pkg powertop
+  else
+    log_status "powertop is already installed"
   fi
 
   if command -v powertop >/dev/null 2>&1; then
