@@ -10,7 +10,7 @@ setup_core_settings() {
   grep -q "ILoveCandy" /etc/pacman.conf || sudo sed -i "/#VerbosePkgLists/a ILoveCandy" /etc/pacman.conf
 
   # Enable multilib
-  sudo sed -i '/^# \[multilib\]$/,/^# Include = \/etc\/pacman\.d\/mirrorlist$/s/^# //' /etc/pacman.conf
+  sudo sed -i '/^#\[multilib\]$/,/^#Include = \/etc\/pacman\.d\/mirrorlist$/s/^#//' /etc/pacman.conf
 
   sudo sed -Ei "s/^#(ParallelDownloads).*/\1 = 15/;/^#Color$/s/#//" /etc/pacman.conf
 
