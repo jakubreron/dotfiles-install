@@ -8,6 +8,12 @@ BASEDIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 source "$BASEDIR/variables.sh"
 
+export GIT_CONFIG_COUNT=2
+export GIT_CONFIG_KEY_0="url.https://github.com/.insteadOf"
+export GIT_CONFIG_VALUE_0="git@github.com:"
+export GIT_CONFIG_KEY_1="url.https://github.com/.insteadOf"
+export GIT_CONFIG_VALUE_1="ssh://git@github.com/"
+
 mkdir -p "$DI_LOG_DIR"
 declare -x DI_LOG_FILE
 DI_LOG_FILE="$DI_LOG_DIR/install-$(date +%F-%H%M%S).log"
