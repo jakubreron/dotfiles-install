@@ -50,7 +50,12 @@ setup_fingerprint() {
   fi
 
   if command -v fprintd-enroll >/dev/null 2>&1; then
-    if fprintd-list "$USER" 2>/dev/null | grep -q '#[0-9]'; then
+    local fingerprint_list
+    fingerprint_list="$(fprintd-list "$USER" 2>&1 || true)"
+
+    if ! grep -q 'Device at' <<<"$fingerprint_list"; then
+      log_warn "No fingerprint reader found, skipping the enrollment"
+    elif grep -q '#[0-9]' <<<"$fingerprint_list"; then
       log_status "Fingerprint already enrolled, skipping"
     else
       log_progress "Enrolling your fingerprints, follow the prompts"
