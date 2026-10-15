@@ -394,7 +394,9 @@ clone_git_repo() {
     log_status "Cloned $repo into $destination"
   else
     log_status "Pulling latest changes in  $destination, the repository already existed"️
-    git -C "$destination" pull
+    if ! git -C "$destination" pull --ff-only; then
+      log_warn "Could not fast-forward $destination (local commits not on origin?), keeping its current version"
+    fi
   fi
 
   if [[ -f "$destination/.gitmodules" ]]; then
