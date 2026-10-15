@@ -235,8 +235,8 @@ if command -v "$DI_NPM_HELPER" >/dev/null 2>&1; then
   fi
 fi
 
-log_progress "Loading the XDG variables from $DI_VOIDRICE_DIR/.config/zsh/profile/profile.xdg"
-source "$DI_VOIDRICE_DIR/.config/zsh/profile/profile.xdg"
+log_progress "Loading the XDG and folder path variables from $DI_VOIDRICE_DIR/.config/zsh/profile/profile.paths"
+source "$DI_VOIDRICE_DIR/.config/zsh/profile/profile.paths"
 
 bin_dotfiles_shortcuts="$HOME/.local/bin/generate-shell-shortcuts"
 repo_dotfiles_shortcuts="$HOME/.config/dotfiles/voidrice/.local/bin/generate-shell-shortcuts"
