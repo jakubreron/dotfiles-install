@@ -11,6 +11,52 @@ remove_db_lock() {
   fi
 }
 
+record_failed_command() {
+  local exit_code="$1" source_file="$2" line="$3" failed_command="$4"
+  local last_failure
+
+  case "$failed_command" in
+  "("* | source\ * | .\ *) return 0 ;;
+  *'$('*)
+    case "${failed_command%% *}" in
+    [A-Za-z_]*=*) return 0 ;;
+    esac
+    ;;
+  esac
+
+  last_failure="$(tail -n 1 "$DI_FAILURES_FILE" 2>/dev/null)"
+  case "$last_failure" in
+  *": $failed_command") return 0 ;;
+  esac
+
+  echo "exit $exit_code in ${source_file##*/}:$line: $failed_command" >>"$DI_FAILURES_FILE"
+}
+
+print_failure_summary() {
+  local count index=0 failure
+
+  [[ -n "${DI_FAILURE_SUMMARY_PRINTED:-}" ]] && return 0
+  DI_FAILURE_SUMMARY_PRINTED=1
+
+  count="$(wc -l <"$DI_FAILURES_FILE" 2>/dev/null | tr -d ' ')"
+  if [[ "${count:-0}" -eq 0 ]]; then
+    log_status "All steps finished without a failed command"
+    return 0
+  fi
+
+  log_warn "$count command(s) failed during this run"
+  while IFS= read -r failure; do
+    index=$((index + 1))
+    echo "   $index. $failure"
+  done <"$DI_FAILURES_FILE"
+  log_warn "Full output of the run is in $DI_LOG_FILE"
+}
+
+finish_install() {
+  print_failure_summary
+  release_install_lock
+}
+
 release_install_lock() {
   rm -f "$DI_LOCK_DIR/pid"
   rmdir "$DI_LOCK_DIR" 2>/dev/null
@@ -37,7 +83,7 @@ acquire_install_lock() {
   fi
 
   echo "$$" >"$DI_LOCK_DIR/pid"
-  trap release_install_lock EXIT
+  trap finish_install EXIT
   log_status "Install lock acquired"
 }
 

@@ -66,6 +66,8 @@ rm -rf "$DI_GIT_CLONE_PATH"
 
 fetch_gpg_key_from_bitwarden
 
+print_failure_summary
+
 log_status "Install finished, manual steps left"
 log_warn "1. Log into Bitwarden and enable its SSH agent in Settings, git over SSH needs it"
 log_warn "2. If the GPG key is still missing, restore it from Bitwarden and run: gpg --import <file>"

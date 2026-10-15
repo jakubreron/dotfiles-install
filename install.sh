@@ -26,6 +26,13 @@ exec > >(tee -a "$DI_LOG_FILE") 2>&1
 source "$BASEDIR/helpers.sh"
 
 log_status "Logging everything to $DI_LOG_FILE"
+declare -x DI_FAILURES_FILE
+DI_FAILURES_FILE="${DI_LOG_FILE%.log}-failures.txt"
+: >"$DI_FAILURES_FILE"
+set -o errtrace
+trap 'record_failed_command "$?" "${BASH_SOURCE[0]}" "$LINENO" "$BASH_COMMAND"' ERR
+log_status "Failed commands are collected in $DI_FAILURES_FILE and summarized at the end"
+
 log_progress "Starting the install on $OS (package type: $DI_PKG_TYPE)"
 
 log_progress "Adding $HOME/.local/bin to PATH for this run"
@@ -61,6 +68,7 @@ fi
 
 sudo_keepalive_seconds=60
 (
+  trap - ERR
   while kill -0 "$$" 2>/dev/null; do
     sudo -n true
     sleep "$sudo_keepalive_seconds"
