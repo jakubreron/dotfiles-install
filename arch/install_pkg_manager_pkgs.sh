@@ -16,6 +16,8 @@ get_fastest_mirrors() {
   if ! command -v reflector >/dev/null 2>&1; then
     log_progress "Installing reflector"
     install_pkg reflector
+  else
+    log_status "reflector is already installed"
   fi
 
   if command -v reflector >/dev/null 2>&1; then
@@ -25,14 +27,21 @@ get_fastest_mirrors() {
       log_progress "Getting the fastest mirrors before installing the dotfiles packages"
       if sudo reflector -f 30 -l 30 -c Japan --number 10 --verbose --save /etc/pacman.d/mirrorlist; then
         echo "Reflector was already updated" >"$reflector_state_file"
+        log_status "Mirrors updated"
+      else
+        log_error "reflector failed, the mirrors were not updated"
       fi
+    else
+      log_status "Mirrors were already updated before, skipping"
     fi
+  else
+    log_warn "reflector is not available, skipping the mirror update"
   fi
 }
 
 install_pkglists() {
   if command -v "$DI_AUR_HELPER" >/dev/null 2>&1; then
-    log_progress "Installing dotfiles packages"
+    log_progress "Installing dotfiles packages from $DI_PKGLISTS_DIR/$DI_PKG_TYPE/pacman.txt"
     install_pkg - <"$DI_PKGLISTS_DIR/$DI_PKG_TYPE/pacman.txt"
   else
     log_error "AUR Helper not detected, quitting"

@@ -5,6 +5,8 @@ gpg_agent_conf="$HOME/.gnupg/gpg-agent.conf"
 if ! command -v gpg >/dev/null 2>&1; then
   log_progress "Installing gnupg"
   install_pkg gnupg
+else
+  log_status "gnupg is already installed"
 fi
 
 if command -v gpg >/dev/null 2>&1; then
@@ -18,6 +20,7 @@ if command -v gpg >/dev/null 2>&1; then
 default-cache-ttl 28800
 max-cache-ttl 28800
 EOF
+    log_progress "Restarting gpg-agent"
     gpgconf --kill gpg-agent
   fi
 

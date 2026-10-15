@@ -3,6 +3,8 @@
 if ! command -v yabai >/dev/null 2>&1; then
   log_progress "Installing tiling manager (yabai)"
   install_pkg koekeishiya/formulae/yabai
+else
+  log_status "yabai is already installed"
 fi
 if command -v yabai >/dev/null 2>&1; then
   log_progress "Starting yabai brew service"
@@ -13,6 +15,8 @@ fi
 if ! command -v borders >/dev/null 2>&1; then
   log_progress "Installing borders"
   install_pkg felixkratz/formulae/borders
+else
+  log_status "borders is already installed"
 fi
 if  command -v borders >/dev/null 2>&1; then
   log_progress "Starting borders brew service"
@@ -22,6 +26,8 @@ fi
 if ! command -v colima >/dev/null 2>&1; then
   log_progress "Installing colima"
   install_pkg "colima"
+else
+  log_status "colima is already installed"
 fi
 if command -v colima >/dev/null 2>&1; then
   log_progress "Starting colima"

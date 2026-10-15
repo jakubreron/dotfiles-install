@@ -8,6 +8,7 @@ declare -xr DI_NPM_HELPER="npm"
 
 declare -xr DI_DOTFILES_DIR="$HOME/.config/dotfiles"
 declare -xr DI_SCRIPT_STATE_DIR="$HOME/.cache/dotfiles-scripts-state"
+declare -xr DI_LOG_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles-install"
 
 declare -xr DI_NVIM_DIR="$HOME/.config/nvim"
 declare -xr DI_NVIM_REPO="https://github.com/jakubreron/kickstart.nvim.git"
@@ -25,6 +26,11 @@ declare -xr DI_UNIVERSAL_DIR="$DI_DOTFILES_DIR/universal"
 declare -xr DI_UNIVERSAL_REPO="https://github.com/jakubreron/universal.git"
 
 declare -xr DI_GIT_CLONE_PATH="$HOME/Downloads/git-clone"
+
+declare -xr DI_LOCK_DIR="$DI_LOG_DIR/install.lock"
+declare -xr DI_NETWORK_TIMEOUT_SECONDS=10
+declare -xr DI_MIN_FREE_GB_LINUX=10
+declare -xr DI_MIN_FREE_GB_MACOS=5
 
 case "$OS" in
 Linux)
