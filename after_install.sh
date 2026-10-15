@@ -64,8 +64,6 @@ fi
 log_progress "Cleaning up the clone folder $DI_GIT_CLONE_PATH"
 rm -rf "$DI_GIT_CLONE_PATH"
 
-fetch_gpg_key_from_bitwarden
-
 print_failure_summary
 
 log_status "Install finished, manual steps left"
@@ -73,3 +71,7 @@ log_warn "1. Log into Bitwarden and enable its SSH agent in Settings, git over S
 log_warn "2. If the GPG key is still missing, restore it from Bitwarden and run: gpg --import <file>"
 log_warn "3. Import Yomitan settings from $DI_VOIDRICE_DIR/.config/yomitan and dictionaries from your Google Drive backup"
 log_warn "4. Restore uBlock Origin settings from $DI_VOIDRICE_DIR/.config/ublock"
+
+log_progress "Last steps that need you, everything above ran unattended"
+enroll_fingerprints
+fetch_gpg_key_from_bitwarden

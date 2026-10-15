@@ -49,20 +49,7 @@ setup_fingerprint() {
     log_status "fprintd is already installed"
   fi
 
-  if command -v fprintd-enroll >/dev/null 2>&1; then
-    local fingerprint_list
-    fingerprint_list="$(fprintd-list "$USER" 2>&1 || true)"
-
-    if ! grep -q 'Device at' <<<"$fingerprint_list"; then
-      log_warn "No fingerprint reader found, skipping the enrollment"
-    elif grep -q '#[0-9]' <<<"$fingerprint_list"; then
-      log_status "Fingerprint already enrolled, skipping"
-    else
-      log_progress "Enrolling your fingerprints, follow the prompts"
-      fprintd-enroll
-      fprintd-enroll -f left-index-finger
-    fi
-  fi
+  log_status "Fingerprints are enrolled at the very end of the install, when the unattended steps are done"
 }
 
 setup_grub

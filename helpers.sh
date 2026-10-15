@@ -209,6 +209,32 @@ ensure_firefox_profile() {
   fi
 }
 
+enroll_fingerprints() {
+  local fingerprint_list
+
+  if [[ "$OS" != "Linux" ]]; then
+    return 0
+  fi
+
+  log_progress "Checking your fingerprints"
+  if ! command -v fprintd-enroll >/dev/null 2>&1; then
+    log_warn "fprintd is not installed, skipping the fingerprint enrollment"
+    return 0
+  fi
+
+  fingerprint_list="$(fprintd-list "$USER" 2>&1 || true)"
+
+  if ! grep -q 'Device at' <<<"$fingerprint_list"; then
+    log_warn "No fingerprint reader found, skipping the enrollment"
+  elif grep -q '#[0-9]' <<<"$fingerprint_list"; then
+    log_status "Fingerprint already enrolled, skipping"
+  else
+    log_progress "Enrolling your fingerprints, follow the prompts"
+    fprintd-enroll
+    fprintd-enroll -f left-index-finger
+  fi
+}
+
 gpg_key_missing() {
   local gpg_key_id
   gpg_key_id="$(git config -f "$1" user.signingkey)"
@@ -322,10 +348,10 @@ install_pkg() {
 
     if command -v "$DI_AUR_HELPER" >/dev/null 2>&1; then
       log_progress "Installing with $DI_AUR_HELPER: $*"
-      "$DI_AUR_HELPER" --needed -S "$@"
+      "$DI_AUR_HELPER" --needed --noconfirm -S "$@"
     else
       log_progress "Installing with pacman: $*"
-      sudo pacman --needed -S "$@"
+      sudo pacman --needed --noconfirm -S "$@"
     fi
     ;;
   Darwin)

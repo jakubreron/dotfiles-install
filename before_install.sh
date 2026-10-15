@@ -46,7 +46,7 @@ Darwin)
     fi
 
     log_progress "Installing brew"
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
     # Add Homebrew to PATH immediately for this script to use it in current session
     log_progress "Adding brew to PATH for this session"
@@ -198,10 +198,10 @@ if command -v zsh >/dev/null 2>&1; then
 
     case "$OS" in
       Linux)
-        chsh -s /usr/bin/zsh "$USER"
+        sudo chsh -s /usr/bin/zsh "$USER"
         ;;
     Darwin)
-      chsh -s /bin/zsh "$USER"
+      sudo chsh -s /bin/zsh "$USER"
       ;;
     esac
   else
