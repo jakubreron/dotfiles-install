@@ -26,14 +26,14 @@ setup_grub() {
 }
 
 setup_bluetooth() {
-  if ! command -v bluetoothctl >/dev/null 2>&1; then
-    log_progress "Installing bluez-utils"
-    install_pkg bluez-utils
+  if ! command -v bluetoothctl >/dev/null 2>&1 || ! pacman -Q bluez >/dev/null 2>&1; then
+    log_progress "Installing bluez and bluez-utils"
+    install_pkg bluez bluez-utils
   else
-    log_status "bluez-utils is already installed"
+    log_status "bluez and bluez-utils are already installed"
   fi
 
-  if command -v bluetoothctl >/dev/null 2>&1; then
+  if command -v bluetoothctl >/dev/null 2>&1 && pacman -Q bluez >/dev/null 2>&1; then
     log_progress "Setting up the bluetooth"
 
     sudo sed -i 's/^AutoEnable=false/AutoEnable=true/g' /etc/bluetooth/main.conf
