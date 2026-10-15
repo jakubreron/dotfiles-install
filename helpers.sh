@@ -11,6 +11,62 @@ remove_db_lock() {
   fi
 }
 
+firefox_profile_exists() {
+  local profile_dir
+
+  for profile_dir in "$@"; do
+    grep -qs "default-release" "$profile_dir/profiles.ini" && return 0
+  done
+
+  return 1
+}
+
+ensure_firefox_profile() {
+  local firefox_bin firefox_pid
+  local -a profile_dirs
+
+  case "$OS" in
+  Linux)
+    firefox_bin="$(command -v firefox)"
+    profile_dirs=("${XDG_CONFIG_HOME:-$HOME/.config}/mozilla/firefox" "$HOME/.mozilla/firefox")
+    ;;
+  Darwin)
+    firefox_bin="/Applications/Firefox.app/Contents/MacOS/firefox"
+    profile_dirs=("$HOME/Library/Application Support/Firefox")
+    ;;
+  esac
+
+  log_progress "Checking whether a Firefox profile already exists"
+  if firefox_profile_exists "${profile_dirs[@]}"; then
+    log_status "Firefox profile already exists, skipping"
+    return 0
+  fi
+
+  if [[ -z "$firefox_bin" || ! -x "$firefox_bin" ]]; then
+    log_warn "Firefox is not installed, cannot create its profile"
+    return 0
+  fi
+
+  log_progress "Starting Firefox headless once to create its profile"
+  "$firefox_bin" --headless --no-remote about:blank >/dev/null 2>&1 &
+  firefox_pid=$!
+
+  for _ in $(seq 1 30); do
+    firefox_profile_exists "${profile_dirs[@]}" && break
+    sleep 1
+  done
+
+  log_progress "Stopping the headless Firefox"
+  kill "$firefox_pid" 2>/dev/null
+  wait "$firefox_pid" 2>/dev/null
+
+  if firefox_profile_exists "${profile_dirs[@]}"; then
+    log_status "Firefox profile created"
+  else
+    log_warn "Firefox did not create a profile within 30 seconds, the user.js merge will be skipped"
+  fi
+}
+
 gpg_key_missing() {
   local gpg_key_id
   gpg_key_id="$(git config -f "$1" user.signingkey)"

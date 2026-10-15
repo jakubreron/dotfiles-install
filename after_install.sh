@@ -9,6 +9,8 @@ done
 log_progress "Stowing again to ensure no unwanted overrides"
 stow --adopt --target="$HOME" --dir="$DI_DOTFILES_DIR" voidrice universal macos
 
+ensure_firefox_profile
+
 log_progress "Updating symlinks with global script (to ensure firefox config)"
 command $HOME/.local/bin/sync/update-symlinks-all
 
