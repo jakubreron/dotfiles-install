@@ -190,7 +190,15 @@ if command -v "$DI_NPM_HELPER" >/dev/null 2>&1; then
 
   packages="$DI_PKGLISTS_DIR/$DI_PKG_TYPE/$DI_NPM_HELPER.txt"
 
-  cat "$packages" | xargs $DI_NPM_HELPER install --global
+  if [[ -f "$packages" ]]; then
+    case "$OS" in
+    Linux)
+      export NPM_CONFIG_PREFIX="$HOME/.local"
+      ;;
+    esac
+
+    xargs $DI_NPM_HELPER install --global <"$packages"
+  fi
 fi
 
 bin_dotfiles_shortcuts="$HOME/.local/bin/generate-shell-shortcuts"
