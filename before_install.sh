@@ -8,6 +8,10 @@ mkdir -p $HOME/.local/{bin,share,src}
 
 case "$OS" in
 Linux)
+  log_progress "Disabling debug packages for AUR builds in $HOME/.config/pacman/makepkg.conf"
+  mkdir -p "$HOME/.config/pacman"
+  grep -qsF 'OPTIONS+=(!debug)' "$HOME/.config/pacman/makepkg.conf" || echo 'OPTIONS+=(!debug)' >>"$HOME/.config/pacman/makepkg.conf"
+
   if ! command -v "$DI_AUR_HELPER" >/dev/null 2>&1; then
     log_progress "Installing AUR helper: $DI_AUR_HELPER"
 
