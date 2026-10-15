@@ -2,6 +2,19 @@
 
 setup_cache_management() {
   log_progress "Setting up the cache management"
+
+  if ! command -v paccache >/dev/null 2>&1; then
+    log_progress "Installing pacman-contrib (provides paccache)"
+    install_pkg pacman-contrib
+  else
+    log_status "pacman-contrib is already installed"
+  fi
+
+  if ! command -v paccache >/dev/null 2>&1; then
+    log_warn "paccache is not available, skipping the cache management so the pacman hook cannot break transactions"
+    return 0
+  fi
+
   log_progress "Vacuuming the systemd journal to 4 weeks"
   sudo journalctl --vacuum-time=4weeks
 
