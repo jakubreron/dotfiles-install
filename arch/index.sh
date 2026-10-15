@@ -8,7 +8,7 @@ source "$BASEDIR/arch/setup_core_settings.sh"
 log_progress "Running arch/install_pkg_manager_pkgs.sh"
 source "$BASEDIR/arch/install_pkg_manager_pkgs.sh"
 
-# NOTE: grub, bluetooth, sddm, fingerprint (install packages, need the synced databases)
+# NOTE: grub, bluetooth, fingerprint (install packages, need the synced databases)
 log_progress "Running arch/setup_basic_settings.sh"
 source "$BASEDIR/arch/setup_basic_settings.sh"
 

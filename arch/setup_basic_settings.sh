@@ -41,51 +41,6 @@ setup_bluetooth() {
   fi
 }
 
-setup_sddm() {
-  if ! command -v sddm >/dev/null 2>&1; then
-    log_progress "Installing sddm"
-    install_pkg sddm
-  else
-    log_status "sddm is already installed"
-  fi
-
-  if command -v sddm >/dev/null 2>&1; then
-    log_progress "Setting up sddm"
-
-    log_progress "Copying the sddm themes"
-    sudo cp -r "$HOME/.config/dotfiles/voidrice/.local/share/sddm/themes/catppuccin/src/"* /usr/share/sddm/themes
-
-    log_progress "Creating the autologin groups and adding $USER to them"
-    sudo groupadd -f autologin
-    sudo usermod -aG autologin "$USER"
-
-    sudo groupadd -rf nopasswdlogin
-    sudo gpasswd -a "$USER" nopasswdlogin
-
-    log_progress "Writing the sddm autologin config"
-    sudo mkdir -p /etc/sddm.conf.d/
-
-    # NOTE: create autologin
-    # ----------------------
-    echo "[Autologin]
-User=$USER
-Session=hyprland
-
-[Theme]
-Current=/usr/share/sddm/themes/catppuccin-mocha" | sudo tee /etc/sddm.conf.d/autologin.conf
-
-    log_progress "Allowing login without a password for the nopasswdlogin group"
-    # NOTE: add permissions for login without password
-    echo "auth        sufficient  pam_succeed_if.so user ingroup nopasswdlogin
-auth        include     system-login" | sudo tee /etc/pam.d/sddm
-
-    log_progress "Making sddm use wayland"
-    # NOTE: make sure everything is wayland compatible
-    echo "[General]
-DisplayServer=wayland" | sudo tee /etc/sddm.conf.d/10-wayland.conf
-  fi
-}
-
 setup_fingerprint() {
   if ! command -v fprintd-enroll  >/dev/null 2>&1; then
     log_progress "Installing fprintd"
@@ -107,5 +62,4 @@ setup_fingerprint() {
 
 setup_grub
 setup_bluetooth
-setup_sddm
 setup_fingerprint 
