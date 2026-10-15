@@ -33,14 +33,18 @@ record_failed_command() {
 }
 
 print_failure_summary() {
-  local count index=0 failure
+  local stopped="${1:-}" count index=0 failure
 
-  [[ -n "${DI_FAILURE_SUMMARY_PRINTED:-}" ]] && return 0
+  if [[ -n "${DI_FAILURE_SUMMARY_PRINTED:-}" ]]; then
+    return 0
+  fi
   DI_FAILURE_SUMMARY_PRINTED=1
 
   count="$(wc -l <"$DI_FAILURES_FILE" 2>/dev/null | tr -d ' ')"
   if [[ "${count:-0}" -eq 0 ]]; then
-    log_status "All steps finished without a failed command"
+    if [[ -z "$stopped" ]]; then
+      log_status "All steps finished without a failed command"
+    fi
     return 0
   fi
 
@@ -53,7 +57,15 @@ print_failure_summary() {
 }
 
 finish_install() {
-  print_failure_summary
+  local exit_code=$?
+
+  if [[ "$exit_code" -ne 0 ]]; then
+    log_error "The install stopped early with exit code $exit_code, the full output is in $DI_LOG_FILE"
+    print_failure_summary stopped
+  else
+    print_failure_summary
+  fi
+
   release_install_lock
 }
 
