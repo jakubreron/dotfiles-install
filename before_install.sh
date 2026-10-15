@@ -11,11 +11,19 @@ Linux)
   if ! command -v "$DI_AUR_HELPER" >/dev/null 2>&1; then
     log_progress "Installing AUR helper: $DI_AUR_HELPER"
 
+    log_progress "Installing AUR helper prerequisites"
+    install_pkg git base-devel
+
     aur_helper_path="$DI_GIT_CLONE_PATH/$DI_AUR_HELPER"
     clone_git_repo "https://aur.archlinux.org/$DI_AUR_HELPER.git" "$aur_helper_path"
 
     (cd "$aur_helper_path" && makepkg -si --noconfirm)
     rm -rf "$aur_helper_path"
+
+    if ! command -v "$DI_AUR_HELPER" >/dev/null 2>&1; then
+      log_error "$DI_AUR_HELPER failed to build, see the output above"
+      exit 1
+    fi
   else
     log_status "AUR helper '$DI_AUR_HELPER' is already installed"️
   fi
