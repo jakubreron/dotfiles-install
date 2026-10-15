@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
-source "$BASEDIR/arch/setup_basic_settings.sh"
+# NOTE: pacman.conf and sudoers, must run before any package sync
+source "$BASEDIR/arch/setup_core_settings.sh"
 
 # NOTE: packages installable with aur helper
 source "$BASEDIR/arch/install_pkg_manager_pkgs.sh"
+
+# NOTE: grub, bluetooth, sddm, fingerprint (install packages, need the synced databases)
+source "$BASEDIR/arch/setup_basic_settings.sh"
 
 # NOTE: packages not installable with aur helper
 source "$BASEDIR/arch/install_custom_pkgs.sh"
