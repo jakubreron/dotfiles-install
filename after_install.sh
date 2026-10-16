@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-log_progress "Stashing local changes in repos to ensure no unwanted overrides"
 for repo_dir in "$DI_VOIDRICE_DIR" "$DI_UNIVERSAL_DIR" "$DI_MACOS_DIR" "$DI_PKGLISTS_DIR" "$DI_NVIM_DIR"; do
   log_progress "Stashing local changes in $repo_dir"
   git -C "$repo_dir" stash push -u -m "dotfiles-install backup"
@@ -21,7 +20,6 @@ else
     log_progress "Restarting firefox to enforce custom config"
     killall firefox
 
-    log_progress "Waiting for Firefox to shut down all processes"
     sleep 5
 
     log_progress "Opening Firefox Add-on pages for manual installation"
@@ -47,7 +45,6 @@ else
       sleep 1 # Small delay to give Firefox a moment to open each tab/window
     done
 
-    log_progress "Marking the firefox setup as completed"
     touch "$DI_SCRIPT_STATE_DIR/.firefox-setup-completed"
   else 
     log_error "betterfox/user.js not found, config not sourced"

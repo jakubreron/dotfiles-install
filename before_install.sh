@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-log_progress "Creating common folders"
-
 mkdir -p $HOME/{Documents,Downloads,Music,Pictures}
 mkdir -p $HOME/Documents/Projects/{personal,work}
 mkdir -p $HOME/.local/{bin,share,src}
@@ -13,9 +11,7 @@ Linux)
   grep -qsF 'OPTIONS+=(!debug)' "$HOME/.config/pacman/makepkg.conf" || echo 'OPTIONS+=(!debug)' >>"$HOME/.config/pacman/makepkg.conf"
 
   if ! command -v "$DI_AUR_HELPER" >/dev/null 2>&1; then
-    log_progress "Installing AUR helper: $DI_AUR_HELPER"
-
-    log_progress "Installing AUR helper prerequisites"
+    log_progress "Installing AUR helper $DI_AUR_HELPER, prerequisites first"
     install_pkg git base-devel
 
     aur_helper_path="$DI_GIT_CLONE_PATH/$DI_AUR_HELPER"
@@ -25,7 +21,6 @@ Linux)
     log_progress "Building and installing $DI_AUR_HELPER with makepkg"
     (cd "$aur_helper_path" && makepkg -si --noconfirm)
 
-    log_progress "Removing the $DI_AUR_HELPER build folder"
     rm -rf "$aur_helper_path"
 
     if ! command -v "$DI_AUR_HELPER" >/dev/null 2>&1; then
@@ -49,12 +44,10 @@ Darwin)
     NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
     # Add Homebrew to PATH immediately for this script to use it in current session
-    log_progress "Adding brew to PATH for this session"
     eval "$(/opt/homebrew/bin/brew shellenv)" || eval "$(brew shellenv)"
     log_status "PATH updated for current session"
   else
     # Ensure brew is in PATH even if already installed (e.g., new terminal)
-    log_progress "Adding brew to PATH for this session"
     eval "$(/opt/homebrew/bin/brew shellenv)" || eval "$(brew shellenv)"
     log_status "Brew is already installed, updating PATH for current session"️
   fi
@@ -63,12 +56,10 @@ esac
 
 case "$OS" in
 Linux)
-  log_progress "Creating the Linux specific folders"
   mkdir -p "$HOME/Videos" "$HOME/Documents/Torrents" "$HOME/Videos/Recordings" "$HOME/Pictures/Screenshots"
   ;;
 esac
 
-log_progress "Creating the clone, dotfiles and script state folders"
 mkdir -p "$DI_GIT_CLONE_PATH"
 mkdir -p "$DI_DOTFILES_DIR"
 mkdir -p "$DI_SCRIPT_STATE_DIR"
@@ -101,7 +92,6 @@ if [[ -d "$DI_UNIVERSAL_DIR" ]]; then
   log_progress "Stowing the dotfiles (universal)"
   stow --adopt --target="$HOME" --dir="$DI_DOTFILES_DIR" universal
 
-  log_progress "Checking whether the universal repo needs to be re-added with git-credential-manager"
   if [[ ! -d "$DI_UNIVERSAL_DIR/.git" ]]; then
     if ! command -v git-credential-manager >/dev/null 2>&1; then
       log_progress "Installing git credential manager"
@@ -148,7 +138,6 @@ if [[ -d "$DI_UNIVERSAL_DIR" ]]; then
     log_status "The universal repo already has git history, skipping the re-add"
   fi
 
-  log_progress "Fixing permissions in ~/.ssh"
   for private_key in ~/.ssh/id_rsa_personal ~/.ssh/id_rsa_work; do
     [[ -f "$private_key" ]] && chmod 400 "$private_key" # 400 for owner read-only, I don't want to modify these files, other users cannot access any file
   done
@@ -160,14 +149,11 @@ else
 fi
 
 if command -v git >/dev/null 2>&1; then
-  log_progress "Cloning dotfiles"
-
   clone_git_repo "$DI_VOIDRICE_REPO" "$DI_VOIDRICE_DIR"
   clone_git_repo "$DI_PKGLISTS_REPO" "$DI_PKGLISTS_DIR"
   clone_git_repo "$DI_MACOS_REPO" "$DI_MACOS_DIR"
   clone_git_repo "$DI_NVIM_REPO" "$DI_NVIM_DIR"
 
-  log_progress "Creating dirs in $HOME/.local/bin to ensure correct stow"
   for dir in $DI_VOIDRICE_DIR/.local/bin/*/; do
     dir_name=$(basename "$dir")
     mkdir -p $HOME/.local/bin/$dir_name
@@ -185,7 +171,6 @@ else
 fi
 
 if command -v zsh >/dev/null 2>&1; then
-  log_progress "Preparing the zsh cache and config folders"
   mkdir -p "$HOME/.cache/zsh/"
   mkdir -p "$HOME/.config/zsh/"
 
@@ -206,7 +191,6 @@ if command -v zsh >/dev/null 2>&1; then
     log_status "ZSH is already a default shell"️
   fi
 
-  log_progress "Removing the old zsh completion cache"
   rm -f "$HOME/.config/zsh/.zcompdump"
 fi
 
@@ -241,7 +225,6 @@ if command -v "$DI_NPM_HELPER" >/dev/null 2>&1; then
   if [[ -f "$packages" ]]; then
     case "$OS" in
     Linux)
-      log_progress "Using $HOME/.local as the npm global prefix"
       export NPM_CONFIG_PREFIX="$HOME/.local"
       ;;
     esac
@@ -253,7 +236,6 @@ if command -v "$DI_NPM_HELPER" >/dev/null 2>&1; then
   fi
 fi
 
-log_progress "Loading the XDG and folder path variables from $DI_VOIDRICE_DIR/.config/zsh/profile/profile.paths"
 source "$DI_VOIDRICE_DIR/.config/zsh/profile/profile.paths"
 
 bin_dotfiles_shortcuts="$HOME/.local/bin/generate-shell-shortcuts"
