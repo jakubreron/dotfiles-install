@@ -24,5 +24,23 @@ EOF
     gpgconf --kill gpg-agent
   fi
 
+  if ! command -v pinentry-curses >/dev/null 2>&1; then
+    log_progress "Installing pinentry"
+    install_pkg pinentry
+  fi
+
+  if ! command -v pinentry-curses >/dev/null 2>&1; then
+    log_warn "pinentry-curses is not installed, skipping the terminal passphrase prompt setup"
+  elif grep -qs "pinentry-program" "$gpg_agent_conf"; then
+    log_status "gpg-agent already has a pinentry program, skipping"
+  else
+    log_progress "Setting gpg-agent to ask for the passphrase in the terminal"
+    mkdir -p "$HOME/.gnupg"
+    chmod 700 "$HOME/.gnupg"
+    echo "pinentry-program $(command -v pinentry-curses)" >>"$gpg_agent_conf"
+    log_progress "Restarting gpg-agent"
+    gpgconf --kill gpg-agent
+  fi
+
   import_gpg_keys
 fi

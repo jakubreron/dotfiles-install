@@ -144,18 +144,16 @@ if [[ -d "$DI_UNIVERSAL_DIR" ]]; then
     else
       log_warn "git-credential-manager not installed, skipping universal repo re-add"
     fi
-
-    log_progress "Fixing permissions in ~/.ssh"
-    for private_key in ~/.ssh/id_rsa_personal ~/.ssh/id_rsa_work; do
-      [[ -f "$private_key" ]] && chmod 400 "$private_key" # 400 for owner read-only, I don't want to modify these files, other users cannot access any file
-    done
-    chmod 600 ~/.ssh/{id_rsa_personal.pub,id_rsa_work.pub} # 600 for .pub (public) keys used as IdentityFile, ssh warns when other users can read them
-    chmod 600 ~/.ssh/config # 600 for ~/.ssh/config, it's a normal file, needs read/write, but no execute
-    chmod 700 ~/.ssh # 700 for ~/.ssh, read/write/execute to make sure ssh works correctly, no access to other users
-    log_warn "Private SSH keys are not in the repo, install Bitwarden and enable its SSH agent (see the universal README)"
   else
     log_status "The universal repo already has git history, skipping the re-add"
   fi
+
+  log_progress "Fixing permissions in ~/.ssh"
+  for private_key in ~/.ssh/id_rsa_personal ~/.ssh/id_rsa_work; do
+    [[ -f "$private_key" ]] && chmod 400 "$private_key" # 400 for owner read-only, I don't want to modify these files, other users cannot access any file
+  done
+  chmod 600 ~/.ssh/config # 600 for ~/.ssh/config, it's a normal file, needs read/write, but no execute
+  chmod 700 ~/.ssh # 700 for ~/.ssh, read/write/execute to make sure ssh works correctly, no access to other users
 else
   log_error "Clone universal repo into $DI_UNIVERSAL_DIR first"
   exit 1
@@ -210,6 +208,22 @@ if command -v zsh >/dev/null 2>&1; then
 
   log_progress "Removing the old zsh completion cache"
   rm -f "$HOME/.config/zsh/.zcompdump"
+fi
+
+if ! command -v fnm >/dev/null 2>&1; then
+  log_progress "Installing fnm"
+  install_pkg fnm
+else
+  log_status "fnm is already installed"
+fi
+
+if command -v fnm >/dev/null 2>&1; then
+  log_progress "Installing the latest LTS node with fnm"
+  fnm install --lts
+  fnm default lts-latest
+  eval "$(fnm env --shell bash)"
+  fnm use lts-latest
+  log_status "Using node $(node --version) from fnm"
 fi
 
 if ! command -v "$DI_NPM_HELPER" >/dev/null 2>&1; then

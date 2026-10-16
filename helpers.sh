@@ -77,7 +77,6 @@ release_install_lock() {
 acquire_install_lock() {
   local running_pid
 
-  log_progress "Checking no other install is running"
   if ! mkdir "$DI_LOCK_DIR" 2>/dev/null; then
     running_pid="$(cat "$DI_LOCK_DIR/pid" 2>/dev/null)"
 
@@ -110,14 +109,12 @@ check_network() {
   fi
 
   for url in "${urls[@]}"; do
-    log_progress "Checking that $url is reachable"
     if ! curl -fsS -I -o /dev/null --max-time "$DI_NETWORK_TIMEOUT_SECONDS" "$url"; then
       log_error "Cannot reach $url, check your internet connection (and VPN or proxy) and run again"
       exit 1
     fi
+    log_status "$url is reachable"
   done
-
-  log_status "Network is reachable"
 }
 
 check_disk_space() {
@@ -129,14 +126,12 @@ check_disk_space() {
   esac
 
   free_gb="$(($(df -Pk "$HOME" | awk 'NR==2 {print $4}') / 1024 / 1024))"
-  log_progress "Free disk space in $HOME is ${free_gb}GB, at least ${min_gb}GB is recommended"
-
   if ((free_gb >= min_gb)); then
-    log_status "Enough free disk space"
+    log_status "Enough free disk space (${free_gb}GB free, ${min_gb}GB recommended)"
     return 0
   fi
 
-  log_warn "Low disk space, the install may fail halfway"
+  log_warn "Low disk space (${free_gb}GB free, ${min_gb}GB recommended), the install may fail halfway"
   if read -r -p "Continue anyway? [y/N] " answer; then
     if [[ ! "$answer" =~ ^[Yy]$ ]]; then
       log_error "Stopping because of low disk space"
@@ -271,32 +266,85 @@ import_gpg_keys() {
   esac
 }
 
-fetch_gpg_key_from_bitwarden() {
-  local git_config_file bitwarden_item answer
+ssh_key_missing() {
+  [[ ! -f "$1" ]]
+}
+
+install_bitwarden_cli() {
+  case "$OS" in
+  Darwin)
+    install_pkg bitwarden-cli
+    ;;
+  Linux)
+    if command -v "$DI_NPM_HELPER" >/dev/null 2>&1; then
+      NPM_CONFIG_PREFIX="$HOME/.local" "$DI_NPM_HELPER" install --global @bitwarden/cli
+    else
+      log_warn "$DI_NPM_HELPER is not installed, cannot install the Bitwarden CLI"
+    fi
+    ;;
+  esac
+}
+
+write_ssh_key_from_bitwarden() {
+  local bitwarden_item="$1" ssh_key_file="$2" ssh_private_key
+
+  ssh_private_key="$(bw get item "$bitwarden_item" | jq -r '.sshKey.privateKey // empty')"
+  if [[ -z "$ssh_private_key" ]]; then
+    log_error "Bitwarden item $bitwarden_item has no SSH key, not writing $ssh_key_file"
+    return 0
+  fi
+
+  mkdir -p "$HOME/.ssh"
+  chmod 700 "$HOME/.ssh"
+  (umask 077 && printf '%s\n' "$ssh_private_key" >"$ssh_key_file")
+  chmod 400 "$ssh_key_file"
+  log_status "SSH key written to $ssh_key_file"
+}
+
+fetch_keys_from_bitwarden() {
+  local git_config_file bitwarden_item ssh_key_file answer
+  local ssh_missing=false gpg_missing=false
 
   case "$OS" in
   Darwin)
     git_config_file="$HOME/.config/git/config_macos"
     bitwarden_item="work-git"
+    ssh_key_file="$HOME/.ssh/id_rsa_work"
     ;;
   Linux)
     git_config_file="$HOME/.config/git/config_linux"
     bitwarden_item="personal-git"
+    ssh_key_file="$HOME/.ssh/id_rsa_personal"
     ;;
   esac
 
-  log_progress "Checking whether the GPG key needs to be fetched from Bitwarden"
-  if ! gpg_key_missing "$git_config_file"; then
-    log_status "GPG key is already in the keyring or not configured, skipping the Bitwarden fetch"
+  log_progress "Checking whether the SSH and GPG keys need to be fetched from Bitwarden"
+  if ssh_key_missing "$ssh_key_file"; then
+    ssh_missing=true
+  fi
+  if gpg_key_missing "$git_config_file"; then
+    gpg_missing=true
+  fi
+
+  if ! $ssh_missing && ! $gpg_missing; then
+    log_status "SSH and GPG keys are already in place, skipping the Bitwarden fetch"
     return 0
   fi
 
+  if ! command -v jq >/dev/null 2>&1; then
+    log_progress "Installing jq"
+    install_pkg jq
+  fi
   if ! command -v bw >/dev/null 2>&1; then
-    log_warn "Bitwarden CLI (bw) is not installed, skipping the Bitwarden fetch"
+    log_progress "Installing the Bitwarden CLI"
+    install_bitwarden_cli
+  fi
+  if ! command -v bw >/dev/null 2>&1 || ! command -v jq >/dev/null 2>&1; then
+    log_warn "Bitwarden CLI (bw) or jq could not be installed, skipping the Bitwarden fetch"
     return 0
   fi
 
-  read -r -p "GPG key is missing, fetch it from Bitwarden item '$bitwarden_item' now? [y/N] " answer || {
+  read -r -p "Keys are missing (SSH: $ssh_missing, GPG: $gpg_missing), fetch them from Bitwarden item '$bitwarden_item' now? [y/N] " answer || {
     log_status "No input available, skipping the Bitwarden fetch"
     return 0
   }
@@ -317,8 +365,15 @@ fetch_gpg_key_from_bitwarden() {
   }
   export BW_SESSION
 
-  log_progress "Importing GPG key from Bitwarden item $bitwarden_item"
-  bw get notes "$bitwarden_item" | gpg --import
+  if $ssh_missing; then
+    log_progress "Writing the SSH key from Bitwarden item $bitwarden_item"
+    write_ssh_key_from_bitwarden "$bitwarden_item" "$ssh_key_file"
+  fi
+
+  if $gpg_missing; then
+    log_progress "Importing GPG key from Bitwarden item $bitwarden_item"
+    bw get notes "$bitwarden_item" | gpg --import
+  fi
 
   log_progress "Locking the Bitwarden vault"
   bw lock >/dev/null 2>&1

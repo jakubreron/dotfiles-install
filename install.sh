@@ -28,19 +28,15 @@ source "$BASEDIR/helpers.sh"
 log_status "Logging everything to $DI_LOG_FILE"
 log_progress "Starting the install on $OS (package type: $DI_PKG_TYPE)"
 
-log_progress "Running prepare.sh"
 source "$BASEDIR/prepare.sh"
 
-log_progress "Running before_install.sh"
 source "$BASEDIR/before_install.sh"
 
 case "$OS" in
 Linux)
-  log_progress "Running the Linux (arch) install steps"
   source "$BASEDIR/arch/index.sh"
   ;;
 Darwin)
-  log_progress "Running the macOS install steps"
   source "$BASEDIR/macos/index.sh"
   ;;
 *)
@@ -49,5 +45,4 @@ Darwin)
   ;;
 esac
 
-log_progress "Running after_install.sh"
 source "$BASEDIR/after_install.sh"
