@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+if [[ ${#DI_SUBMODULE_PIDS[@]} -gt 0 ]]; then
+  wait "${DI_SUBMODULE_PIDS[@]}"
+  log_status "Submodule updates finished"
+fi
+
 for repo_dir in "$DI_VOIDRICE_DIR" "$DI_UNIVERSAL_DIR" "$DI_MACOS_DIR" "$DI_PKGLISTS_DIR" "$DI_NVIM_DIR"; do
   log_progress "Stashing local changes in $repo_dir"
   git -C "$repo_dir" stash push -u -m "dotfiles-install backup"

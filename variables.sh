@@ -29,6 +29,13 @@ declare -xr DI_GIT_CLONE_PATH="$HOME/Downloads/git-clone"
 
 declare -xr DI_LOCK_DIR="$DI_LOG_DIR/install.lock"
 declare -xr DI_NETWORK_TIMEOUT_SECONDS=10
+declare -xr DI_GIT_STALLED_TRANSFER_BYTES_PER_SECOND=1000
+declare -xr DI_GIT_STALLED_TRANSFER_SECONDS=60
+declare -xr DI_GIT_CLONE_ATTEMPTS=3
+declare -a DI_SUBMODULE_PIDS=()
+declare -xr DI_DOWNLOAD_RETRIES=3
+declare -xr DI_DOWNLOAD_MAX_SECONDS=120
+declare -xr DI_HOMEBREW_INSTALLER_URL="https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
 declare -xr DI_MIN_FREE_GB_LINUX=10
 declare -xr DI_MIN_FREE_GB_MACOS=5
 

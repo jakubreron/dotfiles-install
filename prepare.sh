@@ -9,11 +9,15 @@ log_status "Failed commands are collected in $DI_FAILURES_FILE and summarized at
 
 export PATH="$HOME/.local/bin:$PATH"
 
-export GIT_CONFIG_COUNT=2
+export GIT_CONFIG_COUNT=4
 export GIT_CONFIG_KEY_0="url.https://github.com/.insteadOf"
 export GIT_CONFIG_VALUE_0="git@github.com:"
 export GIT_CONFIG_KEY_1="url.https://github.com/.insteadOf"
 export GIT_CONFIG_VALUE_1="ssh://git@github.com/"
+export GIT_CONFIG_KEY_2="http.lowSpeedLimit"
+export GIT_CONFIG_VALUE_2="$DI_GIT_STALLED_TRANSFER_BYTES_PER_SECOND"
+export GIT_CONFIG_KEY_3="http.lowSpeedTime"
+export GIT_CONFIG_VALUE_3="$DI_GIT_STALLED_TRANSFER_SECONDS"
 
 if [[ "$EUID" -eq 0 ]]; then
   log_error "This script should not be run as root. Exiting."

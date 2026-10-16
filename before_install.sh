@@ -41,7 +41,12 @@ Darwin)
     fi
 
     log_progress "Installing brew"
-    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    homebrew_installer="$(curl -fsSL --retry "$DI_DOWNLOAD_RETRIES" --connect-timeout "$DI_NETWORK_TIMEOUT_SECONDS" --max-time "$DI_DOWNLOAD_MAX_SECONDS" "$DI_HOMEBREW_INSTALLER_URL")"
+    if [[ -z "$homebrew_installer" ]]; then
+      log_error "Could not download the Homebrew installer from $DI_HOMEBREW_INSTALLER_URL"
+      exit 1
+    fi
+    NONINTERACTIVE=1 /bin/bash -c "$homebrew_installer"
 
     # Add Homebrew to PATH immediately for this script to use it in current session
     eval "$(/opt/homebrew/bin/brew shellenv)" || eval "$(brew shellenv)"

@@ -475,10 +475,19 @@ log_error() {
 clone_git_repo() {
   repo="$1"
   destination="$2"
+  local attempt
 
   if [[ ! -d "$destination" ]]; then
     log_progress "$destination does not exist, cloning $repo via git"
-    git clone "$repo" "$destination"
+    for ((attempt = 1; attempt <= DI_GIT_CLONE_ATTEMPTS; attempt++)); do
+      git clone "$repo" "$destination" && break
+      log_warn "Cloning $repo failed, attempt $attempt of $DI_GIT_CLONE_ATTEMPTS"
+    done
+
+    if [[ ! -d "$destination" ]]; then
+      log_error "Could not clone $repo into $destination"
+      return 1
+    fi
     log_status "Cloned $repo into $destination"
   else
     log_status "Pulling latest changes in  $destination, the repository already existed"️
@@ -490,5 +499,6 @@ clone_git_repo() {
   if [[ -f "$destination/.gitmodules" ]]; then
     log_progress "[Background] Initializing submodules in $destination"
     git -C "$destination" submodule update --init --remote --recursive &
+    DI_SUBMODULE_PIDS+=("$!")
   fi
 }
