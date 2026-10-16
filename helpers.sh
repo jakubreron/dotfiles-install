@@ -164,7 +164,7 @@ ensure_firefox_profile() {
 
   case "$OS" in
   Linux)
-    firefox_bin="$(command -v firefox)"
+    firefox_bin="$(command -v firefox || true)"
     profile_dirs=("${XDG_CONFIG_HOME:-$HOME/.config}/mozilla/firefox" "$HOME/.mozilla/firefox")
     ;;
   Darwin)

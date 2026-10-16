@@ -18,9 +18,11 @@ if [ -f "$DI_SCRIPT_STATE_DIR/.firefox-setup-completed" ]; then
 else
   if [ -f "$HOME/.config/dotfiles/voidrice/.config/firefox/betterfox/user.js" ]; then
     log_progress "Restarting firefox to enforce custom config"
-    killall firefox
-
-    sleep 5
+    if killall firefox 2>/dev/null; then
+      sleep 5
+    else
+      log_status "Firefox is not running, nothing to restart"
+    fi
 
     log_progress "Opening Firefox Add-on pages for manual installation"
     declare -a addon_urls=(
