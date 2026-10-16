@@ -302,7 +302,8 @@ write_ssh_key_from_bitwarden() {
 }
 
 fetch_keys_from_bitwarden() {
-  local git_config_file bitwarden_item ssh_key_file answer
+  local git_config_file bitwarden_item ssh_key_file answer bitwarden_attempt
+  local bitwarden_max_attempts=3
   local ssh_missing=false gpg_missing=false
 
   case "$OS" in
@@ -353,16 +354,22 @@ fetch_keys_from_bitwarden() {
     return 0
   fi
 
-  if ! bw login --check >/dev/null 2>&1; then
-    log_progress "Logging into Bitwarden"
-    bw login
-  fi
+  BW_SESSION=""
+  for ((bitwarden_attempt = 1; bitwarden_attempt <= bitwarden_max_attempts; bitwarden_attempt++)); do
+    if bw login --check >/dev/null 2>&1; then
+      log_progress "Unlocking the Bitwarden vault"
+      BW_SESSION="$(bw unlock --raw)" && break
+    else
+      log_progress "Logging into Bitwarden"
+      BW_SESSION="$(bw login --raw)" && break
+    fi
+    log_warn "Bitwarden login failed, attempt $bitwarden_attempt of $bitwarden_max_attempts"
+  done
 
-  log_progress "Unlocking the Bitwarden vault"
-  BW_SESSION="$(bw unlock --raw)" || {
-    log_error "Could not unlock the Bitwarden vault"
+  if [[ -z "$BW_SESSION" ]]; then
+    log_error "Could not unlock the Bitwarden vault, skipping the key fetch"
     return 0
-  }
+  fi
   export BW_SESSION
 
   if $ssh_missing; then

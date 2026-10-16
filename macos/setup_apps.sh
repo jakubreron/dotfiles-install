@@ -7,8 +7,14 @@ else
   log_status "yabai is already installed"
 fi
 if command -v yabai >/dev/null 2>&1; then
-  log_progress "Starting yabai brew service"
-  yabai --install-service
+  yabai_service_file="$HOME/Library/LaunchAgents/com.asmvik.yabai.plist"
+  if [[ -f "$yabai_service_file" ]]; then
+    log_status "yabai service is already installed"
+  else
+    log_progress "Installing the yabai service"
+    yabai --install-service
+  fi
+  log_progress "Starting the yabai service"
   yabai --start-service
 fi
 
