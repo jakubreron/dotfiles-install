@@ -34,7 +34,7 @@ bash install.sh
 ## Hands-off, with a few steps at the end
 
 * Package installs use `--noconfirm`, so there is nothing to press during the run
-* Steps that need you come last, after the summary: fingerprint enrollment and the Bitwarden fetch of the SSH key (`~/.ssh/id_rsa_personal` on Linux, `~/.ssh/id_rsa_work` on macOS) and the GPG key
+* Steps that need you come last, after the summary: fingerprint enrollment and the Bitwarden fetch of the SSH keys (`~/.ssh/id_rsa_personal` on Linux, both `id_rsa_personal` and `id_rsa_work` on macOS) and the GPG key
 * The final checklist lists what stays manual (Yomitan and uBlock settings)
 
 ## Logs and failures

@@ -302,32 +302,36 @@ write_ssh_key_from_bitwarden() {
 }
 
 fetch_keys_from_bitwarden() {
-  local git_config_file bitwarden_item ssh_key_file answer bitwarden_attempt
+  local git_config_file gpg_bitwarden_item answer bitwarden_attempt ssh_key_entry
   local bitwarden_max_attempts=3
-  local ssh_missing=false gpg_missing=false
+  local gpg_missing=false
+  local -a ssh_key_entries
+  local -a missing_ssh_key_entries=()
 
   case "$OS" in
   Darwin)
     git_config_file="$HOME/.config/git/config_macos"
-    bitwarden_item="work-git"
-    ssh_key_file="$HOME/.ssh/id_rsa_work"
+    gpg_bitwarden_item="work-git"
+    ssh_key_entries=("work-git|$HOME/.ssh/id_rsa_work" "personal-git|$HOME/.ssh/id_rsa_personal")
     ;;
   Linux)
     git_config_file="$HOME/.config/git/config_linux"
-    bitwarden_item="personal-git"
-    ssh_key_file="$HOME/.ssh/id_rsa_personal"
+    gpg_bitwarden_item="personal-git"
+    ssh_key_entries=("personal-git|$HOME/.ssh/id_rsa_personal")
     ;;
   esac
 
   log_progress "Checking whether the SSH and GPG keys need to be fetched from Bitwarden"
-  if ssh_key_missing "$ssh_key_file"; then
-    ssh_missing=true
-  fi
+  for ssh_key_entry in "${ssh_key_entries[@]}"; do
+    if ssh_key_missing "${ssh_key_entry#*|}"; then
+      missing_ssh_key_entries+=("$ssh_key_entry")
+    fi
+  done
   if gpg_key_missing "$git_config_file"; then
     gpg_missing=true
   fi
 
-  if ! $ssh_missing && ! $gpg_missing; then
+  if [[ ${#missing_ssh_key_entries[@]} -eq 0 ]] && ! $gpg_missing; then
     log_status "SSH and GPG keys are already in place, skipping the Bitwarden fetch"
     return 0
   fi
@@ -345,7 +349,7 @@ fetch_keys_from_bitwarden() {
     return 0
   fi
 
-  read -r -p "Keys are missing (SSH: $ssh_missing, GPG: $gpg_missing), fetch them from Bitwarden item '$bitwarden_item' now? [y/N] " answer || {
+  read -r -p "Keys are missing (SSH: ${#missing_ssh_key_entries[@]}, GPG: $gpg_missing), fetch them from Bitwarden now? [y/N] " answer || {
     log_status "No input available, skipping the Bitwarden fetch"
     return 0
   }
@@ -372,14 +376,14 @@ fetch_keys_from_bitwarden() {
   fi
   export BW_SESSION
 
-  if $ssh_missing; then
-    log_progress "Writing the SSH key from Bitwarden item $bitwarden_item"
-    write_ssh_key_from_bitwarden "$bitwarden_item" "$ssh_key_file"
-  fi
+  for ssh_key_entry in "${missing_ssh_key_entries[@]}"; do
+    log_progress "Writing the SSH key from Bitwarden item ${ssh_key_entry%%|*}"
+    write_ssh_key_from_bitwarden "${ssh_key_entry%%|*}" "${ssh_key_entry#*|}"
+  done
 
   if $gpg_missing; then
-    log_progress "Importing GPG key from Bitwarden item $bitwarden_item"
-    bw get notes "$bitwarden_item" | gpg --import
+    log_progress "Importing GPG key from Bitwarden item $gpg_bitwarden_item"
+    bw get notes "$gpg_bitwarden_item" | gpg --import
   fi
 
   log_progress "Locking the Bitwarden vault"
