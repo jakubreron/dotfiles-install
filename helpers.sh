@@ -232,7 +232,7 @@ enroll_fingerprints() {
 
 gpg_key_missing() {
   local gpg_key_id
-  gpg_key_id="$(git config -f "$1" user.signingkey)"
+  gpg_key_id="$(git config --includes -f "$1" user.signingkey)"
 
   [[ -n "$gpg_key_id" ]] && ! gpg --list-secret-keys "$gpg_key_id" >/dev/null 2>&1
 }
@@ -295,8 +295,10 @@ write_ssh_key_from_bitwarden() {
   fi
 
   mkdir -p "$HOME/.ssh"
+  log_progress "Setting permissions on $HOME/.ssh (700)"
   chmod 700 "$HOME/.ssh"
   (umask 077 && printf '%s\n' "$ssh_private_key" >"$ssh_key_file")
+  log_progress "Setting permissions on $ssh_key_file (400, read-only for you)"
   chmod 400 "$ssh_key_file"
   log_status "SSH key written to $ssh_key_file"
 }
