@@ -16,8 +16,7 @@ declare -xr DI_NVIM_REPO="https://github.com/jakubreron/kickstart.nvim.git"
 declare -xr DI_VOIDRICE_DIR="$DI_DOTFILES_DIR/voidrice"
 declare -xr DI_VOIDRICE_REPO="https://github.com/jakubreron/voidrice.git"
 
-declare -xr DI_MACOS_DIR="$DI_DOTFILES_DIR/macos"
-declare -xr DI_MACOS_REPO="https://github.com/jakubreron/macos.git"
+declare -xr DI_MACOS_ONLY_PATH_NAME="Library"
 
 declare -xr DI_PKGLISTS_DIR="$DI_DOTFILES_DIR/pkglists"
 declare -xr DI_PKGLISTS_REPO="https://github.com/jakubreron/pkglists.git"

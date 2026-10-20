@@ -95,7 +95,7 @@ fi
 
 if [[ -d "$DI_UNIVERSAL_DIR" ]]; then
   log_progress "Stowing the dotfiles (universal)"
-  stow --adopt --target="$HOME" --dir="$DI_DOTFILES_DIR" universal
+  stow_dotfiles universal
 
   if [[ ! -d "$DI_UNIVERSAL_DIR/.git" ]]; then
     if ! command -v git-credential-manager >/dev/null 2>&1; then
@@ -156,7 +156,6 @@ fi
 if command -v git >/dev/null 2>&1; then
   clone_git_repo "$DI_VOIDRICE_REPO" "$DI_VOIDRICE_DIR"
   clone_git_repo "$DI_PKGLISTS_REPO" "$DI_PKGLISTS_DIR"
-  clone_git_repo "$DI_MACOS_REPO" "$DI_MACOS_DIR"
   clone_git_repo "$DI_NVIM_REPO" "$DI_NVIM_DIR"
 
   for dir in $DI_VOIDRICE_DIR/.local/bin/*/; do
@@ -164,8 +163,8 @@ if command -v git >/dev/null 2>&1; then
     mkdir -p $HOME/.local/bin/$dir_name
   done
 
-  log_progress "Stowing the dotfiles (voidrice, macos)"
-  stow --adopt --target="$HOME" --dir="$DI_DOTFILES_DIR" voidrice macos
+  log_progress "Stowing the dotfiles (voidrice)"
+  stow_dotfiles voidrice
 fi
 
 if ! command -v zsh >/dev/null 2>&1; then

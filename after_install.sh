@@ -5,13 +5,13 @@ if [[ ${#DI_SUBMODULE_PIDS[@]} -gt 0 ]]; then
   log_status "Submodule updates finished"
 fi
 
-for repo_dir in "$DI_VOIDRICE_DIR" "$DI_UNIVERSAL_DIR" "$DI_MACOS_DIR" "$DI_PKGLISTS_DIR" "$DI_NVIM_DIR"; do
+for repo_dir in "$DI_VOIDRICE_DIR" "$DI_UNIVERSAL_DIR" "$DI_PKGLISTS_DIR" "$DI_NVIM_DIR"; do
   log_progress "Stashing local changes in $repo_dir"
   git -C "$repo_dir" stash push -u -m "dotfiles-install backup"
 done
 
 log_progress "Stowing again to ensure no unwanted overrides"
-stow --adopt --target="$HOME" --dir="$DI_DOTFILES_DIR" voidrice universal macos
+stow_dotfiles voidrice universal
 
 ensure_firefox_profile
 

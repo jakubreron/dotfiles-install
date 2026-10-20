@@ -478,6 +478,15 @@ log_error() {
   log_message "$message" "$emoji"
 }
 
+stow_dotfiles() {
+  local -a ignore_args=()
+  if [[ "$OS" != "Darwin" ]]; then
+    ignore_args=(--ignore="$DI_MACOS_ONLY_PATH_NAME")
+  fi
+
+  stow --adopt "${ignore_args[@]}" --target="$HOME" --dir="$DI_DOTFILES_DIR" "$@"
+}
+
 clone_git_repo() {
   repo="$1"
   destination="$2"

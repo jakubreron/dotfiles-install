@@ -1,6 +1,6 @@
 set -e
 mkdir -p ~/.config/dotfiles
-for r in universal voidrice macos pkglists; do cp -r "/src/dotfiles/$r" ~/.config/dotfiles/"$r"; done
+for r in universal voidrice pkglists; do cp -r "/src/dotfiles/$r" ~/.config/dotfiles/"$r"; done
 cp -r /src/nvim ~/.config/nvim
 cp -r /src/dotfiles-install ~/dotfiles-install
 mkdir -p ~/.config/dotfiles/pkglists/test
