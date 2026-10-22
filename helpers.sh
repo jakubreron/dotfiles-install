@@ -484,6 +484,10 @@ stow_dotfiles() {
     ignore_args=(--ignore="$DI_MACOS_ONLY_PATH_NAME")
   fi
 
+  # Stow folds a missing target folder into one symlink to the repo. The Claude Code config folder
+  # holds runtime data and .claude.json (tokens), so it must exist first: stow then links its entries one by one.
+  mkdir -p "${XDG_CONFIG_HOME:-$HOME/.config}/claude"
+
   stow --adopt "${ignore_args[@]}" --target="$HOME" --dir="$DI_DOTFILES_DIR" "$@"
 }
 
