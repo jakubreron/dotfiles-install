@@ -62,7 +62,7 @@ setup_mpd() {
   if command -v mpd >/dev/null 2>&1; then
     log_progress "Setting up mpd"
 
-    local config_path="$HOME/.config/mpd"
+    local config_path="$XDG_CONFIG_HOME/mpd"
     log_progress "Creating the mpd config files in $config_path"
     mkdir -p "$config_path/playlists"
     touch $config_path/{database,mpdstate}

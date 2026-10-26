@@ -16,12 +16,12 @@ stow_dotfiles voidrice universal
 ensure_firefox_profile
 
 log_progress "Updating symlinks with global script (to ensure firefox config)"
-command $HOME/.local/bin/dotfiles/update-symlinks-all
+command "$XDG_BIN_HOME/dotfiles/update-symlinks-all"
 
 if [ -f "$DI_SCRIPT_STATE_DIR/.firefox-setup-completed" ]; then
   log_status "Firefox setup already completed, skipping..."
 else
-  if [ -f "$HOME/.config/dotfiles/voidrice/.config/firefox/betterfox/user.js" ]; then
+  if [ -f "$DI_VOIDRICE_DIR/.config/firefox/betterfox/user.js" ]; then
     log_progress "Restarting firefox to enforce custom config"
     if killall firefox 2>/dev/null; then
       sleep 5

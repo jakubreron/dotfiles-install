@@ -165,7 +165,7 @@ ensure_firefox_profile() {
   case "$OS" in
   Linux)
     firefox_bin="$(command -v firefox || true)"
-    profile_dirs=("${XDG_CONFIG_HOME:-$HOME/.config}/mozilla/firefox" "$HOME/.mozilla/firefox")
+    profile_dirs=("$XDG_CONFIG_HOME/mozilla/firefox" "$HOME/.mozilla/firefox")
     ;;
   Darwin)
     firefox_bin="/Applications/Firefox.app/Contents/MacOS/firefox"
@@ -258,10 +258,10 @@ import_gpg_keys() {
 
   case "$OS" in
   Darwin)
-    import_gpg_key "$HOME/.config/git/config_macos" "$HOME/.config/git/work-gpg-key.asc"
+    import_gpg_key "$XDG_CONFIG_HOME/git/config_macos" "$XDG_CONFIG_HOME/git/work-gpg-key.asc"
     ;;
   Linux)
-    import_gpg_key "$HOME/.config/git/config_linux" "$HOME/.config/git/personal-gpg-key.asc"
+    import_gpg_key "$XDG_CONFIG_HOME/git/config_linux" "$XDG_CONFIG_HOME/git/personal-gpg-key.asc"
     ;;
   esac
 }
@@ -312,12 +312,12 @@ fetch_keys_from_bitwarden() {
 
   case "$OS" in
   Darwin)
-    git_config_file="$HOME/.config/git/config_macos"
+    git_config_file="$XDG_CONFIG_HOME/git/config_macos"
     gpg_bitwarden_item="work-git"
     ssh_key_entries=("work-git|$HOME/.ssh/id_rsa_work" "personal-git|$HOME/.ssh/id_rsa_personal")
     ;;
   Linux)
-    git_config_file="$HOME/.config/git/config_linux"
+    git_config_file="$XDG_CONFIG_HOME/git/config_linux"
     gpg_bitwarden_item="personal-git"
     ssh_key_entries=("personal-git|$HOME/.ssh/id_rsa_personal")
     ;;

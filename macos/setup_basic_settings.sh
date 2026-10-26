@@ -70,8 +70,8 @@ fi
 set_default com.apple.desktopservices DSDontWriteNetworkStores -bool true || true # Do not create .DS_Store files on network shares, takes effect after the next login
 
 screenshots_changed=false # Tracks whether the screenshot setting changed, so SystemUIServer restarts only when needed
-mkdir -p "$HOME/Pictures/Screenshots" # The folder must exist before macOS can save screenshots into it
-if set_default com.apple.screencapture location -string "$HOME/Pictures/Screenshots"; then screenshots_changed=true; fi # Save screenshots to the same folder as on Linux instead of the Desktop
+mkdir -p "$SCREENSHOTS_DIR" # The folder must exist before macOS can save screenshots into it
+if set_default com.apple.screencapture location -string "$SCREENSHOTS_DIR"; then screenshots_changed=true; fi # Save screenshots to the same folder as on Linux instead of the Desktop
 
 if $screenshots_changed; then # Only restart SystemUIServer when the setting above changed
   log_progress "Restarting SystemUIServer" # Explain why the menu bar flashes
