@@ -177,10 +177,8 @@ else
 fi
 
 if command -v zsh >/dev/null 2>&1; then
-  mkdir -p "$XDG_CACHE_HOME/zsh/"
-  mkdir -p "$ZDOTDIR/"
-
-  touch "$XDG_CACHE_HOME/zsh/.zsh_history"
+  mkdir -p "$XDG_STATE_HOME/zsh"
+  touch "$XDG_STATE_HOME/zsh/history"
 
   if ! [[ "$SHELL" =~ .*'zsh' ]]; then
     log_progress "Changing default shell to ZSH"
