@@ -167,6 +167,8 @@ if command -v git >/dev/null 2>&1; then
   stow_dotfiles voidrice
 fi
 
+source "$DI_VOIDRICE_DIR/.config/zsh/profile/profile.paths"
+
 if ! command -v zsh >/dev/null 2>&1; then
   log_progress "Installing ZSH"
   install_pkg zsh
@@ -175,10 +177,10 @@ else
 fi
 
 if command -v zsh >/dev/null 2>&1; then
-  mkdir -p "$HOME/.cache/zsh/"
-  mkdir -p "$HOME/.config/zsh/"
+  mkdir -p "$XDG_CACHE_HOME/zsh/"
+  mkdir -p "$ZDOTDIR/"
 
-  touch "$HOME/.cache/zsh/.zsh_history"
+  touch "$XDG_CACHE_HOME/zsh/.zsh_history"
 
   if ! [[ "$SHELL" =~ .*'zsh' ]]; then
     log_progress "Changing default shell to ZSH"
@@ -195,7 +197,7 @@ if command -v zsh >/dev/null 2>&1; then
     log_status "ZSH is already a default shell"️
   fi
 
-  rm -f "$HOME/.config/zsh/.zcompdump"
+  rm -f "$ZDOTDIR/.zcompdump"
 fi
 
 if ! command -v fnm >/dev/null 2>&1; then
@@ -239,8 +241,6 @@ if command -v "$DI_NPM_HELPER" >/dev/null 2>&1; then
     log_warn "No $DI_NPM_HELPER package list at $packages, skipping"
   fi
 fi
-
-source "$DI_VOIDRICE_DIR/.config/zsh/profile/profile.paths"
 
 bin_dotfiles_shortcuts="$XDG_BIN_HOME/dotfiles/generate-shell-shortcuts"
 repo_dotfiles_shortcuts="$DOTFILES_VOIDRICE_DIR/.local/bin/dotfiles/generate-shell-shortcuts"
