@@ -40,7 +40,7 @@ declare -xr DI_MIN_FREE_GB_MACOS=5
 
 case "$OS" in
 Linux)
-  declare -x DI_PKG_TYPE="${DI_PKG_TYPE:-primary}"
+  declare -x DI_PKG_TYPE="${DI_PKG_TYPE:-personal}"
   ;;
 Darwin)
   declare -xr DI_PKG_TYPE="work"

@@ -15,7 +15,7 @@ bash install.sh
 ```
 
 * Never `source` it, it calls `exit` and would close your terminal (it refuses to start if sourced)
-* **Arch** installs the package list from `pkglists/$DI_PKG_TYPE` (default `primary`), for example `DI_PKG_TYPE=secondary bash install.sh`
+* **Arch** installs the `personal` package list from `pkglists/$DI_PKG_TYPE`, and `DI_PKG_TYPE` can point it at another folder (the test container uses `test`)
 * **macOS** always uses the `work` list
 
 ## What it does
