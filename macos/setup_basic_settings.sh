@@ -58,6 +58,9 @@ set_default NSGlobalDomain NSWindowResizeTime -float 0.001 || true # Make native
 
 finder_changed=false # Tracks whether a Finder setting changed, so Finder restarts only when needed
 if set_default com.apple.finder FXPreferredViewStyle -string Nlsv; then finder_changed=true; fi # Open folders without their own view setting in list view (Nlsv)
+if set_default com.apple.finder _FXSortFoldersFirst -bool true; then finder_changed=true; fi # Keep folders above files when sorting by name
+if set_default com.apple.finder FXDefaultSearchScope -string SCcf; then finder_changed=true; fi # Search the current folder first instead of the whole Mac (SCcf)
+if set_default com.apple.finder FXEnableExtensionChangeWarning -bool false; then finder_changed=true; fi # Do not ask for confirmation when changing a file extension
 
 if $finder_changed; then # Only restart Finder when a setting above changed
   log_progress "Restarting Finder" # Explain why Finder windows close
