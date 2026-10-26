@@ -62,3 +62,5 @@ if $finder_changed; then # Only restart Finder when a setting above changed
   log_progress "Restarting Finder" # Explain why Finder windows close
   killall Finder # Finder reads its settings only when it starts
 fi
+
+set_default com.apple.desktopservices DSDontWriteNetworkStores -bool true || true # Do not create .DS_Store files on network shares, takes effect after the next login
