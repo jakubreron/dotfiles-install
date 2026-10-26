@@ -41,6 +41,7 @@ fi
 
 dock_changed=false # Tracks whether a Dock setting changed, so the Dock restarts only when needed
 if set_default com.apple.dock autohide-time-modifier -float 0.15; then dock_changed=true; fi # Faster autohide slide animation, the default is 0.5 seconds
+if set_default com.apple.dock show-recents -bool false; then dock_changed=true; fi # Hide the recent applications section of the Dock
 
 if $dock_changed; then # Only restart the Dock when a setting above changed
   log_progress "Restarting the Dock" # Explain why the Dock flashes
