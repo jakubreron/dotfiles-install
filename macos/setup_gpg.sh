@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-gpg_agent_conf="$HOME/.gnupg/gpg-agent.conf"
+gnupg_home="${GNUPGHOME:-$HOME/.gnupg}"
+gpg_agent_conf="$gnupg_home/gpg-agent.conf"
 
 if ! command -v pinentry-mac >/dev/null 2>&1; then
   log_progress "Installing pinentry-mac"
@@ -14,8 +15,8 @@ if command -v pinentry-mac >/dev/null 2>&1 && command -v gpg >/dev/null 2>&1; th
     log_status "gpg-agent already uses pinentry-mac, skipping"
   else
     log_progress "Setting up gpg-agent with pinentry-mac and an 8 hour passphrase cache"
-    mkdir -p "$HOME/.gnupg"
-    chmod 700 "$HOME/.gnupg"
+    mkdir -p "$gnupg_home"
+    chmod 700 "$gnupg_home"
     cat >"$gpg_agent_conf" <<EOF
 pinentry-program $(command -v pinentry-mac)
 default-cache-ttl 28800
