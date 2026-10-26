@@ -73,3 +73,8 @@ if $screenshots_changed; then # Only restart SystemUIServer when the setting abo
   log_progress "Restarting SystemUIServer" # Explain why the menu bar flashes
   killall SystemUIServer # It reads the screenshot location only when it starts
 fi
+
+set_default NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true || true # Open the Save dialog with the full folder browser
+set_default NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true || true # Companion key set together with the one above, as common macOS defaults scripts do
+set_default NSGlobalDomain PMPrintingExpandedStateForPrint -bool true || true # Open the Print dialog with all its options
+set_default NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true || true # Companion key set together with the one above, as common macOS defaults scripts do
