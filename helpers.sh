@@ -393,6 +393,24 @@ fetch_keys_from_bitwarden() {
   unset BW_SESSION
 }
 
+set_default() { # Write a macOS preference only if it differs, return 1 when nothing changed
+  local domain="$1" key="$2" type="$3" value="$4" # Preference domain, key, defaults type flag (for example -bool) and the wanted value
+  local expected="$value" current # What "defaults read" prints for the wanted value, and the value found now
+
+  if [[ "$type" == "-bool" ]]; then # "defaults read" prints booleans as 1 or 0
+    [[ "$value" == "true" ]] && expected=1 || expected=0 # Translate true or false into what "defaults read" prints
+  fi
+
+  current="$(defaults read "$domain" "$key" 2>/dev/null || true)" # A key that was never set reads as empty
+  if [[ "$current" == "$expected" ]]; then # Already the wanted value
+    log_status "$domain $key is already $value" # Say so, so the log shows the check ran
+    return 1 # Tell the caller nothing changed, so it can skip restarting the app
+  fi
+
+  log_progress "Setting $domain $key to $value" # Log the change before making it
+  defaults write "$domain" "$key" "$type" "$value" # Write the new value
+}
+
 brew_install() {
   local pkg
   for pkg in "$@"; do
