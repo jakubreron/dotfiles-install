@@ -242,8 +242,8 @@ fi
 
 source "$DI_VOIDRICE_DIR/.config/zsh/profile/profile.paths"
 
-bin_dotfiles_shortcuts="$HOME/.local/bin/sync/generate-shell-shortcuts"
-repo_dotfiles_shortcuts="$HOME/.config/dotfiles/voidrice/.local/bin/sync/generate-shell-shortcuts"
+bin_dotfiles_shortcuts="$HOME/.local/bin/dotfiles/generate-shell-shortcuts"
+repo_dotfiles_shortcuts="$HOME/.config/dotfiles/voidrice/.local/bin/dotfiles/generate-shell-shortcuts"
 
 if [[ -f "$bin_dotfiles_shortcuts" ]]; then
   log_progress "Sourcing shortcuts from $bin_dotfiles_shortcuts"
