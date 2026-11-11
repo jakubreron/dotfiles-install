@@ -40,7 +40,6 @@ else
 fi
 
 dock_changed=false # Tracks whether a Dock setting changed, so the Dock restarts only when needed
-if set_default com.apple.dock autohide-time-modifier -float 0.15; then dock_changed=true; fi # Faster autohide slide animation, the default is 0.5 seconds
 if set_default com.apple.dock show-recents -bool false; then dock_changed=true; fi # Hide the recent applications section of the Dock
 
 if $dock_changed; then # Only restart the Dock when a setting above changed
@@ -53,8 +52,6 @@ set_default NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false || tru
 set_default NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false || true # Do not insert a period after a double space
 set_default NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false || true # Do not capitalize the first letter automatically
 set_default NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false || true # Turn off spelling autocorrect
-
-set_default NSGlobalDomain NSWindowResizeTime -float 0.001 || true # Make native app windows resize almost instantly instead of animating
 
 finder_changed=false # Tracks whether a Finder setting changed, so Finder restarts only when needed
 if set_default com.apple.finder FXPreferredViewStyle -string Nlsv; then finder_changed=true; fi # Open folders without their own view setting in list view (Nlsv)
