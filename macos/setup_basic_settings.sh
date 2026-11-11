@@ -40,6 +40,7 @@ else
 fi
 
 dock_changed=false # Tracks whether a Dock setting changed, so the Dock restarts only when needed
+if set_default com.apple.dock autohide-delay -float 0; then dock_changed=true; fi # Show the hidden Dock immediately on hover, the default waits about half a second
 if set_default com.apple.dock show-recents -bool false; then dock_changed=true; fi # Hide the recent applications section of the Dock
 
 if $dock_changed; then # Only restart the Dock when a setting above changed
