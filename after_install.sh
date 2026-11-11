@@ -74,6 +74,7 @@ log_status "Install finished, manual steps left"
 log_warn "1. If the SSH or GPG key is still missing, restore it from Bitwarden (SSH: ~/.ssh/id_rsa_*, GPG: gpg --import <file>)"
 log_warn "2. Import Yomitan settings from $DI_VOIDRICE_DIR/.config/yomitan and dictionaries from your Google Drive backup"
 log_warn "3. Restore uBlock Origin settings from $DI_VOIDRICE_DIR/.config/ublock"
+log_warn "4. In Firefox, download Chinese, Japanese and Korean for offline translation (Settings > General > Translations > Download languages)"
 
 log_progress "Last steps that need you, everything above ran unattended"
 enroll_fingerprints
