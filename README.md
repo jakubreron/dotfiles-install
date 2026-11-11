@@ -22,7 +22,7 @@ bash install.sh
 
 * `prepare.sh`: failure tracking, forced https for GitHub, root check, preflight checks (network, disk space, a lock against two runs at once), `sudo` kept alive
 * `before_install.sh`: folders, `paru` or Homebrew, `git`, `stow`, cloning the dotfile repos, `zsh`, global `npm` packages, shell shortcuts
-* `arch/` or `macos/`: system settings, packages, services, GPG agent, and on Arch the login keyring unlock (a backed up edit of `/etc/pam.d/login`) and fingerprint authentication for login, `sudo` and polkit (a backed up edit of `/etc/pam.d/system-auth`)
+* `arch/` or `macos/`: system settings, packages, services, GPG agent, and on Arch the login keyring unlock (a backed up edit of `/etc/pam.d/login`) and fingerprint authentication for login, `sudo` and polkit (a backed up edit of `/etc/pam.d/system-auth`), and on macOS Touch ID for `sudo` (`/etc/pam.d/sudo_local`, with `pam-reattach` for tmux)
 * `after_install.sh`: stashes local changes, stows again, creates the Firefox profile and merges its config, prints the summary and the checklist
 
 ## Safe to run again
