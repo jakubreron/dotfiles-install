@@ -73,6 +73,7 @@ e = end
 m = enter
 w = C-backspace
 d = delete
+k = macro(S-end delete)
 S-m = S-enter
 
 [mac_option:A]
