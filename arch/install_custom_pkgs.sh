@@ -14,6 +14,26 @@ install_tlp() {
   fi
 }
 
+# NOTE: tlp-pd gives tlp the power-profiles-daemon D-Bus API that the waybar module and tlpctl use
+install_tlp_pd() {
+  if ! command -v tlp-pd >/dev/null 2>&1; then
+    # NOTE: tlp-pd provides power-profiles-daemon and conflicts with it, so the old package has to go first
+    if pacman -Qq power-profiles-daemon >/dev/null 2>&1; then
+      log_progress "Removing power-profiles-daemon, tlp-pd replaces it"
+      sudo pacman -Rdd --noconfirm power-profiles-daemon
+    fi
+    log_progress "Installing tlp-pd"
+    install_pkg tlp-pd
+  else
+    log_status "tlp-pd is already installed"
+  fi
+
+  if command -v tlp-pd >/dev/null 2>&1; then
+    log_progress "Setting up tlp-pd"
+    sudo systemctl enable --now tlp-pd
+  fi
+}
+
 install_keyd() {
   if ! command -v keyd >/dev/null 2>&1; then
     log_progress "Installing and setting up keyd"
@@ -87,4 +107,5 @@ right = end" | sudo tee "/etc/keyd/default.conf"
 }
 
 install_tlp
+install_tlp_pd
 install_keyd
