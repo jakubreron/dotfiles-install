@@ -14,13 +14,13 @@ if command -v pinentry-mac >/dev/null 2>&1 && command -v gpg >/dev/null 2>&1; th
   if grep -qs "pinentry-mac" "$gpg_agent_conf"; then
     log_status "gpg-agent already uses pinentry-mac, skipping"
   else
-    log_progress "Setting up gpg-agent with pinentry-mac and an 8 hour passphrase cache"
+    log_progress "Setting up gpg-agent with pinentry-mac and a 24 hour passphrase cache"
     mkdir -p "$gnupg_home"
     chmod 700 "$gnupg_home"
     cat >"$gpg_agent_conf" <<EOF
 pinentry-program $(command -v pinentry-mac)
-default-cache-ttl 28800
-max-cache-ttl 28800
+default-cache-ttl 86400
+max-cache-ttl 86400
 EOF
     log_progress "Restarting gpg-agent"
     gpgconf --kill gpg-agent
