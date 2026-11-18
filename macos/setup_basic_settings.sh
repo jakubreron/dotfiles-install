@@ -80,3 +80,12 @@ set_default NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true || true
 set_default NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true || true # Companion key set together with the one above, as common macOS defaults scripts do
 set_default NSGlobalDomain PMPrintingExpandedStateForPrint -bool true || true # Open the Print dialog with all its options
 set_default NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true || true # Companion key set together with the one above, as common macOS defaults scripts do
+
+if defaults read com.apple.symbolichotkeys AppleSymbolicHotKeys 2>/dev/null | grep -q -E '^    175 = '; then # Hotkey 175 is "Turn Do Not Disturb On/Off", skip when it already exists
+  log_status "The Do Not Disturb keyboard shortcut is already set" # Say so, so the log shows the check ran
+else
+  log_progress "Setting the Do Not Disturb keyboard shortcut to Ctrl+Option+Cmd+Shift+N" # Log the change before making it, Karabiner presses this combo from Ctrl+Option+Shift+N
+  # Parameters are the character code of n (110), its key code (45) and the modifiers control + option + command + shift (262144 + 524288 + 1048576 + 131072)
+  defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 175 '<dict><key>enabled</key><true/><key>value</key><dict><key>parameters</key><array><integer>110</integer><integer>45</integer><integer>1966080</integer></array><key>type</key><string>standard</string></dict></dict>' || true # Turn the shortcut on and assign the combo
+  /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u || true # Apply it now, without logging out
+fi
