@@ -143,7 +143,7 @@ if [[ -d "$DI_UNIVERSAL_DIR" ]]; then
     log_status "The universal repo already has git history, skipping the re-add"
   fi
 
-  for private_key in ~/.ssh/id_rsa_personal ~/.ssh/id_rsa_work; do
+  for private_key in ~/.ssh/id_ed25519 ~/.ssh/id_ed25519_work; do
     [[ -f "$private_key" ]] && chmod 400 "$private_key" # 400 for owner read-only, I don't want to modify these files, other users cannot access any file
   done
   chmod 600 ~/.ssh/config # 600 for ~/.ssh/config, it's a normal file, needs read/write, but no execute

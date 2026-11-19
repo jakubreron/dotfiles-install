@@ -314,12 +314,12 @@ fetch_keys_from_bitwarden() {
   Darwin)
     git_config_file="$XDG_CONFIG_HOME/git/config_macos"
     gpg_bitwarden_item="work-git"
-    ssh_key_entries=("work-git|$HOME/.ssh/id_rsa_work" "personal-git|$HOME/.ssh/id_rsa_personal")
+    ssh_key_entries=("work-git|$HOME/.ssh/id_ed25519_work" "personal-git|$HOME/.ssh/id_ed25519")
     ;;
   Linux)
     git_config_file="$XDG_CONFIG_HOME/git/config_linux"
     gpg_bitwarden_item="personal-git"
-    ssh_key_entries=("personal-git|$HOME/.ssh/id_rsa_personal")
+    ssh_key_entries=("personal-git|$HOME/.ssh/id_ed25519")
     ;;
   esac
 
