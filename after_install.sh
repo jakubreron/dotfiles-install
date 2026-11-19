@@ -75,6 +75,9 @@ log_warn "1. If the SSH or GPG key is still missing, restore it from Bitwarden (
 log_warn "2. Import Yomitan settings from $DI_VOIDRICE_DIR/.config/yomitan and dictionaries from your Google Drive backup"
 log_warn "3. Restore uBlock Origin settings from $DI_VOIDRICE_DIR/.config/ublock"
 log_warn "4. In Firefox, download Chinese, Japanese and Korean for offline translation (Settings > General > Translations > Download languages)"
+if [[ "$OS" = "Darwin" ]]; then
+  log_warn "5. In System Settings > Privacy & Security > Accessibility, allow Alacritty and karabiner_console_user_server (the close-notification keybind presses a notification button through them)"
+fi
 
 log_progress "Last steps that need you, everything above ran unattended"
 enroll_fingerprints
